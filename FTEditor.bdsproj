@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">DelphiDotNet.Personality</Option>
+			<Option Name="ProjectType">VCLApplication</Option>
+			<Option Name="Version">2.0</Option>
+			<Option Name="GUID">{1598A3E9-2B9B-4CEC-86B4-0715B07A6EC6}</Option>
+		</Option>
+	</PersonalityInfo>
+	<DelphiDotNet.Personality>
+		<Source>
+			<Source Name="MainSource">FTEditor.dpr</Source>
+		</Source>
+		<FileVersion>
+			<FileVersion Name="Version">7.0</FileVersion>
+		</FileVersion>
+		<Compiler>
+			<Compiler Name="A">0</Compiler>
+			<Compiler Name="B">0</Compiler>
+			<Compiler Name="C">1</Compiler>
+			<Compiler Name="D">1</Compiler>
+			<Compiler Name="E">0</Compiler>
+			<Compiler Name="F">0</Compiler>
+			<Compiler Name="G">1</Compiler>
+			<Compiler Name="H">1</Compiler>
+			<Compiler Name="I">1</Compiler>
+			<Compiler Name="J">0</Compiler>
+			<Compiler Name="K">0</Compiler>
+			<Compiler Name="L">1</Compiler>
+			<Compiler Name="M">0</Compiler>
+			<Compiler Name="N">1</Compiler>
+			<Compiler Name="O">0</Compiler>
+			<Compiler Name="P">1</Compiler>
+			<Compiler Name="Q">1</Compiler>
+			<Compiler Name="R">1</Compiler>
+			<Compiler Name="S">0</Compiler>
+			<Compiler Name="T">0</Compiler>
+			<Compiler Name="U">0</Compiler>
+			<Compiler Name="V">1</Compiler>
+			<Compiler Name="W">0</Compiler>
+			<Compiler Name="X">1</Compiler>
+			<Compiler Name="Y">1</Compiler>
+			<Compiler Name="Z">1</Compiler>
+			<Compiler Name="ShowHints">True</Compiler>
+			<Compiler Name="ShowWarnings">True</Compiler>
+			<Compiler Name="UnitAliases">WinTypes=Borland.Vcl.Windows;WinProcs=Borland.Vcl.Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;</Compiler>
+			<Compiler Name="NamespacePrefix"></Compiler>
+			<Compiler Name="GenerateDocumentation">False</Compiler>
+			<Compiler Name="DefaultNamespace"></Compiler>
+			<Compiler Name="SymbolDeprecated">True</Compiler>
+			<Compiler Name="SymbolLibrary">True</Compiler>
+			<Compiler Name="SymbolPlatform">False</Compiler>
+			<Compiler Name="SymbolExperimental">True</Compiler>
+			<Compiler Name="UnitLibrary">True</Compiler>
+			<Compiler Name="UnitPlatform">False</Compiler>
+			<Compiler Name="UnitDeprecated">True</Compiler>
+			<Compiler Name="UnitExperimental">True</Compiler>
+			<Compiler Name="HResultCompat">True</Compiler>
+			<Compiler Name="HidingMember">True</Compiler>
+			<Compiler Name="HiddenVirtual">True</Compiler>
+			<Compiler Name="Garbage">True</Compiler>
+			<Compiler Name="BoundsError">True</Compiler>
+			<Compiler Name="ZeroNilCompat">True</Compiler>
+			<Compiler Name="StringConstTruncated">True</Compiler>
+			<Compiler Name="ForLoopVarVarPar">True</Compiler>
+			<Compiler Name="TypedConstVarPar">True</Compiler>
+			<Compiler Name="AsgToTypedConst">True</Compiler>
+			<Compiler Name="CaseLabelRange">True</Compiler>
+			<Compiler Name="ForVariable">True</Compiler>
+			<Compiler Name="ConstructingAbstract">True</Compiler>
+			<Compiler Name="ComparisonFalse">True</Compiler>
+			<Compiler Name="ComparisonTrue">True</Compiler>
+			<Compiler Name="ComparingSignedUnsigned">True</Compiler>
+			<Compiler Name="CombiningSignedUnsigned">True</Compiler>
+			<Compiler Name="UnsupportedConstruct">True</Compiler>
+			<Compiler Name="FileOpen">True</Compiler>
+			<Compiler Name="FileOpenUnitSrc">True</Compiler>
+			<Compiler Name="BadGlobalSymbol">True</Compiler>
+			<Compiler Name="DuplicateConstructorDestructor">True</Compiler>
+			<Compiler Name="InvalidDirective">True</Compiler>
+			<Compiler Name="PackageNoLink">True</Compiler>
+			<Compiler Name="PackageThreadVar">True</Compiler>
+			<Compiler Name="ImplicitImport">True</Compiler>
+			<Compiler Name="HPPEMITIgnored">True</Compiler>
+			<Compiler Name="NoRetVal">True</Compiler>
+			<Compiler Name="UseBeforeDef">True</Compiler>
+			<Compiler Name="ForLoopVarUndef">True</Compiler>
+			<Compiler Name="UnitNameMismatch">True</Compiler>
+			<Compiler Name="NoCFGFileFound">True</Compiler>
+			<Compiler Name="ImplicitVariants">True</Compiler>
+			<Compiler Name="UnicodeToLocale">True</Compiler>
+			<Compiler Name="LocaleToUnicode">True</Compiler>
+			<Compiler Name="ImagebaseMultiple">True</Compiler>
+			<Compiler Name="SuspiciousTypecast">True</Compiler>
+			<Compiler Name="PrivatePropAccessor">True</Compiler>
+			<Compiler Name="UnsafeType">True</Compiler>
+			<Compiler Name="UnsafeCode">True</Compiler>
+			<Compiler Name="UnsafeCast">True</Compiler>
+			<Compiler Name="OptionTruncated">True</Compiler>
+			<Compiler Name="WideCharReduced">True</Compiler>
+			<Compiler Name="DuplicatesIgnored">True</Compiler>
+			<Compiler Name="UnitInitSeq">True</Compiler>
+			<Compiler Name="LocalPInvoke">True</Compiler>
+			<Compiler Name="MessageDirective">True</Compiler>
+			<Compiler Name="CodePage"></Compiler>
+		</Compiler>
+		<Linker>
+			<Linker Name="MapFile">0</Linker>
+			<Linker Name="OutputObjs">0</Linker>
+			<Linker Name="GenerateHpps">False</Linker>
+			<Linker Name="ConsoleApp">1</Linker>
+			<Linker Name="DebugInfo">True</Linker>
+			<Linker Name="RemoteSymbols">False</Linker>
+			<Linker Name="GenerateDRC">False</Linker>
+			<Linker Name="MinStackSize">4096</Linker>
+			<Linker Name="MaxStackSize">1048576</Linker>
+			<Linker Name="ImageBase">4194304</Linker>
+			<Linker Name="ExeDescription"></Linker>
+		</Linker>
+		<Directories>
+			<Directories Name="OutputDir"></Directories>
+			<Directories Name="UnitOutputDir">CompiledUnits</Directories>
+			<Directories Name="PackageDLLOutputDir"></Directories>
+			<Directories Name="PackageDCPOutputDir"></Directories>
+			<Directories Name="SearchPath">$(BDS)\lib\Debug;$(BDS)\lib\Debug\Indy10;C:\Program Files\Steema Software\TeeChart 7.06 for Delphi 2006\Delphi10\LibNet;C:\Program Files\Steema Software\TeeChart 7.08 for Delphi 2006\Delphi10\LibNet;c:\windows\microsoft.net\framework\v1.1.4322;c:\program files\common files\borland shared\bds\shared assemblies\4.0;c:\xilytix\fieldedtext;C:\Xilytix\FieldedText\Editor;c:\xilytix\fieldedtext\component\trunk</Directories>
+			<Directories Name="Packages">c:\windows\microsoft.net\framework\v1.1.4322\System.Web.dll;c:\windows\microsoft.net\framework\v1.1.4322\System.EnterpriseServices.dll;c:\windows\microsoft.net\framework\v1.1.4322\System.XML.dll;c:\windows\microsoft.net\framework\v1.1.4322\System.Drawing.dll;c:\windows\microsoft.net\framework\v1.1.4322\System.Data.dll;c:\windows\microsoft.net\framework\v1.1.4322\System.dll</Directories>
+			<Directories Name="Conditionals"></Directories>
+			<Directories Name="DebugSourceDirs"></Directories>
+			<Directories Name="UsePackages">True</Directories>
+		</Directories>
+		<Parameters>
+			<Parameters Name="RunParams">-M"C:\Documents and Settings\pbklink.PAULDEV1\My Documents\Test.ftm" "C:\Documents and Settings\pbklink.PAULDEV1\My Documents\Test.ftx"</Parameters>
+			<Parameters Name="HostApplication"></Parameters>
+			<Parameters Name="Launcher"></Parameters>
+			<Parameters Name="UseLauncher">False</Parameters>
+			<Parameters Name="DebugCWD"></Parameters>
+			<Parameters Name="Debug Symbols Search Path"></Parameters>
+			<Parameters Name="LoadAllSymbols">True</Parameters>
+			<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+		</Parameters>
+		<Language>
+			<Language Name="ActiveLang"></Language>
+			<Language Name="ProjectLang">$00000000</Language>
+			<Language Name="RootDir"></Language>
+		</Language>
+		<VersionInfo>
+			<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+			<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+			<VersionInfo Name="MajorVer">1</VersionInfo>
+			<VersionInfo Name="MinorVer">0</VersionInfo>
+			<VersionInfo Name="Release">0</VersionInfo>
+			<VersionInfo Name="Build">0</VersionInfo>
+			<VersionInfo Name="Debug">False</VersionInfo>
+			<VersionInfo Name="PreRelease">False</VersionInfo>
+			<VersionInfo Name="Special">False</VersionInfo>
+			<VersionInfo Name="Private">False</VersionInfo>
+			<VersionInfo Name="DLL">False</VersionInfo>
+			<VersionInfo Name="Locale">3081</VersionInfo>
+			<VersionInfo Name="CodePage">1252</VersionInfo>
+		</VersionInfo>
+		<VersionInfoKeys>
+			<VersionInfoKeys Name="CompanyName"></VersionInfoKeys>
+			<VersionInfoKeys Name="FileDescription"></VersionInfoKeys>
+			<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+			<VersionInfoKeys Name="InternalName"></VersionInfoKeys>
+			<VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys>
+			<VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys>
+			<VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys>
+			<VersionInfoKeys Name="ProductName"></VersionInfoKeys>
+			<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+			<VersionInfoKeys Name="Comments"></VersionInfoKeys>
+		</VersionInfoKeys>  
+    
+    <FileList>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System" AssemblyName="system" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.Data.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.Data" AssemblyName="system.data" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.Drawing.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.Drawing" AssemblyName="system.drawing" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.XML.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.XML" AssemblyName="system.xml" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\4.0\Borland.Vcl.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.Vcl" AssemblyName="Borland.Vcl" Version="10.0.4143.0" LinkUnits="True"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\4.0\Borland.Delphi.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.Delphi" AssemblyName="Borland.Delphi" Version="10.0.4143.0" LinkUnits="True"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\4.0\Borland.VclRtl.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.VclRtl" AssemblyName="Borland.VclRtl" Version="10.0.4143.0" LinkUnits="True"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\4.0\Borland.VclActnBand.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.VclActnBand" AssemblyName="Borland.VclActnBand" Version="10.0.4143.0" LinkUnits="True"/>
+      <File FileName="c:\program files\common files\borland shared\bds\shared assemblies\4.0\Borland.VclX.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Borland.VclX" AssemblyName="Borland.VclX" Version="10.0.4143.0" LinkUnits="True"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.EnterpriseServices.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.EnterpriseServices" AssemblyName="System.EnterpriseServices" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="$(SystemRoot)\microsoft.net\framework\v1.1.4322\System.Web.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="System.Web" AssemblyName="System.Web" Version="1.0.5000.0" LinkUnits="False"/>
+      <File FileName="..\..\component\trunk\Xilytix.FieldedText.dll" ContainerId="DelphiDotNetAssemblyCompiler" ModuleName="Xilytix.FieldedText" AssemblyName="Xilytix.FieldedText" Version="1.0.3.32721" LinkUnits="True"/>
+      <File FileName="" ContainerId="" ModuleName="System.Reflection"/>
+      <File FileName="" ContainerId="" ModuleName="System.Runtime.CompilerServices"/>
+      <File FileName="" ContainerId="" ModuleName="System.Runtime.InteropServices"/>
+      <File FileName="" ContainerId="" ModuleName="SysUtils"/>
+      <File FileName="" ContainerId="" ModuleName="Forms"/>
+      <File FileName="Xilytix.FTEditor.MainForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.MainForm"/>
+      <File FileName="Xilytix.FTEditor.TextViewFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.TextViewFrame"/>
+      <File FileName="Xilytix.FTEditor.GridViewFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.GridViewFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceTreeFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceTreeFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceListFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceListFrame"/>
+      <File FileName="Xilytix.FTEditor.MainPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.MainPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.FieldsFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.FieldsFrame"/>
+      <File FileName="Xilytix.FTEditor.ErrorsFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.ErrorsFrame"/>
+      <File FileName="Xilytix.FTEditor.Common.pas" ContainerId="" ModuleName="Xilytix.FTEditor.Common"/>
+      <File FileName="Xilytix.FTEditor.LayoutConfiguration.pas" ContainerId="" ModuleName="Xilytix.FTEditor.LayoutConfiguration"/>
+      <File FileName="Xilytix.FTEditor.EditEngine.pas" ContainerId="" ModuleName="Xilytix.FTEditor.EditEngine"/>
+      <File FileName="Xilytix.FTEditor.LayoutFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.LayoutFrame"/>
+      <File FileName="Xilytix.FTEditor.BaseFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.BaseFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.StringFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.StringFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequencesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequencesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequencePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequencePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceItemPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceItemPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.LayoutConfigurationForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.LayoutConfigurationForm"/>
+      <File FileName="Xilytix.FTEditor.LayoutableFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.LayoutableFrame"/>
+      <File FileName="Xilytix.FTEditor.Binder.pas" ContainerId="" ModuleName="Xilytix.FTEditor.Binder"/>
+      <File FileName="Xilytix.FTEditor.Configuration.pas" ContainerId="" ModuleName="Xilytix.FTEditor.Configuration"/>
+      <File FileName="Xilytix.FTEditor.NumberStylesForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.NumberStylesForm"/>
+      <File FileName="Xilytix.FTEditor.DateTimeStylesForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.DateTimeStylesForm"/>
+      <File FileName="Xilytix.FTEditor.BooleanStylesForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.BooleanStylesForm"/>
+      <File FileName="Xilytix.FTEditor.NumberFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.NumberFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.DateTimeFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.DateTimeFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.IntegerFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.IntegerFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.FloatFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.FloatFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.DecimalFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.DecimalFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.BooleanFieldPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.BooleanFieldPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.OptionsForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.OptionsForm"/>
+      <File FileName="Xilytix.FTEditor.UrlForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.UrlForm"/>
+      <File FileName="Xilytix.FTEditor.EditData.pas" ContainerId="" ModuleName="Xilytix.FTEditor.EditData"/>
+      <File FileName="Xilytix.FTEditor.CommandLineParser.pas" ContainerId="" ModuleName="Xilytix.FTEditor.CommandLineParser"/>
+      <File FileName="Xilytix.FTEditor.Colors.pas" ContainerId="" ModuleName="Xilytix.FTEditor.Colors"/>
+      <File FileName="Xilytix.FTEditor.ColorSchemaForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.ColorSchemaForm"/>
+      <File FileName="Xilytix.FTEditor.EditorFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.EditorFrame"/>
+      <File FileName="Xilytix.FTEditor.SourceFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SourceFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceBasePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceBasePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_StringPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_StringPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_BooleanPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_BooleanPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_IntegerPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_IntegerPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_CaseInsensitiveStringPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_CaseInsensitiveStringPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame.pas" ContainerId="" ModuleName="Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame"/>
+      <File FileName="Xilytix.FTEditor.AboutForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.AboutForm"/>
+      <File FileName="Borland.Vcl.Grids.pas" ContainerId="" ModuleName="Borland.Vcl.Grids"/>
+      <File FileName="Xilytix.FTEditor.FieldHeadingsForm.pas" ContainerId="" ModuleName="Xilytix.FTEditor.FieldHeadingsForm"/>
+    </FileList>
+  </DelphiDotNet.Personality>
+	<StarTeamAssociation></StarTeamAssociation>
+	<StarTeamNonRelativeFiles></StarTeamNonRelativeFiles>
+</BorlandProject>
