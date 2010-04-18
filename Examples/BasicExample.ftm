@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FieldedText LineCommentChar="!" HeadingLineCount="2">
+  <Field Name="PetName" ValueQuotedType="Always" Headings="Pet Name" />
+  <Field DataType="Float" Name="Age" Headings="Age, " />
+  <Field Name="Color" Headings="Color, (Years)" />
+  <Field DataType="DateTime" Name="DateReceived" Headings="Date Received, " Format="d MMM yyyy" />
+  <Field DataType="Decimal" Name="Price" Headings="Price, (Dollars)" />
+  <Field DataType="Boolean" Name="NeedsWalking" Headings="Needs Walking, " />
+  <Field Name="Type" ValueQuotedType="Always" Headings="Type" />
+</FieldedText>
