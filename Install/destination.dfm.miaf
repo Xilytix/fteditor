@@ -1,0 +1,2 @@
+IF (FolderText.Text = )  THEN  Next.Visible := False;
+IF (FolderText.Text <> )  THEN  Next.Visible := True;
