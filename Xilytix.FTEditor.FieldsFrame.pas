@@ -104,7 +104,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TFieldsFrame }
 

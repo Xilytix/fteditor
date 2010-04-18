@@ -60,7 +60,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TLayoutableFrame }
 

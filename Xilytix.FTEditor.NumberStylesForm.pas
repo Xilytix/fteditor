@@ -64,7 +64,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 procedure TNumberStylesForm.OkButtonClick(Sender: TObject);
 begin

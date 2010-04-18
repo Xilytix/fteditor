@@ -205,7 +205,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 procedure TLayoutConfigurationForm.ApplyButtonClick(Sender: TObject);
 begin

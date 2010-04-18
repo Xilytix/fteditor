@@ -12,7 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls, System.ComponentModel;
+  Dialogs, StdCtrls, ExtCtrls;
 
 type
   TAboutForm = class(TForm)
@@ -45,10 +45,10 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
-  Borland.Vcl.UrlMon,
+  UrlMon,
   Xilytix.FTEditor.Common;
 
 procedure TAboutForm.FieldedTextLinkLabelClick(Sender: TObject);

@@ -11,9 +11,7 @@ unit Xilytix.FTEditor.Colors;
 interface
 
 uses
-  System.Runtime.Serialization,
-  System.Xml.Serialization,
-  Borland.Vcl.Graphics,
+  Graphics,
   Xilytix.FTEditor.Common;
 
 type

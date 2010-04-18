@@ -1,320 +1,264 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <ProjectGuid>{1598a3e9-2b9b-4cec-86b4-0715b07a6ec6}</ProjectGuid>
-    <MainSource>FTEditor.dpr</MainSource>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <DCC_EnabledPackages>true</DCC_EnabledPackages>
-    <DCC_UsePackage>Xilytix.FieldedText;Borland.VclX;Borland.VclRtl;Borland.VclActnBand;Borland.Vcl;Borland.Delphi;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.XML.dll;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.Web.dll;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.EnterpriseServices.dll;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.dll;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.Data.dll</DCC_UsePackage>
-    <DCC_DCCCompiler>DCCIL</DCC_DCCCompiler>
-    <DCC_DependencyCheckOutputName>FTEditor.exe</DCC_DependencyCheckOutputName>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Version>7.0</Version>
-    <DCC_SymbolReferenceInfo>2</DCC_SymbolReferenceInfo>
-    <DCC_DebugInfoInExe>True</DCC_DebugInfoInExe>
-    <DCC_DebugVN>True</DCC_DebugVN>
-    <DCC_DcuOutput>CompiledUnits</DCC_DcuOutput>
-    <DCC_ObjOutput>CompiledUnits</DCC_ObjOutput>
-    <DCC_HppOutput>CompiledUnits</DCC_HppOutput>
-    <DCC_UnitSearchPath>$(BDS)\lib\Debug;c:\xilytix\fieldedtext\component\trunk;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl;C:\Xilytix\FieldedText\Editor\trunk</DCC_UnitSearchPath>
-    <DCC_ResourcePath>$(BDS)\lib\Debug;c:\xilytix\fieldedtext\component\trunk;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl;C:\Xilytix\FieldedText\Editor\trunk</DCC_ResourcePath>
-    <DCC_IncludePath>$(BDS)\lib\Debug;c:\xilytix\fieldedtext\component\trunk;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;C:\Documents and Settings\All Users\Documents\RAD Studio\5.0\Bpl;C:\Xilytix\FieldedText\Editor\trunk</DCC_IncludePath>
-    <DCC_Define>RELEASE</DCC_Define>
-    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
-    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
-    <DCC_Description>FTEditor (Fielded Text Editor)</DCC_Description>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Version>7.0</Version>
-    <DCC_Optimize>False</DCC_Optimize>
-    <DCC_IntegerOverflowCheck>True</DCC_IntegerOverflowCheck>
-    <DCC_RangeChecking>True</DCC_RangeChecking>
-    <DCC_DebugInfoInExe>True</DCC_DebugInfoInExe>
-    <DCC_DebugVN>True</DCC_DebugVN>
-    <DCC_DcuOutput>CompiledUnits</DCC_DcuOutput>
-    <DCC_ObjOutput>CompiledUnits</DCC_ObjOutput>
-    <DCC_HppOutput>CompiledUnits</DCC_HppOutput>
-    <DCC_UnitSearchPath>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;$(BDS)\lib\Debug;C:\Program Files\Steema Software\TeeChart 7.08 for Delphi 2006\Delphi10\LibNet;c:\xilytix\fieldedtext\component\trunk;C:\Xilytix\FieldedText\Editor\trunk</DCC_UnitSearchPath>
-    <DCC_ResourcePath>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;$(BDS)\lib\Debug;C:\Program Files\Steema Software\TeeChart 7.08 for Delphi 2006\Delphi10\LibNet;c:\xilytix\fieldedtext\component\trunk;C:\Xilytix\FieldedText\Editor\trunk</DCC_ResourcePath>
-    <DCC_IncludePath>C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0;$(BDS)\lib\Debug;C:\Program Files\Steema Software\TeeChart 7.08 for Delphi 2006\Delphi10\LibNet;c:\xilytix\fieldedtext\component\trunk;C:\Xilytix\FieldedText\Editor\trunk</DCC_IncludePath>
-    <DCC_Define>DEBUG</DCC_Define>
-    <DCC_SYMBOL_PLATFORM>False</DCC_SYMBOL_PLATFORM>
-    <DCC_UNIT_PLATFORM>False</DCC_UNIT_PLATFORM>
-    <DCC_Platform>x86</DCC_Platform>
-    <DCC_Description>FTEditor (Fielded Text Editor)</DCC_Description>
-  </PropertyGroup>
-  <ProjectExtensions>
-    <Borland.Personality>DelphiDotNet.Personality</Borland.Personality>
-    <Borland.ProjectType>VCLApplication</Borland.ProjectType>
-    <BorlandProject>
-<BorlandProject><DelphiDotNet.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">False</VersionInfo><VersionInfo Name="AutoIncBuild">False</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">0</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">0</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">3081</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName"></VersionInfoKeys><VersionInfoKeys Name="FileDescription"></VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright"></VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName"></VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">FTEditor.dpr</Source></Source></DelphiDotNet.Personality></BorlandProject></BorlandProject>
-  </ProjectExtensions>
-  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
-  <ItemGroup>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Data.dll">
-      <AssemblyName>system.data</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Data.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Data.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.dll">
-      <AssemblyName>system</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll">
-      <AssemblyName>system.drawing</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Drawing.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.EnterpriseServices.dll">
-      <AssemblyName>System.EnterpriseServices</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.EnterpriseServices.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.EnterpriseServices.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Web.dll">
-      <AssemblyName>System.Web</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Web.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.Web.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.XML.dll">
-      <AssemblyName>system.xml</AssemblyName>
-      <Version>2.0.0.0</Version>
-      <HintPath>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.XML.dll</HintPath>
-      <AssemblyTag>$(SystemRoot)\Microsoft.NET\Framework\v2.0.50727\System.XML.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Delphi.dll">
-      <AssemblyName>Borland.Delphi</AssemblyName>
-      <Version>11.0.5000.9245</Version>
-      <HintPath>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Delphi.dll</HintPath>
-      <AssemblyTag>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Delphi.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Vcl.dll">
-      <AssemblyName>Borland.Vcl</AssemblyName>
-      <Version>11.0.5000.9245</Version>
-      <HintPath>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Vcl.dll</HintPath>
-      <AssemblyTag>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.Vcl.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclActnBand.dll">
-      <AssemblyName>Borland.VclActnBand</AssemblyName>
-      <Version>11.0.5000.9245</Version>
-      <HintPath>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclActnBand.dll</HintPath>
-      <AssemblyTag>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclActnBand.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclRtl.dll">
-      <AssemblyName>Borland.VclRtl</AssemblyName>
-      <Version>11.0.5000.9245</Version>
-      <HintPath>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclRtl.dll</HintPath>
-      <AssemblyTag>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclRtl.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclX.dll">
-      <AssemblyName>Borland.VclX</AssemblyName>
-      <Version>11.0.5000.9245</Version>
-      <HintPath>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclX.dll</HintPath>
-      <AssemblyTag>C:\Program Files\Common Files\CodeGear Shared\Rad Studio\Shared Assemblies\5.0\Borland.VclX.dll</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-    <Reference Include="Xilytix.FieldedText.dll">
-      <AssemblyName>Xilytix.FieldedText</AssemblyName>
-      <Version>1.7.0.34995</Version>
-      <HintPath>Xilytix.FieldedText.dll</HintPath>
-      <AssemblyTag>Xilytix.FieldedText</AssemblyTag>
-      <LinkUnits>False</LinkUnits>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <DelphiCompile Include="FTEditor.dpr">
-      <MainSource>MainSource</MainSource>
-    </DelphiCompile>
-    <DCCReference Include="Xilytix.FTEditor.AboutForm.pas">
-      <Form>AboutForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.BaseFieldPropertiesFrame.pas">
-      <Form>BaseFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.Binder.pas" />
-    <DCCReference Include="Xilytix.FTEditor.BooleanFieldPropertiesFrame.pas">
-      <Form>BooleanFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.BooleanStylesForm.pas">
-      <Form>BooleanStylesForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.Colors.pas" />
-    <DCCReference Include="Xilytix.FTEditor.ColorSchemaForm.pas">
-      <Form>ColorSchemaForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.CommandLineParser.pas" />
-    <DCCReference Include="Xilytix.FTEditor.Common.pas" />
-    <DCCReference Include="Xilytix.FTEditor.Configuration.pas" />
-    <DCCReference Include="Xilytix.FTEditor.DateTimeFieldPropertiesFrame.pas">
-      <Form>DateTimeFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.DateTimeStylesForm.pas">
-      <Form>DateTimeStylesForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.DecimalFieldPropertiesFrame.pas">
-      <Form>DecimalFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.EditData.pas" />
-    <DCCReference Include="Xilytix.FTEditor.EditEngine.pas" />
-    <DCCReference Include="Xilytix.FTEditor.EditorFrame.pas">
-      <Form>EditorFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.ErrorsFrame.pas">
-      <Form>ErrorsFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.FieldHeadingsForm.pas">
-      <Form>FieldHeadingsForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.FieldsFrame.pas">
-      <Form>FieldsFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.FloatFieldPropertiesFrame.pas">
-      <Form>FloatFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.GridViewFrame.pas">
-      <Form>GridViewFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.IntegerFieldPropertiesFrame.pas">
-      <Form>IntegerFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.LayoutableFrame.pas">
-      <Form>LayoutableFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.LayoutConfiguration.pas" />
-    <DCCReference Include="Xilytix.FTEditor.LayoutConfigurationForm.pas">
-      <Form>LayoutConfigurationForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.LayoutFrame.pas">
-      <Form>LayoutFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.MainForm.pas">
-      <Form>MainForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.MainPropertiesFrame.pas">
-      <Form>MainPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.NumberFieldPropertiesFrame.pas">
-      <Form>NumberFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.NumberStylesForm.pas">
-      <Form>NumberStylesForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.OptionsForm.pas">
-      <Form>OptionsForm</Form>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceBasePropertiesFrame.pas">
-      <Form>SequenceBasePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceItemPropertiesFrame.pas">
-      <Form>SequenceItemPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceListFrame.pas">
-      <Form>SequenceListFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequencePropertiesFrame.pas">
-      <Form>SequencePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame.pas">
-      <Form>SequenceRedirect_BasePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_BooleanPropertiesFrame.pas">
-      <Form>SequenceRedirect_BooleanPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_CaseInsensitiveStringPropertiesFrame.pas">
-      <Form>SequenceRedirect_CaseInsensitiveStringPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame.pas">
-      <Form>SequenceRedirect_DatePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame.pas">
-      <Form>SequenceRedirect_DateTimePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame.pas">
-      <Form>SequenceRedirect_DecimalPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame.pas">
-      <Form>SequenceRedirect_ExactDateTimePropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame.pas">
-      <Form>SequenceRedirect_ExactStringPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame.pas">
-      <Form>SequenceRedirect_FloatPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_IntegerPropertiesFrame.pas">
-      <Form>SequenceRedirect_IntegerPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_StringPropertiesFrame.pas">
-      <Form>SequenceRedirect_StringPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequencesFrame.pas">
-      <Form>SequencesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SequenceTreeFrame.pas">
-      <Form>SequenceTreeFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.SourceFrame.pas">
-      <Form>SourceFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.StringFieldPropertiesFrame.pas">
-      <Form>StringFieldPropertiesFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.TextViewFrame.pas">
-      <Form>TextViewFrame</Form>
-      <DesignClass>TFrame</DesignClass>
-    </DCCReference>
-    <DCCReference Include="Xilytix.FTEditor.UrlForm.pas">
-      <Form>UrlForm</Form>
-    </DCCReference>
-  </ItemGroup>
-</Project>
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{6374C9C7-253A-4078-96AF-BD57A152ACEB}</ProjectGuid>
+			<MainSource>FTEditor.dpr</MainSource>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+			<ProjectVersion>12.0</ProjectVersion>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_UnitSearchPath>$(TFieldedTextSrc);$(PJVersionInfoLib);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;$(DCC_UnitAlias)</DCC_UnitAlias>
+			<DCC_DependencyCheckOutputName>FTEditor.exe</DCC_DependencyCheckOutputName>
+			<DCC_ImageBase>00400000</DCC_ImageBase>
+			<DCC_Platform>x86</DCC_Platform>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="FTEditor.dpr">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="Xilytix.FTEditor.MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.TextViewFrame.pas">
+				<Form>TextViewFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.GridViewFrame.pas">
+				<Form>GridViewFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceTreeFrame.pas">
+				<Form>SequenceTreeFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceListFrame.pas">
+				<Form>SequenceListFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.MainPropertiesFrame.pas">
+				<Form>MainPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.FieldsFrame.pas">
+				<Form>FieldsFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.ErrorsFrame.pas">
+				<Form>ErrorsFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.Common.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.LayoutConfiguration.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.EditEngine.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.LayoutFrame.pas">
+				<Form>LayoutFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.BaseFieldPropertiesFrame.pas">
+				<Form>BaseFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.StringFieldPropertiesFrame.pas">
+				<Form>StringFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequencesFrame.pas">
+				<Form>SequencesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequencePropertiesFrame.pas">
+				<Form>SequencePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceItemPropertiesFrame.pas">
+				<Form>SequenceItemPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame.pas">
+				<Form>SequenceRedirect_BasePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.LayoutConfigurationForm.pas">
+				<Form>LayoutConfigurationForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.LayoutableFrame.pas">
+				<Form>LayoutableFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.Binder.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.Configuration.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.NumberStylesForm.pas">
+				<Form>NumberStylesForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.DateTimeStylesForm.pas">
+				<Form>DateTimeStylesForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.BooleanStylesForm.pas">
+				<Form>BooleanStylesForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.NumberFieldPropertiesFrame.pas">
+				<Form>NumberFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.DateTimeFieldPropertiesFrame.pas">
+				<Form>DateTimeFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.IntegerFieldPropertiesFrame.pas">
+				<Form>IntegerFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.FloatFieldPropertiesFrame.pas">
+				<Form>FloatFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.DecimalFieldPropertiesFrame.pas">
+				<Form>DecimalFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.BooleanFieldPropertiesFrame.pas">
+				<Form>BooleanFieldPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.OptionsForm.pas">
+				<Form>OptionsForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.UrlForm.pas">
+				<Form>UrlForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.EditData.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.CommandLineParser.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.Colors.pas"/>
+			<DCCReference Include="Xilytix.FTEditor.ColorSchemaForm.pas">
+				<Form>ColorSchemaForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.EditorFrame.pas">
+				<Form>EditorFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SourceFrame.pas">
+				<Form>SourceFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceBasePropertiesFrame.pas">
+				<Form>SequenceBasePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_StringPropertiesFrame.pas">
+				<Form>SequenceRedirect_StringPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_BooleanPropertiesFrame.pas">
+				<Form>SequenceRedirect_BooleanPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_IntegerPropertiesFrame.pas">
+				<Form>SequenceRedirect_IntegerPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame.pas">
+				<Form>SequenceRedirect_DecimalPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame.pas">
+				<Form>SequenceRedirect_FloatPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame.pas">
+				<Form>SequenceRedirect_DateTimePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame.pas">
+				<Form>SequenceRedirect_DatePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_CaseInsensitiveStringPropertiesFrame.pas">
+				<Form>SequenceRedirect_CaseInsensitiveStringPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame.pas">
+				<Form>SequenceRedirect_ExactStringPropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame.pas">
+				<Form>SequenceRedirect_ExactDateTimePropertiesFrame</Form>
+				<DesignClass>TFrame</DesignClass>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.AboutForm.pas">
+				<Form>AboutForm</Form>
+			</DCCReference>
+			<DCCReference Include="Xilytix.FTEditor.FieldHeadingsForm.pas">
+				<Form>FieldHeadingsForm</Form>
+			</DCCReference>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType>VCLApplication</Borland.ProjectType>
+			<BorlandProject>
+				<Delphi.Personality>
+					<Source>
+						<Source Name="MainSource">FTEditor.dpr</Source>
+					</Source>
+					<Parameters>
+						<Parameters Name="UseLauncher">False</Parameters>
+						<Parameters Name="LoadAllSymbols">True</Parameters>
+						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+					</Parameters>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">3081</VersionInfo>
+						<VersionInfo Name="CodePage">1252</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\dcloffice2k140.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\dclofficexp140.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\bcboffice2k140.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+						<Excluded_Packages Name="$(BDS)\bin\bcbofficexp140.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+					</Excluded_Packages>
+				</Delphi.Personality>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>

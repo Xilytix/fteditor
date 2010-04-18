@@ -213,7 +213,7 @@ uses
   Xilytix.FTEditor.SequencePropertiesFrame,
   Xilytix.FTEditor.SequenceItemPropertiesFrame;
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TSequenceListFrame }
 

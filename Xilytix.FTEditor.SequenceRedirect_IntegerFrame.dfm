@@ -1,0 +1,2 @@
+inherited SequenceRedirect_BasePropertiesFrame1: TSequenceRedirect_BasePropertiesFrame1
+end

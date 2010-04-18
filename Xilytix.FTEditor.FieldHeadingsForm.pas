@@ -12,7 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, System.ComponentModel, Borland.Vcl.ExtCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.Grids;
+  Dialogs, ExtCtrls, StdCtrls, Grids;
 
 type
   TFieldHeadingsForm = class(TForm)
@@ -41,7 +41,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   Xilytix.FieldedText.CommaText;

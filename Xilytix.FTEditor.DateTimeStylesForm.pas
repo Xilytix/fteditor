@@ -47,7 +47,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TDateTimeStylesForm }
 

@@ -28,6 +28,6 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 end.
