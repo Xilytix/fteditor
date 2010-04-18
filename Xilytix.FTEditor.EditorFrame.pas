@@ -41,7 +41,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TEditorFrame }
 

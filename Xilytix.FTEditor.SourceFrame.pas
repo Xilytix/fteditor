@@ -147,7 +147,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   System.Globalization,

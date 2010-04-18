@@ -52,7 +52,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   Borland.Vcl.ListActns,

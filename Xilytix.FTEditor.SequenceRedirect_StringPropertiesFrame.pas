@@ -35,7 +35,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   Xilytix.FTEditor.Binder;

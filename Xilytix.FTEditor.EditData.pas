@@ -11,8 +11,6 @@ unit Xilytix.FTEditor.EditData;
 interface
 
 uses
-  System.Globalization,
-  System.Collections,
   Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Colors;
 

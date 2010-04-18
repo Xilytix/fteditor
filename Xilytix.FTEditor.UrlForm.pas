@@ -39,7 +39,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 procedure TUrlForm.FormCreate(Sender: TObject);
 begin

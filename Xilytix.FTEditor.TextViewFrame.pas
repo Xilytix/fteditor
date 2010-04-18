@@ -11,20 +11,19 @@ unit Xilytix.FTEditor.TextViewFrame;
 interface
 
 uses
-  System.ComponentModel,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.RichEdit,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ComCtrls,
-  Borland.Vcl.ExtCtrls,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  RichEdit,
+  StdCtrls,
+  ComCtrls,
+  ExtCtrls,
   Xilytix.FTEditor.EditData,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Binder,
@@ -109,7 +108,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   System.Runtime.InteropServices,

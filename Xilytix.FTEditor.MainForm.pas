@@ -11,19 +11,18 @@ unit Xilytix.FTEditor.MainForm;
 interface
 
 uses
-  System.Xml,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, System.ComponentModel, Xilytix.FTEditor.TextViewFrame, Borland.Vcl.Menus, Borland.Vcl.ComCtrls,
-  Borland.Vcl.ToolWin, Borland.Vcl.ActnMan, Borland.Vcl.ActnCtrls, Borland.Vcl.ActnMenus,
-  Borland.Vcl.ActnList, Borland.Vcl.XPStyleActnCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls,
+  Dialogs, Xilytix.FTEditor.TextViewFrame, Menus, ComCtrls,
+  ToolWin, ActnMan, ActnCtrls, ActnMenus,
+  ActnList, XPStyleActnCtrls, StdCtrls, ExtCtrls,
   Xilytix.FTEditor.Configuration,
   Xilytix.FTEditor.LayoutConfiguration,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.SourceFrame,
-  Xilytix.FTEditor.LayoutFrame, Borland.Vcl.StdActns, Borland.Vcl.BandActn,
-  Xilytix.FTEditor.CommandLineParser, Borland.Vcl.ExtActns;
+  Xilytix.FTEditor.LayoutFrame, StdActns, BandActn,
+  Xilytix.FTEditor.CommandLineParser, ExtActns;
 
 type
   TMainForm = class(TForm)
@@ -207,7 +206,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 uses
   System.IO,

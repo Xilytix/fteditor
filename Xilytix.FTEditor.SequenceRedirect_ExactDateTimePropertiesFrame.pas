@@ -32,7 +32,7 @@ type
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TSequenceRedirect_ExactDateTimePropertiesFrame }
 

@@ -11,12 +11,9 @@ unit Xilytix.FTEditor.Common;
 interface
 
 uses
-  Borland.Vcl.Messages;
+  Messages;
 
 type
-  TCharArray = array of Char;
-  TByteArray = array of Byte;
-
   TCommon = class
   strict private
     class var
@@ -26,7 +23,6 @@ type
       FApplicationDataFolder: string;
       FVersionString: string;
       FColorSchemaFolder: string;
-      FInvalidFileNameChars: TCharArray;
 
     class constructor Create;
 
@@ -46,7 +42,8 @@ type
       ColorSchemaSubFolder = 'ColorSchema';
       SafeFileNamePrefix = '#';
       SafeFileNameEscapeChar = '$';
-      ExplicitInvalidFileNameChars: array[0..8] of char = ('/', '\', ':', '*', '?', '<', '>', '|', SafeFileNameEscapeChar);
+      InvalidFileNameChars: array[0..7] of Char = ('/', '\', ':', '*', '?', '<', '>', '|');
+      ExplicitInvalidFileNameChars: array[0..8] of Char = ('/', '\', ':', '*', '?', '<', '>', '|', SafeFileNameEscapeChar);
 
     class property ProgramFileName: string read FProgramFileName;
     class property ProgramFilePath: string read FProgramFilePath;
@@ -64,55 +61,40 @@ type
 implementation
 
 uses
-  System.Text,
-  System.IO,
-  System.Globalization,
-  System.Diagnostics,
-  Borland.Vcl.Forms;
+  SysUtils,
+  Forms,
+  JclFileUtils,
+  PJVersionInfo;
 
 { TCommon }
 
 class constructor TCommon.Create;
 var
-  I: Integer;
-  Idx: Integer;
-  VersionInfo: FileVersionInfo;
+  VersionInfo: TPJVersionInfo;
 begin
   FProgramFilePath := Application.ExeName;
-  FProgramFileName := Path.GetFileName(FProgramFilePath);
-  FProgramFileFolder := Path.GetDirectoryName(FProgramFilePath);
+  FProgramFileName := ExtractFileName(FProgramFilePath);
+  FProgramFileFolder := ExtractFilePath(FProgramFilePath);
 
   FApplicationDataFolder := System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-  FApplicationDataFolder := Path.Combine(FApplicationDataFolder, PublisherName);
-  FApplicationDataFolder := Path.Combine(FApplicationDataFolder, ProgramName);
+  FApplicationDataFolder := PathAppend(FApplicationDataFolder, PublisherName);
+  FApplicationDataFolder := PathAppend(FApplicationDataFolder, ProgramName);
 
-  VersionInfo := FileVersionInfo.GetVersionInfo(FProgramFilePath);
-  FVersionString := VersionInfo.FileVersion;
-
-  FColorSchemaFolder := Path.Combine(FApplicationDataFolder, ColorSchemaSubFolder);
-
-  FInvalidFileNameChars := Path.GetInvalidFileNameChars;
-  for I := Low(FInvalidFileNameChars) to High(FInvalidFileNameChars) do
-  begin
-    FInvalidFileNameChars[I] := System.Char.ToUpper(FInvalidFileNameChars[I], CultureInfo.InvariantCulture);
+  VersionInfo := TPJVersionInfo.Create(nil);
+  try
+    FVersionString := VersionInfo.FileVersion;
+  finally
+    VersionInfo.Free;
   end;
 
-  for I := Low(ExplicitInvalidFileNameChars) to High(ExplicitInvalidFileNameChars) do
-  begin
-    if not IsInvalidFileNameChar(ExplicitInvalidFileNameChars[I]) then
-    begin
-      Idx := Length(FInvalidFileNameChars);
-      SetLength(FInvalidFileNameChars, Idx+1);
-      FInvalidFileNameChars[Idx] := ExplicitInvalidFileNameChars[I];
-    end;
-  end;
+  FColorSchemaFolder := PathAppend(FApplicationDataFolder, ColorSchemaSubFolder);
 end;
 
 class procedure TCommon.EnsureColorSchemaFolderExists;
 begin
-  if not Directory.Exists(FColorSchemaFolder) then
+  if not DirectoryExists(FColorSchemaFolder) then
   begin
-    Directory.CreateDirectory(FColorSchemaFolder);
+    ForceDirectories(FColorSchemaFolder);
   end;
 end;
 
@@ -124,7 +106,7 @@ var
   I: Integer;
   HexDigitCount: Integer;
   EncodedByteCount: Integer;
-  EncodedBytes: array[0..MaxEncodedByteCount-1] of Byte;
+  EncodedBytes: TBytes;
   DecodedChars: TCharArray;
   HexIdx: Integer;
 begin
@@ -150,6 +132,7 @@ begin
   else
   begin
     // Convert to Byte Array while Hex Digits
+    SetLength(EncodedBytes, MaxEncodedByteCount);
     for I := 0 to EncodedByteCount - 1 do
     begin
       HexIdx := Idx + I * 2;
@@ -167,7 +150,7 @@ begin
     else
     begin
       // Decode Bytes and work out how many were actually used
-      DecodedChars := Encoding.UTF8.GetChars(EncodedBytes, 0, EncodedByteCount);
+      DecodedChars := TEncoding.UTF8.GetChars(EncodedBytes, 0, EncodedByteCount);
       if Length(DecodedChars) = 0 then
         Result := idx
       else
@@ -176,7 +159,7 @@ begin
 
         if EncodedByteCount > 1 then
         begin
-          EncodedByteCount := Encoding.UTF8.GetByteCount(DecodedChars, 0, 1);
+          EncodedByteCount := TEncoding.UTF8.GetByteCount(DecodedChars, 0, 1);
         end;
         Idx := Idx + (EncodedByteCount * 2) - 1; // Move Idx to last Char
         Result := 0;
@@ -203,7 +186,7 @@ var
   I: Integer;
 begin
   Result := False;
-  for I := Low(FInvalidFileNameChars) to High(FInvalidFileNameChars) - 1 do
+  for I := Low(InvalidFileNameChars) to High(InvalidFileNameChars) - 1 do
   begin
     if System.Char.ToUpper(value, CultureInfo.InvariantCulture) = FInvalidFileNameChars[I] then
     begin

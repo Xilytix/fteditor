@@ -48,7 +48,7 @@ var
 
 implementation
 
-{$R *.nfm}
+{$R *.dfm}
 
 { TBooleanStylesForm }
 
