@@ -45,6 +45,7 @@ inherited IntegerFieldPropertiesFrame: TIntegerFieldPropertiesFrame
       inherited HeadingTabSheet: TTabSheet
         ExplicitLeft = 0
         ExplicitTop = 0
+        ExplicitWidth = 0
         ExplicitHeight = 200
         inherited HeadingPadAlignmentComboBox: TComboBoxEx
           TabOrder = 0
@@ -63,8 +64,8 @@ inherited IntegerFieldPropertiesFrame: TIntegerFieldPropertiesFrame
   end
   inherited TopPanel: TPanel
     inherited DataTypeLabel: TLabel
-      Caption = 'Integer'
       Width = 43
+      Caption = 'Integer'
       ExplicitWidth = 43
     end
     inherited NameEdit: TEdit
@@ -73,7 +74,6 @@ inherited IntegerFieldPropertiesFrame: TIntegerFieldPropertiesFrame
     end
     inherited HeadingConstraintComboBox: TComboBoxEx
       TabOrder = 2
-      ExplicitWidth = 74
     end
     inherited NullConstantCheckBox: TCheckBox
       TabOrder = 3

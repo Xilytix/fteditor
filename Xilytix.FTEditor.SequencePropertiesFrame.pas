@@ -14,7 +14,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   Xilytix.FieldedText.Sequence,
-  Xilytix.FTEditor.SequenceBasePropertiesFrame, Borland.Vcl.StdCtrls, System.ComponentModel;
+  Xilytix.FTEditor.SequenceBasePropertiesFrame, Borland.Vcl.StdCtrls, System.ComponentModel, StdCtrls;
 
 type
   TSequencePropertiesFrame = class(TSequenceBasePropertiesFrame)

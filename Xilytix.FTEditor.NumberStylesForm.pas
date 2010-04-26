@@ -13,7 +13,7 @@ interface
 uses
   System.Globalization,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel;
+  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, StdCtrls;
 
 type
   TNumberStylesForm = class(TForm)

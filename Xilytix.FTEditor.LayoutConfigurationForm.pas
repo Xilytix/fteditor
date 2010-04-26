@@ -20,7 +20,7 @@ uses
   Xilytix.FTEditor.SequencesFrame,
   Xilytix.FTEditor.TextViewFrame,
   Xilytix.FTEditor.GridViewFrame,
-  Xilytix.FTEditor.ErrorsFrame;
+  Xilytix.FTEditor.ErrorsFrame, StdCtrls, ComCtrls;
 
 type
   TNotifyConfigurationChange = procedure of object;

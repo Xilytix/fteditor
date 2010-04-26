@@ -15,7 +15,7 @@ uses
   Dialogs,
   Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls,
-  System.ComponentModel;
+  System.ComponentModel, ComCtrls, StdCtrls;
 
 type
   TSequenceRedirect_DatePropertiesFrame = class(TSequenceRedirect_DateTimePropertiesFrame)

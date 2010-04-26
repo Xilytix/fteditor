@@ -1,26 +1,25 @@
 inherited GridViewFrame: TGridViewFrame
   Width = 543
   Height = 67
-  OnEnter = FrameEnter
   ExplicitWidth = 543
   ExplicitHeight = 67
   object TopSplitter: TSplitter [0]
+    Left = 0
+    Top = 65
+    Width = 543
+    Height = 3
+    Cursor = crVSplit
     Align = alTop
     AutoSnap = False
     Beveled = True
-    Cursor = crVSplit
     MinSize = 15
-    Width = 543
-    Left = 0
-    Top = 65
-    Height = 3
     ExplicitLeft = -160
     ExplicitTop = 15
     ExplicitWidth = 626
   end
   inherited TopFlowPanel: TFlowPanel
-    TabOrder = 1
     Width = 543
+    TabOrder = 1
     OnClick = FrameComponentClick
     ExplicitWidth = 559
     inherited SourcePanel: TPanel
@@ -28,8 +27,6 @@ inherited GridViewFrame: TGridViewFrame
       OnClick = FrameComponentClick
       ExplicitWidth = 134
       object GenerateButton: TButton
-        Caption = 'Generate'
-        TabOrder = 1
         Left = 0
         Top = 0
         Width = 50
@@ -38,6 +35,8 @@ inherited GridViewFrame: TGridViewFrame
         Margins.Top = 1
         Margins.Right = 4
         Margins.Bottom = 1
+        Caption = 'Generate'
+        TabOrder = 1
         OnClick = GenerateButtonClick
       end
     end
@@ -119,6 +118,10 @@ inherited GridViewFrame: TGridViewFrame
     end
   end
   object Grid: TDrawGrid
+    Left = 0
+    Top = 68
+    Width = 543
+    Height = 26
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -126,10 +129,6 @@ inherited GridViewFrame: TGridViewFrame
     DefaultDrawing = False
     Options = [goRowSizing, goColSizing, goTabs, goThumbTracking]
     TabOrder = 0
-    Left = 0
-    Top = 68
-    Width = 543
-    Height = 26
     OnDrawCell = GridDrawCell
     OnEnter = GridEnter
     OnExit = GridExit

@@ -30,7 +30,7 @@ uses
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.EditorFrame,
-  Xilytix.FTEditor.SourceFrame;
+  Xilytix.FTEditor.SourceFrame, Grids, StdCtrls, ExtCtrls, Controls, ComCtrls, Classes;
 
 type
   TBeginDrawCellsEvent = procedure of object;

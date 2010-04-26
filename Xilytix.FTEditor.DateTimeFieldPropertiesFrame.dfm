@@ -27,6 +27,8 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
       ExplicitWidth = 169
       ExplicitHeight = 111
       inherited ValueTabSheet: TTabSheet
+        ExplicitLeft = 0
+        ExplicitTop = 0
         ExplicitWidth = 143
         ExplicitHeight = 67
         inherited ValuePadAlignmentComboBox: TComboBoxEx
@@ -69,41 +71,41 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
     ExplicitWidth = 167
     ExplicitHeight = 218
     inherited DataTypeLabel: TLabel
-      Caption = 'DateTime'
       Width = 55
+      Caption = 'DateTime'
       ExplicitWidth = 55
     end
     object Label6: TLabel [4]
-      Caption = 'Format'
-      FocusControl = FormatEdit
       Left = 3
       Top = 96
       Width = 34
       Height = 13
+      Caption = 'Format'
+      FocusControl = FormatEdit
     end
     object Label8: TLabel [5]
-      Caption = 'Date'
-      FocusControl = ConstantDatePicker
       Left = 21
       Top = 160
       Width = 23
       Height = 13
+      Caption = 'Date'
+      FocusControl = ConstantDatePicker
     end
     object Label27: TLabel [6]
-      Caption = 'Time'
-      FocusControl = ConstantTimePicker
       Left = 21
       Top = 182
       Width = 22
       Height = 13
+      Caption = 'Time'
+      FocusControl = ConstantTimePicker
     end
     object Label28: TLabel [7]
-      Caption = 'Styles'
-      FocusControl = StylesEdit
       Left = 3
       Top = 118
       Width = 29
       Height = 13
+      Caption = 'Styles'
+      FocusControl = StylesEdit
     end
     inherited NameEdit: TEdit
       TabOrder = 12
@@ -114,15 +116,15 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
       ExplicitWidth = 82
     end
     inherited NullConstantCheckBox: TCheckBox
-      TabOrder = 9
       Top = 138
       Width = 36
+      TabOrder = 9
       ExplicitTop = 138
       ExplicitWidth = 36
     end
     inherited ConstantCheckBox: TCheckBox
-      TabOrder = 4
       Top = 138
+      TabOrder = 4
       ExplicitTop = 138
     end
     inherited DelimitedRadioButton: TRadioButton
@@ -130,40 +132,44 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
       ExplicitTop = 204
     end
     object FormatEdit: TEdit [15]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
-      Text = 'FormatEdit'
       Left = 43
       Top = 93
       Width = 123
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 0
+      Text = 'FormatEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
     end
     object ConstantDatePicker: TDateTimePicker [16]
-      Anchors = [akLeft, akTop, akRight]
-      Date = 39076.3862335417
-      Time = 39076.3862335417
-      TabOrder = 5
       Left = 51
       Top = 155
       Width = 115
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      Date = 39076.386233541700000000
+      Time = 39076.386233541700000000
+      TabOrder = 5
       OnChange = ConstantDatePickerChange
     end
     object ConstantTimePicker: TDateTimePicker [17]
-      Anchors = [akLeft, akTop, akRight]
-      Date = 39076.3862335417
-      Time = 39076.3862335417
-      Kind = dtkTime
-      TabOrder = 6
       Left = 51
       Top = 177
       Width = 115
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      Date = 39076.386233541700000000
+      Time = 39076.386233541700000000
+      Kind = dtkTime
+      TabOrder = 6
       OnChange = ConstantTimePickerChange
     end
     object StylesButton: TButton [18]
+      Left = 150
+      Top = 117
+      Width = 15
+      Height = 17
       Anchors = [akTop, akRight]
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -173,20 +179,16 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 3
-      Left = 150
-      Top = 117
-      Width = 15
-      Height = 17
       OnClick = StylesButtonClick
     end
     object StylesEdit: TEdit [19]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
-      Text = 'FormatEdit'
       Left = 43
       Top = 115
       Width = 105
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 2
+      Text = 'FormatEdit'
       OnExit = StylesEditExit
       OnKeyPress = StylesEditKeyPress
     end

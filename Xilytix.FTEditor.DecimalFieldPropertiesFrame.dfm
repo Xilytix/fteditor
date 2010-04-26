@@ -72,8 +72,8 @@ inherited DecimalFieldPropertiesFrame: TDecimalFieldPropertiesFrame
   end
   inherited TopPanel: TPanel
     inherited DataTypeLabel: TLabel
-      Caption = 'Decimal'
       Width = 45
+      Caption = 'Decimal'
       ExplicitWidth = 45
     end
     inherited NameEdit: TEdit
@@ -82,7 +82,6 @@ inherited DecimalFieldPropertiesFrame: TDecimalFieldPropertiesFrame
     end
     inherited HeadingConstraintComboBox: TComboBoxEx
       TabOrder = 2
-      ExplicitWidth = 74
     end
     inherited NullConstantCheckBox: TCheckBox
       TabOrder = 3

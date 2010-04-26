@@ -15,7 +15,7 @@ uses
   Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, Borland.Vcl.ComCtrls, Borland.Vcl.ExtCtrls,
   Xilytix.FieldedText.BaseField,
   Xilytix.FTEditor.Binder,
-  Xilytix.FTEditor.EditEngine;
+  Xilytix.FTEditor.EditEngine, StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TBaseFieldPropertiesFrame = class(TFrame)

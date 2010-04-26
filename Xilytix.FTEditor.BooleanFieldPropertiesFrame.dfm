@@ -27,6 +27,8 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
       ExplicitWidth = 147
       ExplicitHeight = 111
       inherited ValueTabSheet: TTabSheet
+        ExplicitLeft = 0
+        ExplicitTop = 0
         ExplicitWidth = 127
         ExplicitHeight = 32
         inherited ValuePadAlignmentComboBox: TComboBoxEx
@@ -66,33 +68,33 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
     ExplicitWidth = 167
     ExplicitHeight = 210
     inherited DataTypeLabel: TLabel
-      Caption = 'Boolean'
       Width = 45
+      Caption = 'Boolean'
       ExplicitWidth = 45
     end
     object Label6: TLabel [4]
-      Caption = 'True Text'
-      FocusControl = TrueTextEdit
       Left = 3
       Top = 96
       Width = 47
       Height = 13
+      Caption = 'True Text'
+      FocusControl = TrueTextEdit
     end
     object Label27: TLabel [5]
-      Caption = 'False Text'
-      FocusControl = FalseTextEdit
       Left = 3
       Top = 117
       Width = 50
       Height = 13
+      Caption = 'False Text'
+      FocusControl = FalseTextEdit
     end
     object Label28: TLabel [6]
-      Caption = 'Styles'
-      FocusControl = StylesEdit
       Left = 3
       Top = 138
       Width = 29
       Height = 13
+      Caption = 'Styles'
+      FocusControl = StylesEdit
     end
     inherited NameEdit: TEdit
       TabOrder = 10
@@ -109,8 +111,8 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
       ExplicitTop = 175
     end
     inherited ConstantCheckBox: TCheckBox
-      TabOrder = 9
       Top = 158
+      TabOrder = 9
       ExplicitTop = 158
     end
     inherited DelimitedRadioButton: TRadioButton
@@ -118,39 +120,43 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
       ExplicitTop = 195
     end
     object TrueTextEdit: TEdit [14]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
-      Text = 'TrueTextEdit'
       Left = 57
       Top = 93
       Width = 109
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 0
+      Text = 'TrueTextEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
     end
     object FalseTextEdit: TEdit [15]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
-      Text = 'TrueTextEdit'
       Left = 57
       Top = 114
       Width = 109
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 2
+      Text = 'TrueTextEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
     end
     object StylesEdit: TEdit [16]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 3
-      Text = 'TrueTextEdit'
       Left = 57
       Top = 135
       Width = 91
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 3
+      Text = 'TrueTextEdit'
       OnExit = StylesEditExit
       OnKeyPress = StylesEditKeyPress
     end
     object StylesButton: TButton [17]
+      Left = 150
+      Top = 138
+      Width = 15
+      Height = 17
       Anchors = [akTop, akRight]
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -160,10 +166,6 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
-      Left = 150
-      Top = 138
-      Width = 15
-      Height = 17
       OnClick = StylesButtonClick
     end
     inherited FixedWidthRadioButton: TRadioButton
@@ -175,12 +177,12 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
       ExplicitWidth = 104
     end
     object ConstantValueCheckBox: TCheckBox [20]
-      Caption = '&Value'
-      TabOrder = 5
       Left = 21
       Top = 175
       Width = 49
       Height = 17
+      Caption = '&Value'
+      TabOrder = 5
       OnClick = CheckBoxClick
     end
     inherited HeadingsButton: TButton

@@ -2,6 +2,10 @@ inherited SequenceRedirect_ExactDateTimePropertiesFrame: TSequenceRedirect_Exact
   Height = 76
   ExplicitHeight = 76
   object Label2: TLabel [2]
+    Left = 2
+    Top = 18
+    Width = 89
+    Height = 13
     Caption = 'Exact DateTime'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -9,9 +13,5 @@ inherited SequenceRedirect_ExactDateTimePropertiesFrame: TSequenceRedirect_Exact
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    Left = 2
-    Top = 18
-    Width = 89
-    Height = 13
   end
 end

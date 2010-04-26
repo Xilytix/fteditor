@@ -27,7 +27,7 @@ uses
   Borland.Vcl.ExtCtrls,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Binder,
-  Xilytix.FTEditor.EditorFrame;
+  Xilytix.FTEditor.EditorFrame, StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TSourceFrame = class;

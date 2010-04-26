@@ -26,7 +26,7 @@ uses
   Xilytix.FTEditor.DecimalFieldPropertiesFrame,
   Xilytix.FTEditor.DateTimeFieldPropertiesFrame,
   Xilytix.FTEditor.BooleanFieldPropertiesFrame,
-  Xilytix.FTEditor.EditorFrame;
+  Xilytix.FTEditor.EditorFrame, StdCtrls, ComCtrls, ButtonGroup, ExtCtrls;
 
 type
   TFieldsFrame = class(TEditorFrame)

@@ -1,37 +1,41 @@
 object SequenceListFrame: TSequenceListFrame
-  TabOrder = 0
-  TabStop = True
   Left = 0
   Top = 0
   Width = 179
   Height = 95
+  TabOrder = 0
+  TabStop = True
   object ButtonsAndPropertyPanel: TPanel
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 0
     Left = 0
     Top = 0
     Width = 179
     Height = 74
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 0
     object PropertyButtonsSplitter: TSplitter
-      Align = alRight
-      AutoSnap = False
       Left = 79
       Top = 0
       Height = 74
+      Align = alRight
+      AutoSnap = False
       ExplicitLeft = 72
       ExplicitTop = -40
       ExplicitHeight = 124
     end
     object ButtonsPanel: TPanel
-      Align = alClient
-      BevelOuter = bvNone
-      TabOrder = 0
       Left = 0
       Top = 0
       Width = 79
       Height = 74
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 0
       object Buttons: TCategoryButtons
+        Left = 0
+        Top = 0
+        Width = 79
+        Height = 74
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -39,7 +43,6 @@ object SequenceListFrame: TSequenceListFrame
         ButtonFlow = cbfVertical
         ButtonWidth = 110
         ButtonOptions = [boFullSize, boShowCaptions, boBoldCaptions]
-        Height = 74
         Categories = <
           item
             Caption = 'Sequences'
@@ -62,9 +65,6 @@ object SequenceListFrame: TSequenceListFrame
         RegularButtonColor = 15660791
         SelectedButtonColor = 13361893
         TabOrder = 0
-        Width = 79
-        Left = 0
-        Top = 0
         OnDragDrop = ButtonsDragDrop
         OnDragOver = ButtonsDragOver
         OnMouseDown = ButtonsMouseDown
@@ -73,50 +73,49 @@ object SequenceListFrame: TSequenceListFrame
       end
     end
     object PropertiesPanel: TPanel
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 1
       Left = 82
       Top = 0
       Width = 97
       Height = 74
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 1
     end
   end
   object AddRemovePanel: TPanel
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 1
     Left = 0
     Top = 74
     Width = 179
     Height = 21
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
     DesignSize = (
       179
       21)
     object AddItemComboBox: TComboBoxEx
-      ItemsEx = <>
-      Style = csExDropDownList
-      ItemHeight = 16
-      TabOrder = 0
       Left = 0
       Top = 0
       Width = 125
       Height = 21
       Align = alLeft
+      ItemsEx = <>
+      Style = csExDropDownList
       Anchors = [akLeft, akTop, akRight, akBottom]
+      TabOrder = 0
       OnChange = AddItemComboBoxChange
       OnDropDown = AddItemComboBoxDropDown
       ExplicitHeight = 22
     end
     object RemoveButton: TButton
-      Caption = 'Rem'
-      TabOrder = 1
       Left = 140
       Top = 1
       Width = 37
       Height = 20
       Anchors = [akTop, akRight]
+      Caption = 'Rem'
       Enabled = False
+      TabOrder = 1
       OnClick = RemoveButtonClick
     end
   end

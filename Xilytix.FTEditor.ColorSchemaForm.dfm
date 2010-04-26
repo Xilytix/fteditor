@@ -1,4 +1,6 @@
 object ColorSchemaForm: TColorSchemaForm
+  Left = 377
+  Top = 126
   Caption = 'Load/Save Colour Schema'
   ClientHeight = 317
   ClientWidth = 366
@@ -8,96 +10,95 @@ object ColorSchemaForm: TColorSchemaForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  Left = 377
-  Top = 126
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 1
     Left = 0
     Top = 280
     Width = 366
     Height = 37
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
     DesignSize = (
       366
       37)
     object LoadSaveButton: TButton
-      Caption = 'LoadSave'
-      Default = True
-      ModalResult = 1
-      TabOrder = 0
       Left = 16
       Top = 6
       Width = 75
       Height = 25
+      Caption = 'LoadSave'
+      Default = True
+      ModalResult = 1
+      TabOrder = 0
     end
     object DeleteButton: TButton
-      Action = DeleteAction
-      TabOrder = 1
       Left = 128
       Top = 6
       Width = 75
       Height = 25
+      Action = DeleteAction
+      TabOrder = 1
     end
     object CancelButton: TButton
+      Left = 276
+      Top = 6
+      Width = 75
+      Height = 25
       Anchors = [akTop, akRight]
       Cancel = True
       Caption = 'Cancel'
       ModalResult = 2
       TabOrder = 2
-      Left = 276
-      Top = 6
-      Width = 75
-      Height = 25
     end
   end
   object SelectedPanel: TPanel
-    Align = alBottom
-    Alignment = taLeftJustify
-    BevelOuter = bvNone
-    TabOrder = 2
     Left = 0
     Top = 244
     Width = 366
     Height = 36
+    Align = alBottom
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    TabOrder = 2
     DesignSize = (
       366
       36)
     object LoadSaveAsLabel: TLabel
-      Caption = 'Save As'
-      FocusControl = SelectedEdit
       Left = 16
       Top = 12
       Width = 39
       Height = 13
+      Caption = 'Save As'
+      FocusControl = SelectedEdit
     end
     object SelectedEdit: TEdit
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
-      Text = 'SelectedEdit'
       Left = 62
       Top = 9
       Width = 289
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 0
+      Text = 'SelectedEdit'
     end
   end
   object SchemaButtonGroup: TButtonGroup
+    Left = 0
+    Top = 0
+    Width = 366
+    Height = 244
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
     ButtonWidth = 240
     ButtonOptions = [gboFullSize, gboGroupStyle, gboShowCaptions]
-    Height = 244
     Items = <>
     TabOrder = 0
-    Width = 366
-    Left = 0
-    Top = 0
     OnButtonClicked = SchemaButtonGroupButtonClicked
     OnKeyDown = SchemaButtonGroupKeyDown
   end

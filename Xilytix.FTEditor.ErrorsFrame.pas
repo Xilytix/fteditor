@@ -27,7 +27,7 @@ uses
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
-  Xilytix.FTEditor.EditorFrame;
+  Xilytix.FTEditor.EditorFrame, StdCtrls, ExtCtrls, Controls, Classes;
 
 type
   TErrorsFrame = class(TEditorFrame)

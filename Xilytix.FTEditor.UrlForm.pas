@@ -12,7 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.ActnList, Borland.Vcl.StdCtrls, System.ComponentModel;
+  Dialogs, Borland.Vcl.ActnList, Borland.Vcl.StdCtrls, System.ComponentModel, ActnList, StdCtrls;
 
 type
   TUrlForm = class(TForm)

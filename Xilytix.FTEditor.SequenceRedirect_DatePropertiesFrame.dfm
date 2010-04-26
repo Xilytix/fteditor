@@ -2,6 +2,10 @@ inherited SequenceRedirect_DatePropertiesFrame: TSequenceRedirect_DateProperties
   Height = 131
   ExplicitHeight = 131
   object Label2: TLabel [2]
+    Left = 2
+    Top = 18
+    Width = 27
+    Height = 13
     Caption = 'Date'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -9,10 +13,6 @@ inherited SequenceRedirect_DatePropertiesFrame: TSequenceRedirect_DateProperties
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    Left = 2
-    Top = 18
-    Width = 27
-    Height = 13
   end
   inherited TimePicker: TDateTimePicker
     Visible = False

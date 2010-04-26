@@ -8,7 +8,6 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     Width = 157
     Height = 199
     ExplicitTop = 176
-    ExplicitWidth = 159
     ExplicitHeight = 179
     inherited Bevel5: TBevel
       Width = 156
@@ -77,17 +76,17 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     ExplicitWidth = 169
     ExplicitHeight = 154
     inherited DataTypeLabel: TLabel
-      Caption = 'String'
       Width = 34
+      Caption = 'String'
       ExplicitWidth = 34
     end
     object Label8: TLabel [4]
-      Caption = '&Value'
-      FocusControl = ConstantValueEdit
       Left = 22
       Top = 113
       Width = 26
       Height = 13
+      Caption = '&Value'
+      FocusControl = ConstantValueEdit
     end
     inherited NameEdit: TEdit
       TabOrder = 8
@@ -98,13 +97,13 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
       ExplicitWidth = 82
     end
     object ConstantValueEdit: TEdit [9]
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
-      Text = 'ConstantValueEdit'
       Left = 53
       Top = 110
       Width = 104
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 2
+      Text = 'ConstantValueEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
       ExplicitWidth = 112
@@ -114,23 +113,23 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
       ExplicitTop = 93
     end
     inherited ConstantCheckBox: TCheckBox
-      TabOrder = 0
       Left = 0
       Top = 93
+      TabOrder = 0
       ExplicitLeft = 0
       ExplicitTop = 93
     end
     inherited DelimitedRadioButton: TRadioButton
-      TabOrder = 3
       Left = -2
       Top = 137
+      TabOrder = 3
       ExplicitLeft = -2
       ExplicitTop = 137
     end
     inherited FixedWidthRadioButton: TRadioButton
-      TabOrder = 5
       Left = 72
       Top = 137
+      TabOrder = 5
       ExplicitLeft = 72
       ExplicitTop = 137
     end

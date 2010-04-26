@@ -14,7 +14,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Xilytix.FTEditor.NumberFieldPropertiesFrame, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls,
   System.ComponentModel,
-  Xilytix.FieldedText.BaseField;
+  Xilytix.FieldedText.BaseField, StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TIntegerFieldPropertiesFrame = class(TNumberFieldPropertiesFrame)

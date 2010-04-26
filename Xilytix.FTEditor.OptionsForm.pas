@@ -27,7 +27,7 @@ uses
   Borland.Vcl.ActnList,
   Borland.Vcl.ButtonGroup,
   Xilytix.FTEditor.Colors,
-  Xilytix.FTEditor.Configuration;
+  Xilytix.FTEditor.Configuration, Dialogs, Classes, ActnList, ButtonGroup, StdCtrls, ExtCtrls, Controls, ComCtrls;
 
 type
   TOptionsForm = class(TForm)

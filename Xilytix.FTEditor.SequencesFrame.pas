@@ -28,7 +28,7 @@ uses
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.EditorFrame,
-  Xilytix.FTEditor.SequenceListFrame;
+  Xilytix.FTEditor.SequenceListFrame, ComCtrls, Classes, Controls;
 
 
 type
