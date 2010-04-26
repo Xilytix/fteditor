@@ -12,7 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, System.ComponentModel, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls;
+  Dialogs, System.ComponentModel, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls, StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TSequenceTreeFrame = class(TFrame)

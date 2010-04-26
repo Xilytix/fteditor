@@ -74,8 +74,8 @@ inherited FloatFieldPropertiesFrame: TFloatFieldPropertiesFrame
   end
   inherited TopPanel: TPanel
     inherited DataTypeLabel: TLabel
-      Caption = 'Float'
       Width = 28
+      Caption = 'Float'
       ExplicitWidth = 28
     end
     inherited NameEdit: TEdit
@@ -84,7 +84,6 @@ inherited FloatFieldPropertiesFrame: TFloatFieldPropertiesFrame
     end
     inherited HeadingConstraintComboBox: TComboBoxEx
       TabOrder = 2
-      ExplicitWidth = 74
     end
     inherited NullConstantCheckBox: TCheckBox
       TabOrder = 3

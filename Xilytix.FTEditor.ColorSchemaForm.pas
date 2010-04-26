@@ -13,7 +13,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, Borland.Vcl.ExtCtrls, Borland.Vcl.ButtonGroup,
-  Borland.Vcl.ActnList;
+  Borland.Vcl.ActnList, ActnList, ButtonGroup, StdCtrls, ExtCtrls;
 
 type
   TLoadSaveMode = (lsLoad, lsSave);

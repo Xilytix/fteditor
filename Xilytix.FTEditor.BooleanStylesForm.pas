@@ -13,7 +13,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, System.ComponentModel, Borland.Vcl.StdCtrls,
-  Xilytix.FieldedText.BaseField;
+  Xilytix.FieldedText.BaseField, StdCtrls;
 
 type
   TBooleanStylesForm = class(TForm)

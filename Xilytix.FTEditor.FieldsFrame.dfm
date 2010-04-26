@@ -5,33 +5,37 @@ inherited FieldsFrame: TFieldsFrame
   ExplicitWidth = 177
   ExplicitHeight = 4
   object Splitter: TSplitter
-    Align = alRight
-    ResizeStyle = rsUpdate
     Left = 12
     Top = 0
     Height = 4
+    Align = alRight
+    ResizeStyle = rsUpdate
     ExplicitLeft = 224
     ExplicitTop = 3
     ExplicitHeight = 225
   end
   object PropertiesPanel: TPanel
-    Align = alRight
-    BevelOuter = bvNone
-    TabOrder = 0
     Left = 15
     Top = 0
     Width = 162
     Height = 4
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 0
   end
   object FieldListPanel: TPanel
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 1
     Left = 0
     Top = 0
     Width = 12
     Height = 4
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 1
     object Label1: TLabel
+      Left = 0
+      Top = 0
+      Width = 12
+      Height = 13
       Align = alTop
       Alignment = taCenter
       Caption = 'Fields'
@@ -41,63 +45,58 @@ inherited FieldsFrame: TFieldsFrame
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      Left = 0
-      Top = 0
-      Width = 12
-      Height = 13
       ExplicitWidth = 32
     end
     object FieldsButtonGroup: TButtonGroup
+      Left = 0
+      Top = 13
+      Width = 12
+      Height = 24
       Align = alClient
       BevelEdges = []
       BevelInner = bvNone
       BevelOuter = bvNone
       BorderStyle = bsNone
       ButtonOptions = [gboAllowReorder, gboFullSize, gboGroupStyle, gboShowCaptions]
-      Height = 24
       Items = <>
       TabOrder = 0
-      Width = 12
-      Left = 0
-      Top = 13
       OnButtonClicked = FieldsButtonGroupButtonClicked
       OnReorderButton = FieldsButtonGroupReorderButton
       OnStartDrag = FieldsButtonGroupStartDrag
     end
     object FieldAddRemovePanel: TPanel
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 1
       Left = 0
       Top = -19
       Width = 12
       Height = 23
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 1
       object RemoveButton: TButton
-        Caption = 'Rem'
-        TabOrder = 0
+        AlignWithMargins = True
         Left = -15
         Top = 0
         Width = 27
         Height = 23
-        Align = alRight
-        AlignWithMargins = True
         Margins.Left = 10
         Margins.Top = 0
         Margins.Right = 0
         Margins.Bottom = 0
+        Align = alRight
+        Caption = 'Rem'
+        TabOrder = 0
         OnClick = RemoveButtonClick
       end
       object AddFieldComboBox: TComboBoxEx
-        ItemsEx.SortType = stText
-        ItemsEx = <>
-        Style = csExDropDownList
-        ItemHeight = 16
-        TabOrder = 1
         Left = 0
         Top = 0
         Width = 7
         Height = 22
         Align = alClient
+        ItemsEx.SortType = stText
+        ItemsEx = <>
+        Style = csExDropDownList
+        TabOrder = 1
         OnChange = AddFieldComboBoxChange
       end
     end

@@ -39,7 +39,7 @@ uses
   Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame,
-  Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame;
+  Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame, StdCtrls, ComCtrls, CategoryButtons, ExtCtrls;
 
 type
   TSequenceListFrame = class(TFrame)
@@ -83,7 +83,7 @@ type
       TItemInfoArray = array[TItemTypeId] of TItemInfoRec;
 
       TRedirectTypeInfoRec = record
-        &Type: TFieldedTextSequenceRedirectType;
+        RedirectType: TFieldedTextSequenceRedirectType;
         Id: TItemTypeId;
         FrameClass: TSequenceRedirect_BasePropertiesFrameClass;
       end;
@@ -111,16 +111,16 @@ type
 
       RedirectTypeInfoArray: TRedirectTypeInfoArray =
       (
-        (&Type: ftrtExactString; Id: itRedirect_ExactString; FrameClass: TSequenceRedirect_ExactStringPropertiesFrame),
-        (&Type: ftrtCaseInsensitiveString; Id: itRedirect_CaseInsensitiveString;
+        (RedirectType: ftrtExactString; Id: itRedirect_ExactString; FrameClass: TSequenceRedirect_ExactStringPropertiesFrame),
+        (RedirectType: ftrtCaseInsensitiveString; Id: itRedirect_CaseInsensitiveString;
                                            FrameClass: TSequenceRedirect_CaseInsensitiveStringPropertiesFrame),
-        (&Type: ftrtBoolean; Id: itRedirect_Boolean; FrameClass: TSequenceRedirect_BooleanPropertiesFrame),
-        (&Type: ftrtExactInteger; Id: itRedirect_ExactInteger; FrameClass: TSequenceRedirect_IntegerPropertiesFrame),
-        (&Type: ftrtExactFloat; Id: itRedirect_ExactFloat; FrameClass: TSequenceRedirect_FloatPropertiesFrame),
-        (&Type: ftrtExactDateTime; Id: itRedirect_ExactDateTime;
+        (RedirectType: ftrtBoolean; Id: itRedirect_Boolean; FrameClass: TSequenceRedirect_BooleanPropertiesFrame),
+        (RedirectType: ftrtExactInteger; Id: itRedirect_ExactInteger; FrameClass: TSequenceRedirect_IntegerPropertiesFrame),
+        (RedirectType: ftrtExactFloat; Id: itRedirect_ExactFloat; FrameClass: TSequenceRedirect_FloatPropertiesFrame),
+        (RedirectType: ftrtExactDateTime; Id: itRedirect_ExactDateTime;
                                    FrameClass: TSequenceRedirect_ExactDateTimePropertiesFrame),
-        (&Type: ftrtDate; Id: itRedirect_Date; FrameClass: TSequenceRedirect_DatePropertiesFrame),
-        (&Type: ftrtExactDecimal; Id: itRedirect_ExactDecimal; FrameClass: TSequenceRedirect_DecimalPropertiesFrame)
+        (RedirectType: ftrtDate; Id: itRedirect_Date; FrameClass: TSequenceRedirect_DatePropertiesFrame),
+        (RedirectType: ftrtExactDecimal; Id: itRedirect_ExactDecimal; FrameClass: TSequenceRedirect_DecimalPropertiesFrame)
       );
 
     var
@@ -528,7 +528,7 @@ begin
 
   for &Type := Low(TFieldedTextSequenceRedirectType) to High(TFieldedTextSequenceRedirectType) do
   begin
-    if &Type <> RedirectTypeInfoArray[&Type].&Type then
+    if &Type <> RedirectTypeInfoArray[&Type].RedirectType then
     begin
       raise Exception.Create('RedirectTypeInfoArray out of order');
     end;

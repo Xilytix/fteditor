@@ -13,7 +13,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Xilytix.FTEditor.BaseFieldPropertiesFrame, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls,
-  System.ComponentModel;
+  System.ComponentModel, StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TNumberFieldPropertiesFrame = class(TBaseFieldPropertiesFrame)

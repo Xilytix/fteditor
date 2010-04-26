@@ -14,7 +14,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   Xilytix.FieldedText.Sequence,
-  Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls, System.ComponentModel;
+  Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls, System.ComponentModel,
+  StdCtrls, ComCtrls;
 
 type
   TSequenceRedirect_FloatPropertiesFrame = class(TSequenceRedirect_BasePropertiesFrame)

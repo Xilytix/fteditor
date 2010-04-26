@@ -7,6 +7,10 @@ inherited SequenceRedirect_BasePropertiesFrame: TSequenceRedirect_BaseProperties
     104
     145)
   object Label1: TLabel
+    Left = 2
+    Top = 3
+    Width = 48
+    Height = 13
     Caption = 'Redirect'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -14,48 +18,42 @@ inherited SequenceRedirect_BasePropertiesFrame: TSequenceRedirect_BaseProperties
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    Left = 2
-    Top = 3
-    Width = 48
-    Height = 13
   end
   object Label3: TLabel
-    Caption = 'Sequence'
     Left = 2
     Top = 39
     Width = 47
     Height = 13
+    Caption = 'Sequence'
   end
   object InvokationDelayLabel: TLabel
-    Caption = 'Invokation Delay'
     Left = 2
     Top = 83
     Width = 81
     Height = 13
+    Caption = 'Invokation Delay'
   end
   object SequenceComboBox: TComboBoxEx
-    ItemsEx = <>
-    Style = csExDropDownList
-    ItemHeight = 16
-    TabOrder = 0
     Left = 2
     Top = 56
     Width = 100
     Height = 22
+    ItemsEx = <>
+    Style = csExDropDownList
     Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
     OnChange = SequenceComboBoxChange
     OnDropDown = SequenceComboBoxDropDown
   end
   object InvokationDelayComboBox: TComboBoxEx
-    ItemsEx = <>
-    Style = csExDropDownList
-    ItemHeight = 16
-    TabOrder = 1
     Left = 2
     Top = 99
     Width = 100
     Height = 22
+    ItemsEx = <>
+    Style = csExDropDownList
     Anchors = [akLeft, akTop, akRight]
+    TabOrder = 1
     OnChange = ComboBoxChange
   end
 end

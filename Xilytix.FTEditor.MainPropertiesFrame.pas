@@ -19,7 +19,7 @@ uses
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.EditorFrame,
   Xilytix.FTEditor.Binder,
-  Xilytix.FTEditor.EditEngine;
+  Xilytix.FTEditor.EditEngine, Grids, ValEdit, StdCtrls, ButtonGroup, ExtCtrls, ComCtrls;
 
 type
   TMainPropertiesFrame = class(TEditorFrame)

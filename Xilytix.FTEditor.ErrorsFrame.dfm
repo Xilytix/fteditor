@@ -4,20 +4,24 @@ inherited ErrorsFrame: TErrorsFrame
   ExplicitWidth = 1004
   ExplicitHeight = 4
   object TopSplitter: TSplitter
+    Left = 0
+    Top = 15
+    Width = 1004
+    Height = 3
+    Cursor = crVSplit
     Align = alTop
     AutoSnap = False
     Beveled = True
-    Cursor = crVSplit
     MinSize = 15
-    Width = 1004
-    Left = 0
-    Top = 15
-    Height = 3
     ExplicitLeft = 8
     ExplicitTop = 23
     ExplicitWidth = 626
   end
   object ErrorsMemo: TMemo
+    Left = 0
+    Top = 18
+    Width = 1004
+    Height = 22
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -33,25 +37,17 @@ inherited ErrorsFrame: TErrorsFrame
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 0
-    Left = 0
-    Top = 18
-    Width = 1004
-    Height = 22
-    ExplicitWidth = 1012
   end
   object TopFlowPanel: TFlowPanel
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 1
     Left = 0
     Top = 0
     Width = 1004
     Height = 15
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 1
     ExplicitWidth = 1012
     object LinePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 0
       AlignWithMargins = True
       Left = 4
       Top = 1
@@ -61,28 +57,28 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 0
       object Label1: TLabel
-        Caption = 'Line'
         Left = 0
         Top = 0
         Width = 19
         Height = 13
+        Caption = 'Line'
       end
       object LineEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 25
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object LinePosPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 1
       AlignWithMargins = True
       Left = 87
       Top = 1
@@ -92,29 +88,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 1
       object Label2: TLabel
-        Caption = 'Line Pos'
-        FocusControl = LinePosEdit
         Left = 0
         Top = 0
         Width = 39
         Height = 13
+        Caption = 'Line Pos'
+        FocusControl = LinePosEdit
       end
       object LinePosEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 44
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object RecordPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 3
       AlignWithMargins = True
       Left = 189
       Top = 1
@@ -124,29 +120,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 3
       object Label4: TLabel
-        Caption = 'Record'
-        FocusControl = RecordEdit
         Left = 0
         Top = 0
         Width = 34
         Height = 13
+        Caption = 'Record'
+        FocusControl = RecordEdit
       end
       object RecordEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 39
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object ActiveIndexPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 5
       AlignWithMargins = True
       Left = 286
       Top = 1
@@ -156,29 +152,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 5
       object Label6: TLabel
-        Caption = 'Active Index'
-        FocusControl = ActiveIndexEdit
         Left = 0
         Top = 0
         Width = 61
         Height = 13
+        Caption = 'Active Index'
+        FocusControl = ActiveIndexEdit
       end
       object ActiveIndexEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 66
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object FieldPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 7
       AlignWithMargins = True
       Left = 410
       Top = 1
@@ -188,29 +184,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 7
       object Label8: TLabel
-        Caption = 'Field'
-        FocusControl = FieldEdit
         Left = 0
         Top = 0
         Width = 22
         Height = 13
+        Caption = 'Field'
+        FocusControl = FieldEdit
       end
       object FieldEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 27
         Top = 0
         Width = 86
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object SequencePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 8
       AlignWithMargins = True
       Left = 531
       Top = 1
@@ -220,29 +216,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 8
       object Label9: TLabel
-        Caption = 'Sequence'
-        FocusControl = SequenceEdit
         Left = 0
         Top = 0
         Width = 47
         Height = 13
+        Caption = 'Sequence'
+        FocusControl = SequenceEdit
       end
       object SequenceEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 52
         Top = 0
         Width = 86
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object ItemIndexPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 6
       AlignWithMargins = True
       Left = 677
       Top = 1
@@ -252,29 +248,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 6
       object Label7: TLabel
-        Caption = 'Item Index'
-        FocusControl = ItemIndexEdit
         Left = 0
         Top = 0
         Width = 53
         Height = 13
+        Caption = 'Item Index'
+        FocusControl = ItemIndexEdit
       end
       object ItemIndexEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 58
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object FilePosPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 2
       AlignWithMargins = True
       Left = 793
       Top = 1
@@ -284,29 +280,29 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 2
       object Label3: TLabel
-        Caption = 'File Pos'
-        FocusControl = FilePosEdit
         Left = 0
         Top = 0
         Width = 36
         Height = 13
+        Caption = 'File Pos'
+        FocusControl = FilePosEdit
       end
       object FilePosEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 41
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object TablePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 4
       AlignWithMargins = True
       Left = 892
       Top = 1
@@ -316,23 +312,26 @@ inherited ErrorsFrame: TErrorsFrame
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 4
       object Label5: TLabel
-        Caption = 'Table'
-        FocusControl = TableEdit
         Left = 0
         Top = 0
         Width = 26
         Height = 13
+        Caption = 'Table'
+        FocusControl = TableEdit
       end
       object TableEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 31
         Top = 0
         Width = 50
         Height = 14
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
   end

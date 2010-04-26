@@ -1,4 +1,6 @@
 object BooleanStylesForm: TBooleanStylesForm
+  Left = 197
+  Top = 81
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Edit Boolean Styles'
@@ -10,71 +12,70 @@ object BooleanStylesForm: TBooleanStylesForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  Left = 197
-  Top = 81
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object OkButton: TButton
-    Caption = 'Ok'
-    Default = True
-    ModalResult = 1
-    TabOrder = 0
     Left = 13
     Top = 101
     Width = 59
     Height = 25
+    Caption = 'Ok'
+    Default = True
+    ModalResult = 1
+    TabOrder = 0
     OnClick = OkButtonClick
   end
   object CancelButton: TButton
-    Cancel = True
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 1
     Left = 111
     Top = 101
     Width = 58
     Height = 25
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
   end
   object IgnoreCaseCheckBox: TCheckBox
-    Caption = 'Ignore Case'
-    TabOrder = 2
+    Tag = 256
     Left = 13
     Top = 13
     Width = 134
     Height = 17
-    Tag = 256
+    Caption = 'Ignore Case'
+    TabOrder = 2
     OnClick = CheckBoxClick
   end
   object MatchFirstCharOnlyCheckBox: TCheckBox
-    Caption = 'Match First Character Only'
-    TabOrder = 3
+    Tag = 32
     Left = 13
     Top = 30
     Width = 164
     Height = 17
-    Tag = 32
+    Caption = 'Match First Character Only'
+    TabOrder = 3
     OnClick = CheckBoxClick
   end
   object IgnoreTrailingCharsCheckBox: TCheckBox
-    Caption = 'Ignore Trailing Characters'
-    TabOrder = 4
+    Tag = 128
     Left = 13
     Top = 47
     Width = 164
     Height = 17
-    Tag = 128
+    Caption = 'Ignore Trailing Characters'
+    TabOrder = 4
     OnClick = CheckBoxClick
   end
   object FalseIfNotMatchTrueCheckBox: TCheckBox
-    Caption = 'False If Not Match True'
-    TabOrder = 5
+    Tag = 512
     Left = 13
     Top = 64
     Width = 135
     Height = 17
-    Tag = 512
+    Caption = 'False If Not Match True'
+    TabOrder = 5
     OnClick = CheckBoxClick
   end
 end

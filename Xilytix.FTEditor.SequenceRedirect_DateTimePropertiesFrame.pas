@@ -13,7 +13,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls,
-  System.ComponentModel;
+  System.ComponentModel, ComCtrls, StdCtrls;
 
 type
   TSequenceRedirect_DateTimePropertiesFrame = class(TSequenceRedirect_BasePropertiesFrame)

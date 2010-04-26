@@ -12,6 +12,7 @@ interface
 
 uses
   Graphics,
+  XMLIntf,
   Xilytix.FTEditor.Common;
 
 type
@@ -129,6 +130,9 @@ type
 
     procedure StringsToColors;
     procedure ColorsToStrings;
+
+    procedure SaveToXml(XmlNode: IXMLNode);
+    procedure LoadFromXml(XmlNode: IXMLNode);
   end;
   TColorItemValues = array[TColorItemId] of TColorItemValue;
 
@@ -393,14 +397,14 @@ type
 implementation
 
 uses
-  System.Globalization,
-  System.IO;
+  SysUtils,
+  JclFileUtils;
 
 { TColorItems }
 
 class procedure TColorItems.CopyValues(const src: TColorItemValues; var dest: TColorItemValues);
 begin
-  System.&Array.Copy(src, dest, Length(src));
+  dest := Src;
 end;
 
 class procedure TColorItems.CopyDefaultValues(var dest: TColorItemValues);
@@ -475,7 +479,7 @@ end;
 
 procedure TColorItems.LoadFromScheme(scheme: TColorScheme);
 begin
-  System.&Array.Copy(scheme.Values, FValues, Length(scheme.Values));
+  FValues := scheme.Values;
 end;
 
 procedure TColorItems.PrepareForSerialize;
@@ -582,14 +586,24 @@ begin
   FontAsString := ColorToString(Font);
 end;
 
+procedure TColorItemValue.LoadFromXml(XmlNode: IXMLNode);
+begin
+
+end;
+
+procedure TColorItemValue.SaveToXml(XmlNode: IXMLNode);
+begin
+
+end;
+
 procedure TColorItemValue.StringsToColors;
 begin
-  if Assigned(BackgroundAsString) then
+  if BackgroundAsString <> '' then
   begin
     Background := StringToColor(BackgroundAsString);
   end;
 
-  if Assigned(FontAsString) then
+  if FontAsString <> '' then
   begin
     Font := StringToColor(FontAsString);
   end;
@@ -645,7 +659,7 @@ end;
 class function TColorScheme.NameToFilePath(value: string): string;
 begin
   Result := NameToFileName(value);
-  Result := Path.Combine(TCommon.ColorSchemaFolder, Result);
+  Result := PathAppend(TCommon.ColorSchemaFolder, Result);
 end;
 
 procedure TColorScheme.SaveToFile;
@@ -670,7 +684,7 @@ class function TColorScheme.TryFileNameToName(fileName: string; out schemeName: 
 var
   NoExtFileName: string;
 begin
-  NoExtFileName := Path.GetFileNameWithoutExtension(fileName);
+  NoExtFileName := PathExtractFileNameNoExt(fileName);
   Result := TCommon.TrySafeFileNameDecode(NoExtFileName, schemeName) = 0;
 end;
 

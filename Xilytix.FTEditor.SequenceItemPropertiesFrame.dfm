@@ -4,20 +4,24 @@ inherited SequenceItemPropertiesFrame: TSequenceItemPropertiesFrame
   ExplicitWidth = 104
   ExplicitHeight = 85
   object Label1: TLabel
-    Caption = 'Field'
     Left = 2
     Top = 24
     Width = 22
     Height = 13
+    Caption = 'Field'
   end
   object Label2: TLabel
-    Caption = 'Redirects'
     Left = 2
     Top = 69
     Width = 45
     Height = 13
+    Caption = 'Redirects'
   end
   object Label3: TLabel
+    Left = 3
+    Top = 3
+    Width = 86
+    Height = 13
     Caption = 'Sequence Item'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -25,40 +29,35 @@ inherited SequenceItemPropertiesFrame: TSequenceItemPropertiesFrame
     Font.Name = 'Tahoma'
     Font.Style = [fsBold]
     ParentFont = False
-    Left = 3
-    Top = 3
-    Width = 86
-    Height = 13
   end
   object RedirectsCountLabel: TLabel
-    Caption = '0'
     Left = 56
     Top = 69
     Width = 6
     Height = 13
+    Caption = '0'
   end
   object FieldComboBox: TComboBoxEx
-    ItemsEx = <>
-    Style = csExDropDownList
-    ItemHeight = 16
-    TabOrder = 0
     Left = 1
     Top = 40
     Width = 101
     Height = 22
+    ItemsEx = <>
+    Style = csExDropDownList
     Anchors = [akLeft, akTop, akRight]
-    DropDownCount = 10
+    TabOrder = 0
     OnChange = FieldComboBoxChange
     OnDropDown = FieldComboBoxDropDown
+    DropDownCount = 10
   end
   object SortCheckBox: TCheckBox
-    Caption = 'Sort'
-    TabOrder = 1
     Left = 65
     Top = 23
     Width = 39
     Height = 17
     Anchors = [akTop, akRight]
+    Caption = 'Sort'
+    TabOrder = 1
     OnClick = SortCheckBoxClick
   end
 end
