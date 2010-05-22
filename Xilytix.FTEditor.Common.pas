@@ -63,14 +63,21 @@ type
     class function TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Integer;
   end;
 
+  TNonRefCountedInterfacedObject = class(TObject, IInterface)
+  protected
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
+  end;
+
 implementation
 
 uses
   Windows,
   SysUtils,
+  IOUtils,
   Forms,
   SHFolder,
-  JclFileUtils,
   PJVersionInfo;
 
 { TCommon }
@@ -95,8 +102,8 @@ begin
   else
   begin
     PathAsString := Path;
-    FApplicationDataFolder := PathAppend(PathAsString, PublisherName);
-    FApplicationDataFolder := PathAppend(FApplicationDataFolder, ProgramName);
+    FApplicationDataFolder := TPath.Combine(PathAsString, PublisherName);
+    FApplicationDataFolder := TPath.Combine(FApplicationDataFolder, ProgramName);
   end;
 
   VersionInfo := TPJVersionInfo.Create(nil);
@@ -106,7 +113,7 @@ begin
     VersionInfo.Free;
   end;
 
-  FColorSchemaFolder := PathAppend(FApplicationDataFolder, ColorSchemaSubFolder);
+  FColorSchemaFolder := TPath.Combine(FApplicationDataFolder, ColorSchemaSubFolder);
 end;
 
 class procedure TCommon.EnsureColorSchemaFolderExists;
@@ -363,6 +370,26 @@ begin
   end;
 
   Result := Bldr.ToString;
+end;
+
+{ TNonRefCountedInterfacedObject }
+
+function TNonRefCountedInterfacedObject.QueryInterface(const IID: TGUID; out Obj): HResult;
+begin
+  if GetInterface(IID, Obj) then
+    Result := 0
+  else
+    Result := E_NOINTERFACE;
+end;
+
+function TNonRefCountedInterfacedObject._AddRef: Integer;
+begin
+  Result := -1;
+end;
+
+function TNonRefCountedInterfacedObject._Release: Integer;
+begin
+  Result := -1;
 end;
 
 end.

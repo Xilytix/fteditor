@@ -115,62 +115,7 @@ type
   );
 
   TColorItemValue = record
-    [XmlAttribute]
-    Id: TColorItemId;
-    [XmlIgnore]
-    Background: TColor;
-    [XmlAttribute]
-    BackgroundAsString: string;
-    [XmlIgnore]
-    Font: TColor;
-    [XmlAttribute]
-    FontAsString: string;
-    [XmlAttribute]
-    FontStyles: TFontStyles;
-
-    procedure StringsToColors;
-    procedure ColorsToStrings;
-
-    procedure SaveToXml(XmlNode: IXMLNode);
-    procedure LoadFromXml(XmlNode: IXMLNode);
-  end;
-  TColorItemValues = array[TColorItemId] of TColorItemValue;
-
-  TColorScheme = class
-  strict private
-    FName: string;
-    FValues: TColorItemValues;
   public
-    const
-      DefaultSchemeName = '<Default>';
-      FileExtension = 'ftecs';
-      FileNameFirstChar = TCommon.SafeFileNamePrefix;
-
-
-    property Name: string read FName write FName;
-    property Values: TColorItemValues read FValues write FValues;
-
-    constructor Create; overload;
-    constructor Create(myName: string; myValues: TColorItemValues); overload;
-    class function CreateFromFile(schemeName: string): TColorScheme;
-    procedure SaveToFile;
-
-    class function IsDefaultName(value: string): Boolean;
-    class function NameToFileName(value: string): string;
-    class function TryFileNameToName(fileName: string; out schemeName: string): Boolean;
-    class function NameToFilePath(value: string): string;
-  end;
-
-
-  TResolvedColor = record
-    Background: TColor;
-    Font: TColor;
-    FontStyles: TFontStyles;
-  end;
-  TResolvedColors = array[TResolvedColorId] of TResolvedColor;
-
-  TColorItems = class
-  strict private
     type
       TColorItemConstant = record
         Id: TColorItemId;
@@ -180,15 +125,6 @@ type
         IgnoreFont: Boolean;
       end;
       TColorItemConstants = array[TColorItemId] of TColorItemConstant;
-
-      TSurface = (sfText, sfGrid, sfOther);
-
-      TResolver = record
-        Id: TResolvedColorId;
-        Surface: TSurface;
-        ItemId: TColorItemId;
-      end;
-      TResolvers = array[TResolvedColorId] of TResolver;
 
     const
       Constants: TColorItemConstants =
@@ -241,6 +177,84 @@ type
         (Id: ciBeyondBoundary; Name: 'BeyondBoundary'; Example: rcGridBeyondBoundary)
       );
 
+      XmlTag_Id = 'Id';
+      XmlTag_Background = 'Bkgd';
+      XmlTag_Font = 'Font';
+      XmlTag_FontStyles = 'FontStyles';
+
+    var
+      [XmlAttribute]
+      Id: TColorItemId;
+      [XmlIgnore]
+      Background: TColor;
+      [XmlIgnore]
+      Font: TColor;
+      [XmlAttribute]
+      FontStyles: TFontStyles;
+
+    class constructor Create;
+
+    procedure StringsToColors;
+    procedure ColorsToStrings;
+
+    procedure SaveToXml(XmlNode: IXMLNode);
+    procedure LoadFromXml(XmlNode: IXMLNode);
+  end;
+  TColorItemValues = array[TColorItemId] of TColorItemValue;
+
+  TColorScheme = class
+  strict private
+    const
+      XmlTag_Root = 'ColorScheme';
+
+    var
+      FName: string;
+      FValues: TColorItemValues;
+
+      procedure LoadFromXml(Node: IXMLNode);
+      procedure SaveToXml(XmlNode: IXMLNode);
+
+  public
+    const
+      DefaultSchemeName = '<Default>';
+      FileExtension = 'ftecs';
+      FileNameFirstChar = TCommon.SafeFileNamePrefix;
+
+    property Name: string read FName write FName;
+    property Values: TColorItemValues read FValues write FValues;
+
+    constructor Create; overload;
+    constructor Create(const myName: string; myValues: TColorItemValues); overload;
+    class function CreateFromFile(const schemeName: string): TColorScheme;
+    procedure SaveToFile;
+
+    class function IsDefaultName(const value: string): Boolean;
+    class function NameToFileName(const value: string): string;
+    class function TryFileNameToName(const fileName: string; out schemeName: string): Boolean;
+    class function NameToFilePath(const value: string): string;
+  end;
+
+
+  TResolvedColor = record
+    Background: TColor;
+    Font: TColor;
+    FontStyles: TFontStyles;
+  end;
+  TResolvedColors = array[TResolvedColorId] of TResolvedColor;
+
+  TColorItems = class
+  strict private
+    type
+      TSurface = (sfText, sfGrid, sfOther);
+
+      TResolver = record
+        Id: TResolvedColorId;
+        Surface: TSurface;
+        ItemId: TColorItemId;
+      end;
+      TResolvers = array[TResolvedColorId] of TResolver;
+
+    const
       DefaultValues: TColorItemValues =
       (
         (Id: ciActiveFrameHeader;   Background: clMoneyGreen; Font: clBlack),
@@ -374,18 +388,12 @@ type
 
     property Values: TColorItemValues read FValues write FValues;
 
-    [XmlIgnore]
     property IgnoreBackgrounds[id: TColorItemId]: Boolean read GetIgnoreBackgrounds;
-    [XmlIgnore]
     property IgnoreFonts[id: TColorItemId]: Boolean read GetIgnoreFonts;
-    [XmlIgnore]
     property Backgrounds[id: TColorItemId]: TColor read GetBackgrounds write SetBackgrounds;
-    [XmlIgnore]
     property Fonts[id: TColorItemId]: TColor read GetFonts write SetFonts;
-    [XmlIgnore]
     property FontStyles[id: TColorItemId]: TFontStyles read GetFontStyles write SetFontStyles;
 
-    [XmlIgnore]
     property ExampleResolvedColorIds[id: TColorItemId]: TResolvedColorId read GetExampleResolvedColorIds;
 
     class procedure CopyValues(const src: TColorItemValues; var dest: TColorItemValues);
@@ -398,7 +406,10 @@ implementation
 
 uses
   SysUtils,
-  JclFileUtils;
+  IOUtils,
+  Classes,
+  XmlDoc,
+  Xilytix.FieldedText.Utils;
 
 { TColorItems }
 
@@ -425,14 +436,6 @@ begin
     end;
   end;
 
-  for ColorItemId := Low(Constants) to High(Constants) do
-  begin
-    if ColorItemId <> Constants[ColorItemId].Id then
-    begin
-      raise Exception.Create('Color Constants our of order');
-    end;
-  end;
-
   for ResolvedColorId := Low(Resolvers) to High(Resolvers) do
   begin
     if ResolvedColorId <> Resolvers[ResolvedColorId].Id then
@@ -449,7 +452,7 @@ end;
 
 function TColorItems.GetExampleResolvedColorIds(id: TColorItemId): TResolvedColorId;
 begin
-  Result := Constants[id].Example;
+  Result := TColorItemValue.Constants[id].Example;
 end;
 
 function TColorItems.GetFonts(id: TColorItemId): TColor;
@@ -464,17 +467,17 @@ end;
 
 function TColorItems.GetIgnoreBackgrounds(id: TColorItemId): Boolean;
 begin
-  Result := Constants[id].IgnoreBackground;
+  Result := TColorItemValue.Constants[id].IgnoreBackground;
 end;
 
 function TColorItems.GetIgnoreFonts(id: TColorItemId): Boolean;
 begin
-  Result := Constants[id].IgnoreFont;
+  Result := TColorItemValue.Constants[id].IgnoreFont;
 end;
 
 class function TColorItems.GetNames(id: TColorItemId): string;
 begin
-  Result := Constants[id].Name;
+  Result := TColorItemValue.Constants[id].Name;
 end;
 
 procedure TColorItems.LoadFromScheme(scheme: TColorScheme);
@@ -531,7 +534,6 @@ begin
 
 
   ResolveGridColor(rcGridHeadingRow, ciHeadingRow, Result);
-
 end;
 
 procedure TColorItems.ResolveColor(resolvedId: TResolvedColorId; itemId: TColorItemId; defaultBackgroundColor,
@@ -586,6 +588,19 @@ begin
   FontAsString := ColorToString(Font);
 end;
 
+class constructor TColorItemValue.Create;
+var
+  ColorItemId: TColorItemId;
+begin
+  for ColorItemId := Low(Constants) to High(Constants) do
+  begin
+    if ColorItemId <> Constants[ColorItemId].Id then
+    begin
+      raise Exception.Create('Color Constants our of order');
+    end;
+  end;
+end;
+
 procedure TColorItemValue.LoadFromXml(XmlNode: IXMLNode);
 begin
 
@@ -593,7 +608,7 @@ end;
 
 procedure TColorItemValue.SaveToXml(XmlNode: IXMLNode);
 begin
-
+  XmlNode.Attributes[XmlTag_Id] :=
 end;
 
 procedure TColorItemValue.StringsToColors;
@@ -611,7 +626,7 @@ end;
 
 { TColorScheme }
 
-constructor TColorScheme.Create(myName: string; myValues: TColorItemValues);
+constructor TColorScheme.Create(const myName: string; myValues: TColorItemValues);
 begin
   inherited Create;
 
@@ -624,67 +639,87 @@ begin
   inherited Create;
 end;
 
-class function TColorScheme.CreateFromFile(schemeName: string): TColorScheme;
+class function TColorScheme.CreateFromFile(const schemeName: string): TColorScheme;
 var
   FilePath: string;
-  Serializer: XmlSerializer;
-  Reader: TextReader;
+  XMLDocument: IXMLDocument;
+  RootNode: IXmlNode;
+  Strm: TFileStream;
 begin
   FilePath := NameToFilePath(schemeName);
-  if not &File.Exists(FilePath) then
+  if not FileExists(FilePath) then
     Result := nil
   else
   begin
-    Serializer := XmlSerializer.Create(TypeOf(TColorScheme));
-    Reader := StreamReader.Create(FilePath);
+    Strm := TFileStream.Create(FilePath, fmOpenRead or fmShareDenyWrite);
     try
-      Result := Serializer.Deserialize(Reader) as TColorScheme;
+      XMLDocument := TXmlDocument.Create('') as IXMLDocument;
+      XMLDocument.LoadFromStream(Strm);
     finally
-      Reader.Close;
+      Strm.Free;
     end;
+
+    Result := TColorScheme.Create;
     Result.Name := schemeName;
+    Result.LoadFromXml(XMLDocument.DocumentElement);
   end;
 end;
 
-class function TColorScheme.IsDefaultName(value: string): Boolean;
+class function TColorScheme.IsDefaultName(const value: string): Boolean;
 begin
-  Result := System.&String.Compare(value, DefaultSchemeName, True, CultureInfo.InvariantCulture) = 0;
+  Result := InvariantSameString(Value, DefaultSchemeName, True);
 end;
 
-class function TColorScheme.NameToFileName(value: string): string;
+procedure TColorScheme.LoadFromXml(Node: IXMLNode);
+begin
+
+end;
+
+class function TColorScheme.NameToFileName(const value: string): string;
 begin
   Result := TCommon.SafeFileNameEncode(value) + '.' + FileExtension;
 end;
 
-class function TColorScheme.NameToFilePath(value: string): string;
+class function TColorScheme.NameToFilePath(const value: string): string;
 begin
   Result := NameToFileName(value);
-  Result := PathAppend(TCommon.ColorSchemaFolder, Result);
+  Result := TPath.Combine(TCommon.ColorSchemaFolder, Result);
 end;
 
 procedure TColorScheme.SaveToFile;
 var
   FilePath: string;
-  Serializer: XmlSerializer;
-  Writer: TextWriter;
+  XMLDocument: IXMLDocument;
+  RootNode: IXmlNode;
+  Strm: TFileStream;
 begin
   TCommon.EnsureColorSchemaFolderExists;
 
   FilePath := NameToFilePath(Name);
-  Serializer := XmlSerializer.Create(TypeOf(TColorScheme));
-  Writer := StreamWriter.Create(FilePath);
+  XMLDocument := TXMLDocument.Create('') as IXMLDocument;
+  XMLDocument.Active := True;
+  RootNode := XMLDocument.AddChild(XmlTag_Root) as IXMLNode;
+
+  SaveToXml(RootNode);
+
+  Strm := TFileStream.Create(FilePath, fmCreate or fmShareExclusive);
   try
-    Serializer.Serialize(Writer, Self);
+    XmlDocument.SaveToStream(Strm);
   finally
-    Writer.Close;
+    Strm.Free;
   end;
 end;
 
-class function TColorScheme.TryFileNameToName(fileName: string; out schemeName: string): Boolean;
+procedure TColorScheme.SaveToXml(XmlNode: IXMLNode);
+begin
+
+end;
+
+class function TColorScheme.TryFileNameToName(const fileName: string; out schemeName: string): Boolean;
 var
   NoExtFileName: string;
 begin
-  NoExtFileName := PathExtractFileNameNoExt(fileName);
+  NoExtFileName := TPath.GetFileNameWithoutExtension(fileName);
   Result := TCommon.TrySafeFileNameDecode(NoExtFileName, schemeName) = 0;
 end;
 
