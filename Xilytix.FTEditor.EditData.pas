@@ -11,7 +11,12 @@ unit Xilytix.FTEditor.EditData;
 interface
 
 uses
+  Contnrs,
+  Generics.Defaults,
+  Generics.Collections,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Sequence,
+  Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Colors;
 
 type
@@ -30,7 +35,7 @@ type
     FTextLength: Integer;
     FRichLength: Integer;
     FRow: TRow;
-    FDisplayCulture: CultureInfo;
+    FDisplayCulture: TLocaleSettings;
     FError: Boolean;
 
     FGridResolvedColorId: TResolvedColorId;
@@ -48,7 +53,7 @@ type
                        myTextLength: Integer;
                        myRichLength: Integer;
                        myRow: TRow;
-                       myDisplayCulture: CultureInfo);
+                       myDisplayCulture: TLocaleSettings);
     property ActiveIndex: Integer read FActiveIndex;
     property SequenceItem: TFieldedTextSequenceItem read FSequenceItem;
     property FilePos: Int64 read FFilePos;
@@ -69,14 +74,13 @@ type
     property TextResolvedColorId: TResolvedColorId read FTextResolvedColorId write FTextResolvedColorId;
   end;
 
-  TCellCollection = class(CollectionBase)
+  TCellCollection = class(TObjectList)
   strict private
     function GetCells(idx: Integer): TCell;
     function GetLast: TCell;
   public
     property Cells[idx: Integer]: TCell read GetCells; default;
     property Last: TCell read GetLast;
-    function Add(cell: TCell): Integer;
   end;
 
   TRow = class
@@ -117,7 +121,7 @@ type
   TEditData = class
   strict private
     type
-      TAllCellsEntry = class(TObject, IComparable)
+      TAllCellsEntry = class(TNonRefCountedInterfacedObject, IComparable)
         Col: Integer;
         Row: Integer;
         Cell: TCell;
@@ -127,7 +131,7 @@ type
         function CompareTo(obj: TObject): Integer;
       end;
 
-      TAllCells = class(ArrayList)
+      TAllCells = class(TList<TAllCellsEntry>)
       strict private
         function GetCells(idx: Integer): TCell;
         function GetCols(idx: Integer): Integer;
@@ -141,7 +145,7 @@ type
         function Find(richPos: Integer; out idx: Integer): Boolean;
       end;
 
-      TRows = class(CollectionBase)
+      TRows = class(TObjectList)
       strict private
         function GetRows(idx: Integer): TRow;
         function GetLastRow: TRow;
@@ -149,11 +153,9 @@ type
         property Rows[idx: Integer]: TRow read GetRows; default;
         property LastRow: TRow read GetLastRow;
         function CheckGetRow(idx: Integer): TRow;
-
-        function AddRow(row: TRow): Integer;
       end;
 
-      TLineRec = record(IComparable)
+      TLineRec = record
         FilePos: Int64;
         RichPos: Integer;
         Length: Integer;
@@ -176,7 +178,7 @@ type
 
       FMainHeadingRow: TRow;
 
-      FDisplayCulture: CultureInfo;
+      FDisplayCulture: TLocaleSettings;
 
     procedure GrowLines;
 
@@ -196,7 +198,7 @@ type
     property LastRow: TRow read GetLastRow;
     property LastRowIdx: Integer read GetLastRowIdx;
   public
-    constructor Create(myDisplayCulture: CultureInfo);
+    constructor Create(myDisplayCulture: TLocaleSettings);
     property RowCount: Integer read GetRowCount;
     property HeadingCount: Integer read FHeadingCount;
     property Heading[aCol: Integer]: string read GetHeading;
@@ -213,7 +215,7 @@ type
     property RecordCount: Integer read FRecordCount;
 
     procedure Reset;
-    procedure ResetParsing(myDisplayCulture: CultureInfo);
+    procedure ResetParsing(myDisplayCulture: TLocaleSettings);
     procedure Resolve;
 
     procedure StartLine(const filePos: Int64);
@@ -230,7 +232,7 @@ type
 
     procedure FindCellAtRichPos(pos: Integer; out aCell: TCell; out aCol, aRow: Integer);
 
-    property DisplayCulture: CultureInfo read FDisplayCulture write FDisplayCulture;
+    property DisplayCulture: TLocaleSettings read FDisplayCulture write FDisplayCulture;
   end;
 
 implementation
@@ -250,7 +252,7 @@ constructor TCell.Create(myActiveIndex: Integer;
   myTextLength: Integer;
   myRichLength: Integer;
   myRow: TRow;
-  myDisplayCulture: CultureInfo);
+  myDisplayCulture: TLocaleSettings);
 begin
   inherited Create;
   FActiveIndex := myActiveIndex;
@@ -477,7 +479,7 @@ begin
   Result := FRows.CheckGetRow(aRow);
 end;
 
-constructor TEditData.Create(myDisplayCulture: CultureInfo);
+constructor TEditData.Create(myDisplayCulture: TLocaleSettings);
 begin
   inherited Create;
 
@@ -665,11 +667,6 @@ end;
 
 { TEditData.TRows }
 
-function TEditData.TRows.AddRow(row: TRow): Integer;
-begin
-  Result := InnerList.Add(row);
-end;
-
 function TEditData.TRows.CheckGetRow(idx: Integer): TRow;
 begin
   if (idx < 0) or (idx >= Count) then
@@ -685,19 +682,14 @@ end;
 
 function TEditData.TRows.GetRows(idx: Integer): TRow;
 begin
-  Result := InnerList[idx] as TRow;
+  Result := TRow(Items[idx]);
 end;
 
 { TCellCollection }
 
-function TCellCollection.Add(cell: TCell): Integer;
-begin
-  Result := InnerList.Add(cell);
-end;
-
 function TCellCollection.GetCells(idx: Integer): TCell;
 begin
-  Result := InnerList[idx] as TCell;
+  Result := TCell(Items[idx]);
 end;
 
 function TCellCollection.GetLast: TCell;

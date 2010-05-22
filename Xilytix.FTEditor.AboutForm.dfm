@@ -58,9 +58,9 @@ object AboutForm: TAboutForm
   object Label3: TLabel
     Left = 7
     Top = 105
-    Width = 72
+    Width = 131
     Height = 16
-    Caption = 'Licence: GPL'
+    Caption = 'Licence: Public Domain'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13

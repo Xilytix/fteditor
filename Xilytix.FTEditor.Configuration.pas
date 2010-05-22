@@ -11,11 +11,10 @@ unit Xilytix.FTEditor.Configuration;
 interface
 
 uses
-  System.Text,
-  System.Globalization,
-  System.Xml,
-  System.Xml.Serialization,
-  Borland.Vcl.Graphics,
+  SysUtils,
+  Graphics,
+  XMLIntf,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Colors;
 
@@ -49,10 +48,10 @@ type
       XmlFileName = 'FTEditorConfig.xml';
 
     var
-      FXmlElementHolder: XmlDocument;
+      FXmlElementHolder: IXmlDocument;
 
       FActiveLayoutConfigurationName: string;
-      FLayoutConfigurations: XmlElement;
+      FLayoutConfigurations: IXMLNode;
       FMainWindowMaximised: Boolean;
       FMainWindowWidth: Integer;
       FMainWindowTop: Integer;
@@ -66,10 +65,10 @@ type
 
       FDefaultNonViewableCharFormat: TNonViewableCharFormat;
       FDisplayCultureType: TDisplayCultureType;
-      FNamedDisplayCulture: CultureInfo;
+      FNamedDisplayCulture: TLocaleSettings;
       FNamedDisplayCultureName: string;
       FDisplayCharEncodingType: TDisplayCharEncodingType;
-      FNamedDisplayCharEncoding: Encoding;
+      FNamedDisplayCharEncoding: TEncoding;
       FNamedDisplayCharEncodingName: string;
 
       FTextFont: TFont;
@@ -96,7 +95,7 @@ type
 
       FResetMetaForNewOpenText: Boolean;
       FIgnoreDeclaredMeta: Boolean;
-      FMetaTextFormatting: System.Xml.Formatting;
+      FMetaTextFormatting: Boolean;
       FMetaTextIndentation: Integer;
       FMetaTextIndentChar: Char;
       FEmbeddedMetaMargin: Integer;
@@ -116,9 +115,9 @@ type
 
     function GetMouseOverPanelHeight: Integer;
 
-    procedure SetNamedDisplayCharEncoding(const Value: Encoding);
+    procedure SetNamedDisplayCharEncoding(const Value: TEncoding);
     procedure SetNamedDisplayCharEncodingName(const Value: string);
-    procedure SetNamedDisplayCulture(const Value: CultureInfo);
+    procedure SetNamedDisplayCulture(const Value: TLocaleSettings);
     procedure SetNamedDisplayCultureName(const Value: string);
 
     procedure SetGridFont(const Value: TFont);
@@ -127,18 +126,20 @@ type
   public
     const
       MinMouseOverPanelHeight = 19;
+      DefaultDefaultTextCharEncodingName = TFieldedTextConst.Utf8EncodingName;
+      DefaultDefaultMetaCharEncodingName = TFieldedTextConst.Utf8EncodingName;
 
     constructor Create;
     procedure Initialise;
 
-    class function Load: TConfiguration;
+    procedure Load;
     procedure Save;
 
     [XmlIgnore]
-    property XmlElementHolder: XmlDocument read FXmlElementHolder;
+    property XmlElementHolder: IXmlDocument read FXmlElementHolder;
 
     property ActiveLayoutConfigurationName: string read FActiveLayoutConfigurationName write FActiveLayoutConfigurationName;
-    property LayoutConfigurations: XmlElement read FLayoutConfigurations write FLayoutConfigurations;
+    property LayoutConfigurations: IXMLNode read FLayoutConfigurations write FLayoutConfigurations;
     property MainWindowMaximised: Boolean read FMainWindowMaximised write FMainWindowMaximised;
     property MainWindowTop: Integer read FMainWindowTop write FMainWindowTop;
     property MainWindowLeft: Integer read FMainWindowLeft write FMainWindowLeft;
@@ -153,11 +154,11 @@ type
     property DefaultNonViewableCharFormat: TNonViewableCharFormat read FDefaultNonViewableCharFormat write FDefaultNonViewableCharFormat;
     property DisplayCultureType: TDisplayCultureType read FDisplayCultureType write FDisplayCultureType;
     [XmlIgnore]
-    property NamedDisplayCulture: CultureInfo read FNamedDisplayCulture write SetNamedDisplayCulture;
+    property NamedDisplayCulture: TLocaleSettings read FNamedDisplayCulture write SetNamedDisplayCulture;
     property NamedDisplayCultureName: string read FNamedDisplayCultureName write SetNamedDisplayCultureName;
     property DisplayCharEncodingType: TDisplayCharEncodingType read FDisplayCharEncodingType write FDisplayCharEncodingType;
     [XmlIgnore]
-    property NamedDisplayCharEncoding: Encoding read FNamedDisplayCharEncoding write SetNamedDisplayCharEncoding;
+    property NamedDisplayCharEncoding: TEncoding read FNamedDisplayCharEncoding write SetNamedDisplayCharEncoding;
     property NamedDisplayCharEncodingName: string read FNamedDisplayCharEncodingName write SetNamedDisplayCharEncodingName;
 
     [XmlIgnore]
@@ -190,7 +191,7 @@ type
 
     property ResetMetaForNewOpenText: Boolean read FResetMetaForNewOpenText write FResetMetaForNewOpenText;
     property IgnoreDeclaredMeta: Boolean read FIgnoreDeclaredMeta write FIgnoreDeclaredMeta;
-    property MetaTextFormatting: System.Xml.Formatting read FMetaTextFormatting write FMetaTextFormatting;
+    property MetaTextFormatting: Boolean read FMetaTextFormatting write FMetaTextFormatting;
     property MetaTextIndentation: Integer read FMetaTextIndentation write FMetaTextIndentation;
     property MetaTextIndentChar: Char read FMetaTextIndentChar write FMetaTextIndentChar;
     property EmbeddedMetaMargin: Integer read FEmbeddedMetaMargin write FEmbeddedMetaMargin;
@@ -209,9 +210,6 @@ type
     class function CreateDefaultTextFont: TFont;
     class function CreateDefaultGridFont: TFont;
 
-    class function GetDefaultDefaultTextCharEncodingName: string;
-    class function GetDefaultDefaultMetaCharEncodingName: string;
-
     property UpdatedEvent: TConfigurationUpdatedEvent read FUpdatedEvent write FUpdatedEvent;
   end;
 
@@ -221,9 +219,13 @@ var
 implementation
 
 uses
-  System.IO,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.Grids,
+  Classes,
+  IOUtils,
+  XmlDoc,
+  XMLDom,
+  StdCtrls,
+  Grids,
+  Dialogs,
   Xilytix.FTEditor.Common;
 
 { TConfiguration }
@@ -232,10 +234,11 @@ constructor TConfiguration.Create;
 begin
   inherited;
 
-  FXmlElementHolder := XmlDocument.Create;
+  FXmlElementHolder := TXmlDocument.Create(nil);
   FColorItems := TColorItems.Create;
 
-  FLayoutConfigurations := FXmlElementHolder.CreateElement('LayoutConfigurations');
+  FLayoutConfigurations := FXmlElementHolder.CreateNode('LayoutConfigurations');
+//  FXmlElementHolder.DocumentElement := FLayoutConfigurations;
 
   FTextFont := TFont.Create;
   FGridFont := TFont.Create;
@@ -256,16 +259,6 @@ begin
   DummyMemo := TMemo.Create(nil);
   DummyMemo.Font.Name := 'Courier New';
   Result := DummyMemo.Font;
-end;
-
-class function TConfiguration.GetDefaultDefaultMetaCharEncodingName: string;
-begin
-  Result := Encoding.UTF8.WebName;
-end;
-
-class function TConfiguration.GetDefaultDefaultTextCharEncodingName: string;
-begin
-  Result := Encoding.UTF8.WebName;
 end;
 
 function TConfiguration.GetMouseOverPanelHeight: Integer;
@@ -290,9 +283,9 @@ begin
   FMouseOverPanelHeight := MinMouseOverPanelHeight;
 
   DefaultNonViewableCharFormat := nv0xHex;
-  NamedDisplayCulture := CultureInfo.CurrentCulture;
+  NamedDisplayCulture := TLocaleSettings.Create;
   DisplayCultureType := dcLocal;
-  NamedDisplayCharEncoding := Encoding.UTF8;
+  NamedDisplayCharEncoding := TEncoding.UTF8;
   DisplayCharEncodingType := deUtf8;
 
   FResetMetaForNewOpenText := True;
@@ -327,12 +320,12 @@ begin
   FColorItems.Reset;
   FColors := FColorItems.Resolve;
 
-  FDefaultTextCharEncodingName := GetDefaultDefaultTextCharEncodingName;
-  FDefaultMetaCharEncodingName := GetDefaultDefaultMetaCharEncodingName;
+  FDefaultTextCharEncodingName := DefaultDefaultTextCharEncodingName;
+  FDefaultMetaCharEncodingName := DefaultDefaultMetaCharEncodingName;
   FMaxOpenTextLines := -1;
 end;
 
-class function TConfiguration.Load: TConfiguration;
+function TConfiguration.Load;
 
   procedure CreateAndInitialise;
   begin
@@ -343,27 +336,50 @@ var
   FilePath: string;
   Serializer: XmlSerializer;
   Reader: StreamReader;
+  Strm: TFileStream;
+  Doc: IXMLDocument;
+  LoadErrorMsg: string;
 begin
-  FilePath := Path.Combine(TCommon.ApplicationDataFolder, XmlFileName);
+  FilePath := TPath.Combine(TCommon.ApplicationDataFolder, XmlFileName);
 
-  if not System.IO.&File.Exists(FilePath) then
-    CreateAndInitialise
+  if not TFile.Exists(FilePath) then
+    Initialise
   else
   begin
-    Serializer := XmlSerializer.Create(TypeOf(TConfiguration));
+    Strm := TFileStream.Create(FilePath, fmOpenRead or fmShareDenyWrite);
     try
-      Reader := StreamReader.Create(FilePath);
+      LoadErrorMsg := '';
+      Doc := TXmlDocument.Create('') as IXmlDocument;
+      Doc.Options
       try
-        Configuration := Serializer.Deserialize(Reader) as TConfiguration;
-        Configuration.ProcessDeserialize;
-      finally
-        Reader.Close;
+        Doc.LoadFromStream(Strm);
+      except
+        on E: EDOMParseError do
+        begin
+          LoadErrorMsg := 'Could not load Configuration File.  Parse Error'#13 +
+                          'Error Code: ' + IntToStr(E.ErrorCode) + #13 +
+                          'Reason: ' + E.Reason + #13 +
+                          'File: ' + FilePath + #13 +
+                          'FilePos: ' + IntToStr(E.FilePos) + #13 +
+                          'Line Number: ' + IntToStr(E.Line) + #13 +
+                          'Line Pos: ' + IntToStr(E.LinePos) + #13 +
+                          'Using Default Configuration';
+        end;
       end;
-    except
-      CreateAndInitialise;
+    finally
+      Strm.Free;
+    end;
+
+    if LoadErrorMsg <> '' then
+    begin
+      MessageDlg(LoadErrorMsg, mtError, [mbOk], 0);
+      Initialise;
+    end
+    else
+    begin
+      LoadFromXml(Doc.DocumentElement);
     end;
   end;
-  Result := Configuration;
 end;
 
 procedure TConfiguration.PrepareForSerialize;
@@ -383,11 +399,11 @@ begin
 
   if FDefaultTextCharEncodingName = '' then
   begin
-    FDefaultTextCharEncodingName := GetDefaultDefaultTextCharEncodingName;
+    FDefaultTextCharEncodingName := DefaultDefaultTextCharEncodingName;
   end;
   if FDefaultMetaCharEncodingName = '' then
   begin
-    FDefaultMetaCharEncodingName := GetDefaultDefaultMetaCharEncodingName;
+    FDefaultMetaCharEncodingName := DefaultDefaultMetaCharEncodingName;
   end;
 end;
 
