@@ -12,8 +12,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, System.ComponentModel, Borland.Vcl.StdCtrls,
-  Xilytix.FieldedText.BaseField, StdCtrls;
+  Dialogs, StdCtrls,
+  Xilytix.FieldedText.Utils,
+  Xilytix.FieldedText.BaseField;
 
 type
   TBooleanStylesForm = class(TForm)

@@ -11,10 +11,10 @@ unit Xilytix.FTEditor.DateTimeStylesForm;
 interface
 
 uses
-  System.Globalization,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
-  StdCtrls, System.ComponentModel;
+  StdCtrls,
+  Xilytix.FieldedText.Utils;
 
 type
   TDateTimeStylesForm = class(TForm)
@@ -26,7 +26,7 @@ type
     procedure OkButtonClick(Sender: TObject);
     procedure AllowInnerWhiteCheckBoxClick(Sender: TObject);
   private
-    FValue: DateTimeStyles;
+    FValue: TDotNetDateTimeStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
 

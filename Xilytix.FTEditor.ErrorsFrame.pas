@@ -11,23 +11,22 @@ unit Xilytix.FTEditor.ErrorsFrame;
 interface
 
 uses
-  System.ComponentModel,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ExtCtrls,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  StdCtrls,
+  ExtCtrls,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
-  Xilytix.FTEditor.EditorFrame, StdCtrls, ExtCtrls, Controls, Classes;
+  Xilytix.FTEditor.EditorFrame;
 
 type
   TErrorsFrame = class(TEditorFrame)

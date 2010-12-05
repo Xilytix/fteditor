@@ -11,23 +11,22 @@ unit Xilytix.FTEditor.OptionsForm;
 interface
 
 uses
-  System.ComponentModel,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ComCtrls,
-  Borland.Vcl.ExtCtrls,
-  Borland.Vcl.ActnList,
-  Borland.Vcl.ButtonGroup,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  StdCtrls,
+  ComCtrls,
+  ExtCtrls,
+  ActnList,
+  ButtonGroup,
   Xilytix.FTEditor.Colors,
-  Xilytix.FTEditor.Configuration, Dialogs, Classes, ActnList, ButtonGroup, StdCtrls, ExtCtrls, Controls, ComCtrls;
+  Xilytix.FTEditor.Configuration;
 
 type
   TOptionsForm = class(TForm)

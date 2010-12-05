@@ -11,24 +11,22 @@ unit Xilytix.FTEditor.SequencesFrame;
 interface
 
 uses
-  System.ComponentModel,
-  System.Xml,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.ComCtrls,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  ComCtrls,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.EditorFrame,
-  Xilytix.FTEditor.SequenceListFrame, ComCtrls, Classes, Controls;
+  Xilytix.FTEditor.SequenceListFrame;
 
 
 type

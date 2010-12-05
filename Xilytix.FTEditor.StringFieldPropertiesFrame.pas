@@ -12,9 +12,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Xilytix.FTEditor.BaseFieldPropertiesFrame, Borland.Vcl.ExtCtrls, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls,
-  System.ComponentModel,
-  Xilytix.FieldedText.BaseField, StdCtrls, ComCtrls, ExtCtrls;
+  Dialogs, ExtCtrls, ComCtrls, StdCtrls,
+  Xilytix.FTEditor.BaseFieldPropertiesFrame,
+  Xilytix.FieldedText.BaseField;
 
 type
   TStringFieldPropertiesFrame = class(TBaseFieldPropertiesFrame)

@@ -32,7 +32,6 @@ type
 implementation
 
 uses
-  System.IO,
   Dialogs,
   Xilytix.FTEditor.Common;
 

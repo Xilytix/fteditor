@@ -11,9 +11,8 @@ unit Xilytix.FTEditor.LayoutableFrame;
 interface
 
 uses
-  System.Xml,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs;
+  Dialogs, XMLIntf;
 
 type
   TLayoutableFrame = class(TFrame)
@@ -38,8 +37,8 @@ type
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
 
-    procedure LoadFromXml(config: XmlElement); virtual;
-    procedure SaveToXml(config: XmlElement); virtual;
+    procedure LoadFromXml(config: IXMLNode); virtual;
+    procedure SaveToXml(config: IXMLNode); virtual;
 
     property NamePrefix: string read FNamePrefix write FNamePrefix;
     property TypeInstance: Integer read FTypeInstance write SetTypeInstance;
@@ -69,7 +68,7 @@ begin
   if aTypeInstance = 1 then
     Result := NamePrefix + GetTypeName
   else
-    Result := NamePrefix + GetTypeName + aTypeInstance.ToString;
+    Result := NamePrefix + GetTypeName + IntToStr(aTypeInstance);
 end;
 
 constructor TLayoutableFrame.Create(AOwner: TComponent);
@@ -93,12 +92,12 @@ begin
   Result := '';
 end;
 
-procedure TLayoutableFrame.LoadFromXml(config: XmlElement);
+procedure TLayoutableFrame.LoadFromXml(config: IXMLNode);
 begin
   ;
 end;
 
-procedure TLayoutableFrame.SaveToXml(config: XmlElement);
+procedure TLayoutableFrame.SaveToXml(config: IXMLNode);
 begin
   ;
 end;
@@ -110,7 +109,7 @@ begin
   if TypeInstance = 1 then
     FInstanceCaption := GetTypeCaption
   else
-    FInstanceCaption := GetTypeCaption + ' ' + TypeInstance.ToString;
+    FInstanceCaption := GetTypeCaption + ' ' + IntToStr(TypeInstance);
 end;
 
 procedure TLayoutableFrame.SetTypeInstance(const Value: Integer);

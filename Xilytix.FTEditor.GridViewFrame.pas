@@ -11,26 +11,25 @@ unit Xilytix.FTEditor.GridViewFrame;
 interface
 
 uses
-  System.ComponentModel,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.ComCtrls,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ExtCtrls,
-  Borland.Vcl.Grids,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  ComCtrls,
+  StdCtrls,
+  ExtCtrls,
+  Grids,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.EditorFrame,
-  Xilytix.FTEditor.SourceFrame, Grids, StdCtrls, ExtCtrls, Controls, ComCtrls, Classes;
+  Xilytix.FTEditor.SourceFrame;
 
 type
   TBeginDrawCellsEvent = procedure of object;

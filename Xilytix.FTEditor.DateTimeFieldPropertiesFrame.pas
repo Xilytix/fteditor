@@ -12,9 +12,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Xilytix.FTEditor.BaseFieldPropertiesFrame, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls,
-  System.ComponentModel,
-  Xilytix.FieldedText.BaseField, ComCtrls, StdCtrls, ExtCtrls;
+  Dialogs, ComCtrls, StdCtrls,
+  ExtCtrls,
+  Xilytix.FTEditor.BaseFieldPropertiesFrame,
+  Xilytix.FieldedText.BaseField;
 
 type
   TDateTimeFieldPropertiesFrame = class(TBaseFieldPropertiesFrame)

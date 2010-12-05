@@ -13,9 +13,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
+  StdCtrls,
+  ComCtrls,
   Xilytix.FieldedText.Sequence,
-  Xilytix.FTEditor.SequenceBasePropertiesFrame, System.ComponentModel, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls, StdCtrls,
-  ComCtrls;
+  Xilytix.FTEditor.SequenceBasePropertiesFrame;
 
 type
   TSequenceRedirect_BasePropertiesFrame = class(TSequenceBasePropertiesFrame)

@@ -11,9 +11,7 @@ unit Xilytix.FTEditor.EditEngine;
 interface
 
 uses
-  System.Text,
-  System.Globalization,
-  Borland.Vcl.Forms,
+  Forms,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditData;
 

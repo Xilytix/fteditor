@@ -11,15 +11,14 @@ unit Xilytix.FTEditor.MainPropertiesFrame;
 interface
 
 uses
-  System.Globalization,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, Borland.Vcl.ComCtrls, Borland.Vcl.Tabs, Borland.Vcl.DockTabSet,
-  Borland.Vcl.ButtonGroup, Borland.Vcl.CategoryButtons, Borland.Vcl.ExtCtrls, Borland.Vcl.Grids, Borland.Vcl.ValEdit,
+  Dialogs, StdCtrls, ComCtrls, Tabs, DockTabSet,
+  ButtonGroup, CategoryButtons, ExtCtrls, Grids, ValEdit,
   Xilytix.FieldedText.BaseField,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.EditorFrame,
   Xilytix.FTEditor.Binder,
-  Xilytix.FTEditor.EditEngine, Grids, ValEdit, StdCtrls, ButtonGroup, ExtCtrls, ComCtrls;
+  Xilytix.FTEditor.EditEngine;
 
 type
   TMainPropertiesFrame = class(TEditorFrame)
