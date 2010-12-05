@@ -11,27 +11,31 @@ unit Xilytix.FTEditor.LayoutFrame;
 interface
 
 uses
-  System.Xml,
-  Borland.Vcl.Windows,
-  Borland.Vcl.Messages,
-  Borland.Vcl.SysUtils,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Graphics,
-  Borland.Vcl.Controls,
-  Borland.Vcl.Forms,
-  Borland.Vcl.Dialogs,
-  Borland.Vcl.ExtCtrls,
-  Borland.Vcl.ComCtrls,
+  Windows,
+  Messages,
+  SysUtils,
+  Variants,
+  Classes,
+  Graphics,
+  Controls,
+  Forms,
+  Dialogs,
+  ExtCtrls,
+  ComCtrls,
+  XMLIntf,
   Xilytix.FTEditor.LayoutConfiguration,
   Xilytix.FTEditor.LayoutableFrame;
 
 type
   TLayoutFrame = class;
-  TLayoutableFrameAddEvent = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; config: XmlElement) of object;
+  TLayoutableFrameAddEvent = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; config: IXMLNode) of object;
   TLayoutableFrameRemoveEvent = procedure(sender: TLayoutFrame; frame: TLayoutableFrame) of object;
 
   TLayoutFrame = class(TFrame)
+  public
+    type
+      TAddFrameDelegate = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; config: IXMLNode) of object;
+      TRemoveFrameDelegate = procedure(sender: TLayoutFrame; frame: TLayoutableFrame) of object;
   strict private
     type
       TArrangement = TLayoutConfiguration.TArrangement;
@@ -112,8 +116,12 @@ type
     property LayoutableFrameCount: Integer read GetLayoutableFrameCount;
     property LayoutableFrames[idx: Integer]: TLayoutableFrame read GetLayoutableFrames;
 
-    property AddFrameEvent: TLayoutableFrameAddEvent add FAddFrameEvent remove FAddFrameEvent;
-    property RemoveFrameEvent: TLayoutableFrameRemoveEvent add FRemoveFrameEvent remove FRemoveFrameEvent;
+    procedure SubscribeAddFrameEvent(Delegate: TAddFrameDelegate);
+    procedure UnsubscribeAddFrameEvent(Delegate: TAddFrameDelegate);
+    procedure SubscribeRemoveFrameEvent(Delegate: TRemoveFrameDelegate);
+    procedure UnsubscribeRemoveFrameEvent(Delegate: TRemoveFrameDelegate);
+{    property AddFrameEvent: TLayoutableFrameAddEvent add FAddFrameEvent remove FAddFrameEvent;
+    property RemoveFrameEvent: TLayoutableFrameRemoveEvent add FRemoveFrameEvent remove FRemoveFrameEvent;}
   end;
 
 implementation

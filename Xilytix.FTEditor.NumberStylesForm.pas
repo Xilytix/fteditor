@@ -11,9 +11,9 @@ unit Xilytix.FTEditor.NumberStylesForm;
 interface
 
 uses
-  System.Globalization,
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, StdCtrls;
+  Dialogs, StdCtrls,
+  Xilytix.FieldedText.Utils;
 
 type
   TNumberStylesForm = class(TForm)
@@ -41,7 +41,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
-    FValue: NumberStyles;
+    FValue: TDotNetNumberStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
 

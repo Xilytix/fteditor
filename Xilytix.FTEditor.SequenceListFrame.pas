@@ -11,7 +11,6 @@ unit Xilytix.FTEditor.SequenceListFrame;
 interface
 
 uses
-  System.ComponentModel,
   Windows,
   Messages,
   SysUtils,
@@ -21,11 +20,11 @@ uses
   Controls,
   Forms,
   Dialogs,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ComCtrls,
-  Borland.Vcl.CategoryButtons,
-  Borland.Vcl.ExtCtrls,
-  Borland.Vcl.ButtonGroup,
+  StdCtrls,
+  ComCtrls,
+  CategoryButtons,
+  ExtCtrls,
+  ButtonGroup,
   Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.EditEngine,
@@ -39,7 +38,7 @@ uses
   Xilytix.FTEditor.SequenceRedirect_FloatPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame,
-  Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame, StdCtrls, ComCtrls, CategoryButtons, ExtCtrls;
+  Xilytix.FTEditor.SequenceRedirect_DatePropertiesFrame;
 
 type
   TSequenceListFrame = class(TFrame)

@@ -11,13 +11,11 @@ unit Xilytix.FTEditor.Binder;
 interface
 
 uses
-  System.Text,
-  System.Globalization,
-  Borland.Vcl.Classes,
-  Borland.Vcl.Variants,
-  Borland.Vcl.Controls,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ComCtrls,
+  Classes,
+  Variants,
+  Controls,
+  StdCtrls,
+  ComCtrls,
   Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditEngine,

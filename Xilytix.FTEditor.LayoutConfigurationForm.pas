@@ -12,7 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, Borland.Vcl.ExtCtrls, Borland.Vcl.ComCtrls,
+  Dialogs, StdCtrls, ExtCtrls, ComCtrls,
   Xilytix.FTEditor.LayoutConfiguration,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.MainPropertiesFrame,
@@ -20,7 +20,7 @@ uses
   Xilytix.FTEditor.SequencesFrame,
   Xilytix.FTEditor.TextViewFrame,
   Xilytix.FTEditor.GridViewFrame,
-  Xilytix.FTEditor.ErrorsFrame, StdCtrls, ComCtrls;
+  Xilytix.FTEditor.ErrorsFrame;
 
 type
   TNotifyConfigurationChange = procedure of object;

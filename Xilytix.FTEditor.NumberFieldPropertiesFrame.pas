@@ -12,8 +12,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Xilytix.FTEditor.BaseFieldPropertiesFrame, Borland.Vcl.ComCtrls, Borland.Vcl.StdCtrls, Borland.Vcl.ExtCtrls,
-  System.ComponentModel, StdCtrls, ComCtrls, ExtCtrls;
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls,
+  Xilytix.FTEditor.BaseFieldPropertiesFrame;
 
 type
   TNumberFieldPropertiesFrame = class(TBaseFieldPropertiesFrame)

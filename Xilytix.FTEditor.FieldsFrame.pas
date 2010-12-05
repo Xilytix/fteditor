@@ -12,9 +12,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, System.ComponentModel, Borland.Vcl.ButtonGroup, Borland.Vcl.CategoryButtons, Borland.Vcl.StdCtrls,
-  Borland.Vcl.ExtCtrls, Borland.Vcl.ComCtrls,
-  Borland.Vcl.Menus,
+  Dialogs, ButtonGroup, CategoryButtons, StdCtrls,
+  ExtCtrls, ComCtrls,
+  Menus,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FieldedText.BaseField,
   Xilytix.FTEditor.Binder,
@@ -26,7 +26,7 @@ uses
   Xilytix.FTEditor.DecimalFieldPropertiesFrame,
   Xilytix.FTEditor.DateTimeFieldPropertiesFrame,
   Xilytix.FTEditor.BooleanFieldPropertiesFrame,
-  Xilytix.FTEditor.EditorFrame, StdCtrls, ComCtrls, ButtonGroup, ExtCtrls;
+  Xilytix.FTEditor.EditorFrame;
 
 type
   TFieldsFrame = class(TEditorFrame)

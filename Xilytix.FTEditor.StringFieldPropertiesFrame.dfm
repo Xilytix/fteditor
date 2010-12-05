@@ -8,6 +8,7 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     Width = 157
     Height = 199
     ExplicitTop = 176
+    ExplicitWidth = 157
     ExplicitHeight = 179
     inherited Bevel5: TBevel
       Width = 156

@@ -11,9 +11,9 @@ unit Xilytix.FTEditor.LayoutConfiguration;
 interface
 
 uses
-  System.Collections,
-  System.Xml,
-  Borland.Vcl.Classes,
+  Classes,
+  XMLIntf,
+  Generics.Collections,
   Xilytix.FTEditor.LayoutableFrame;
 
 type
@@ -40,7 +40,7 @@ type
 
       THalfExplicitSizes = array[THalfId] of Integer;
       TFrameSlotExplicitSizes = array[TFrameSlot] of Integer;
-      TFrameSlotConfigs = array[TFrameSlot] of XmlElement;
+      TFrameSlotConfigs = array[TFrameSlot] of IXMLNode;
 
       TExplicitSizesRec = record
         Main: Integer;
@@ -53,7 +53,7 @@ type
         Fill: Boolean;
         ExplicitSize: Integer;
         Slot: TFrameSlot;
-        Config: XmlElement;
+        Config: IXMLNode;
       end;
       TFrameTypeAndFillRecs = array of TFrameTypeAndFillRec;
 
@@ -69,24 +69,24 @@ type
           FLeftFrameFill: Boolean;
           FLeftFrameExplicitSize: Integer;
           FLeftFrameSlot: TFrameSlot;
-          FLeftFrameConfiguration: XmlElement;
+          FLeftFrameConfiguration: IXMLNode;
           FMiddleFrameTypeId: TLayoutableFrame.TTypeId;
           FMiddleFrameFill: Boolean;
           FMiddleFrameExplicitSize: Integer;
           FMiddleFrameSlot: TFrameSlot;
-          FMiddleFrameConfiguration: XmlElement;
+          FMiddleFrameConfiguration: IXMLNode;
           FRightFrameTypeId: TLayoutableFrame.TTypeId;
           FRightFrameFill: Boolean;
           FRightFrameExplicitSize: Integer;
           FRightFrameSlot: TFrameSlot;
-          FRightFrameConfiguration: XmlElement;
+          FRightFrameConfiguration: IXMLNode;
 
           FCalculatedArrangement: TArrangement;
           FCalculatedFrameTypeAndFills: TFrameTypeAndFillRecs;
           FCalculatedTabbed: Boolean;
 
         procedure AddFrameTypeAndFill(frameTypeId: TLayoutableFrame.TTypeId; fill: Boolean; explicitSize: Integer;
-                                      slot: TFrameSlot; config: XmlElement);
+                                      slot: TFrameSlot; config: IXMLNode);
         procedure CalculateHorizontalVertical;
         procedure CalculateDoubleSingle;
 
@@ -108,15 +108,15 @@ type
         property LeftFrameTypeId: TLayoutableFrame.TTypeId read FLeftFrameTypeId write FLeftFrameTypeId;
         property LeftFrameFill: Boolean read FLeftFrameFill write SetLeftFrameFill;
         property LeftFrameExplicitSize: Integer read FLeftFrameExplicitSize;
-        property LeftFrameConfiguration: XmlElement read FLeftFrameConfiguration;
+        property LeftFrameConfiguration: IXMLNode read FLeftFrameConfiguration;
         property MiddleFrameTypeId: TLayoutableFrame.TTypeId read FMiddleFrameTypeId write FMiddleFrameTypeId;
         property MiddleFrameFill: Boolean read FMiddleFrameFill write SetMiddleFrameFill;
         property MiddleFrameExplicitSize: Integer read FMiddleFrameExplicitSize;
-        property MiddleFrameConfiguration: XmlElement read FMiddleFrameConfiguration;
+        property MiddleFrameConfiguration: IXMLNode read FMiddleFrameConfiguration;
         property RightFrameTypeId: TLayoutableFrame.TTypeId read FRightFrameTypeId write FRightFrameTypeId;
         property RightFrameFill: Boolean read FRightFrameFill write SetRightFrameFill;
         property RightFrameExplicitSize: Integer read FRightFrameExplicitSize;
-        property RightFrameConfiguration: XmlElement read FRightFrameConfiguration;
+        property RightFrameConfiguration: IXMLNode read FRightFrameConfiguration;
 
         procedure Calculate;
         procedure Check;
@@ -129,8 +129,8 @@ type
         procedure AssignExplicitSizes(myExplicitSize: Integer; frameSlotExplicitSizes: TFrameSlotExplicitSizes);
         procedure ResetExplicitSizes;
 
-        procedure Load(element: XmlElement);
-        procedure Save(element: XmlElement);
+        procedure Load(element: IXMLNode);
+        procedure Save(element: IXMLNode);
 
         class function HalfIdToXmlValue(value: THalfId): string;
         class function XmlValueToHalfId(value: string): THalfId;
@@ -225,19 +225,19 @@ type
     procedure AssignExplicitSizes(const explicitSizes: TExplicitSizesRec);
     procedure ResetExplicitSizes;
 
-    procedure Save(element: XmlElement);
-    procedure Load(element: XmlElement);
+    procedure Save(element: IXMLNode);
+    procedure Load(element: IXMLNode);
 
     class function IntegerToXmlValue(value: Integer): string;
     class function XmlValueToInteger(value: string): Integer;
     class function BooleanToXmlValue(value: Boolean): string;
     class function XmlValueToBoolean(value: string): Boolean;
 
-    class function GenerateBlankFrameSlotConfigs(doc: XmlDocument): TFrameSlotConfigs;
+    class function GenerateBlankFrameSlotConfigs(doc: IXmlDocument): TFrameSlotConfigs;
     class function GetFrameSlotConfigElementName(slot: TFrameSlot): string;
   end;
 
-  TLayoutConfigurations = class(CollectionBase)
+  TLayoutConfigurations = class(TObjectList<TLayoutConfiguration>)
   strict private
     const
       XmlTag_Configuration = 'Configuration';
@@ -245,20 +245,19 @@ type
     function GetConfigurations(idx: Integer): TLayoutConfiguration;
     function CalculateUniqueName: string;
   public
-    property Configurations[idx: Integer]: TLayoutConfiguration read GetConfigurations; default;
+//    property Configurations[idx: Integer]: TLayoutConfiguration read GetConfigurations; default;
     function New: TLayoutConfiguration;
     function Get(name: string): TLayoutConfiguration;
     function Add(value: TLayoutConfiguration): Integer;
     procedure Remove(configuration: TLayoutConfiguration);
 
-    procedure Save(element: XmlElement);
-    procedure Load(element: XmlElement);
+    procedure Save(element: IXMLNode);
+    procedure Load(element: IXMLNode);
   end;
 
 implementation
 
 uses
-  System.Globalization,
   Xilytix.FTEditor.MainPropertiesFrame,
   Xilytix.FTEditor.FieldsFrame,
   Xilytix.FTEditor.GridViewFrame,
@@ -410,10 +409,10 @@ begin
   Result := value.ToString(CultureInfo.InvariantCulture);
 end;
 
-procedure TLayoutConfiguration.Load(element: XmlElement);
+procedure TLayoutConfiguration.Load(element: IXMLNode);
 var
-  HalfElements: XmlNodeList;
-  HalfElement: XmlElement;
+  HalfElements: IXmlNodeList;
+  HalfElement: IXMLNode;
   HalfId: THalfId;
   I: Integer;
 begin
@@ -472,9 +471,9 @@ begin
   FHalfB.ResetExplicitSizes;
 end;
 
-procedure TLayoutConfiguration.Save(element: XmlElement);
+procedure TLayoutConfiguration.Save(element: IXMLNode);
 var
-  halfElement: XmlElement;
+  halfElement: IXMLNode;
 begin
   element.SetAttribute(XmlTag_Name, Name);
   element.SetAttribute(XmlTag_Arrangement, ArrangementToXmlValue(Arrangement));
@@ -533,7 +532,7 @@ procedure TLayoutConfiguration.THalf.AddFrameTypeAndFill(frameTypeId: TLayoutabl
                                                          fill: Boolean;
                                                          explicitSize: Integer;
                                                          slot: TFrameSlot;
-                                                         config: XmlElement);
+                                                         config: IXMLNode);
 var
   Idx: Integer;
 begin
@@ -749,9 +748,9 @@ begin
   Result := Enum(typeId).ToString.Substring(2);
 end;
 
-procedure TLayoutConfiguration.THalf.Load(element: XmlElement);
+procedure TLayoutConfiguration.THalf.Load(element: IXMLNode);
 var
-  ConfigNodes: XmlNodeList;
+  ConfigNodes: IXmlNodeList;
 begin
   if element.HasAttribute(XmlTag_Arrangement) then
   begin
@@ -831,7 +830,7 @@ begin
   Check;
 end;
 
-procedure TLayoutConfiguration.THalf.Save(element: XmlElement);
+procedure TLayoutConfiguration.THalf.Save(element: IXMLNode);
 begin
   element.SetAttribute(XmlTag_HalfId, HalfIdToXmlValue(Id));
   element.SetAttribute(XmlTag_Arrangement, ArrangementToXmlValue(Arrangement));
@@ -1082,9 +1081,9 @@ begin
   Result := TLayoutConfiguration(InnerList[idx]);
 end;
 
-procedure TLayoutConfigurations.Load(element: XmlElement);
+procedure TLayoutConfigurations.Load(element: IXMLNode);
 var
-  Configurations: XmlNodeList;
+  Configurations: IXmlNodeList;
   I: Integer;
   Configuration: TLayoutConfiguration;
 begin
@@ -1092,7 +1091,7 @@ begin
   for I := 0 to Configurations.Count - 1 do
   begin
     Configuration := New;
-    Configuration.Load(Configurations[I] as XmlElement);
+    Configuration.Load(Configurations[I] as IXMLNode);
   end;
 end;
 
@@ -1108,10 +1107,10 @@ begin
   InnerList.Remove(configuration);
 end;
 
-procedure TLayoutConfigurations.Save(element: XmlElement);
+procedure TLayoutConfigurations.Save(element: IXMLNode);
 var
   I: Integer;
-  ConfigurationElement: XmlElement;
+  ConfigurationElement: IXMLNode;
 begin
   for I := 0 to Count - 1 do
   begin
