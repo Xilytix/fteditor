@@ -1,12 +1,8 @@
-{ $HDR$}
-{ Copyright (c) Xilytix from ModDate}
-{ $ProjectName:FieldedText$}
-{ $Version:$}
-{ $Revision:1.3$}
-{ $Author:pbklink$}
-{ $RevDate:26/01/2011 11:09:04 PM$}
-{ $ModDate:26/01/2011 10:32:46 PM$}
-{ $NoExpand$}
+// Project: FTEditor (Fielded Text Editor)
+// Licence: Public Domain
+// Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
+// Initial Developer: Paul Klink (http://paul.klink.id.au)
+
 program FTEditor;
 
 uses
