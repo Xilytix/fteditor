@@ -4,9 +4,8 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
   inherited DelimitedPanel: TPanel
     Top = 210
     Height = 156
-    ExplicitTop = 242
-    ExplicitWidth = 168
-    ExplicitHeight = 173
+    ExplicitTop = 210
+    ExplicitHeight = 156
     inherited Bevel5: TBevel
       Width = 192
       ExplicitWidth = 192
@@ -19,39 +18,26 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
   inherited FixedWidthPanel: TPanel
     Top = 210
     Height = 156
-    ExplicitTop = 242
-    ExplicitWidth = 147
-    ExplicitHeight = 138
+    ExplicitTop = 210
+    ExplicitHeight = 156
     inherited FixedWidthPageControl: TPageControl
       Height = 129
-      ExplicitWidth = 147
-      ExplicitHeight = 111
+      ExplicitHeight = 129
       inherited ValueTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 127
-        ExplicitHeight = 32
-        inherited ValuePadAlignmentComboBox: TComboBoxEx
+        ExplicitHeight = 101
+        inherited ValuePadAlignmentComboBox: TComboBox
           TabOrder = 0
-          ExplicitWidth = 88
         end
-        inherited ValuePadCharTypeComboBox: TComboBoxEx
+        inherited ValuePadCharTypeComboBox: TComboBox
           TabOrder = 2
-          ExplicitWidth = 88
-        end
-        inherited ValueTruncateTypeComboBox: TComboBoxEx
-          ExplicitWidth = 113
         end
         inherited ValuePadCharEdit: TEdit
           TabOrder = 1
         end
       end
       inherited HeadingTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 159
-        ExplicitHeight = 86
-        inherited HeadingPadCharTypeComboBox: TComboBoxEx
+        ExplicitHeight = 101
+        inherited HeadingPadCharTypeComboBox: TComboBox
           TabOrder = 2
         end
         inherited HeadingPadCharEdit: TEdit
@@ -59,13 +45,9 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
         end
       end
     end
-    inherited FxiedWidthTopPanel: TPanel
-      ExplicitWidth = 155
-    end
   end
   inherited TopPanel: TPanel
     Height = 210
-    ExplicitWidth = 167
     ExplicitHeight = 210
     inherited DataTypeLabel: TLabel
       Width = 45
@@ -98,11 +80,9 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
     end
     inherited NameEdit: TEdit
       TabOrder = 10
-      ExplicitWidth = 122
     end
-    inherited HeadingConstraintComboBox: TComboBoxEx
+    inherited HeadingConstraintComboBox: TComboBox
       TabOrder = 11
-      ExplicitWidth = 82
     end
     inherited NullConstantCheckBox: TCheckBox
       Left = 86
@@ -174,7 +154,6 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
     end
     inherited HeadingsEdit: TEdit
       TabOrder = 12
-      ExplicitWidth = 104
     end
     object ConstantValueCheckBox: TCheckBox [20]
       Left = 21
@@ -187,7 +166,6 @@ inherited BooleanFieldPropertiesFrame: TBooleanFieldPropertiesFrame
     end
     inherited HeadingsButton: TButton
       TabOrder = 13
-      ExplicitLeft = 142
     end
   end
 end

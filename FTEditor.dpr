@@ -1,12 +1,12 @@
-// Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
-// Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
-// Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
-// 20 May 2007  Paul Klink         Fixed Reference to trunk Xilytix.FieldedText.dll
-
+{ $HDR$}
+{ Copyright (c) Xilytix from ModDate}
+{ $ProjectName:FieldedText$}
+{ $Version:$}
+{ $Revision:1.3$}
+{ $Author:pbklink$}
+{ $RevDate:26/01/2011 11:09:04 PM$}
+{ $ModDate:26/01/2011 10:32:46 PM$}
+{ $NoExpand$}
 program FTEditor;
 
 uses
@@ -34,7 +34,6 @@ uses
   Xilytix.FTEditor.Binder in 'Xilytix.FTEditor.Binder.pas',
   Xilytix.FTEditor.Configuration in 'Xilytix.FTEditor.Configuration.pas',
   Xilytix.FTEditor.NumberStylesForm in 'Xilytix.FTEditor.NumberStylesForm.pas' {NumberStylesForm},
-  Xilytix.FTEditor.DateTimeStylesForm in 'Xilytix.FTEditor.DateTimeStylesForm.pas' {DateTimeStylesForm},
   Xilytix.FTEditor.BooleanStylesForm in 'Xilytix.FTEditor.BooleanStylesForm.pas' {BooleanStylesForm},
   Xilytix.FTEditor.NumberFieldPropertiesFrame in 'Xilytix.FTEditor.NumberFieldPropertiesFrame.pas' {NumberFieldPropertiesFrame: TFrame},
   Xilytix.FTEditor.DateTimeFieldPropertiesFrame in 'Xilytix.FTEditor.DateTimeFieldPropertiesFrame.pas' {DateTimeFieldPropertiesFrame: TFrame},
@@ -62,7 +61,8 @@ uses
   Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame in 'Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame.pas' {SequenceRedirect_ExactStringPropertiesFrame: TFrame},
   Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame in 'Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame.pas' {SequenceRedirect_ExactDateTimePropertiesFrame: TFrame},
   Xilytix.FTEditor.AboutForm in 'Xilytix.FTEditor.AboutForm.pas' {AboutForm},
-  Xilytix.FTEditor.FieldHeadingsForm in 'Xilytix.FTEditor.FieldHeadingsForm.pas' {FieldHeadingsForm};
+  Xilytix.FTEditor.FieldHeadingsForm in 'Xilytix.FTEditor.FieldHeadingsForm.pas' {FieldHeadingsForm},
+  Xilytix.FTEditor.TypedXml in 'Xilytix.FTEditor.TypedXml.pas';
 
 {$R *.res}
 

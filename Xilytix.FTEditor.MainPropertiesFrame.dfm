@@ -8,7 +8,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     Top = 0
     Width = 264
     Height = 195
-    ActivePage = MainTabSheet
+    ActivePage = FileTabSheet
     Align = alClient
     TabOrder = 0
     object MainTabSheet: TTabSheet
@@ -74,9 +74,9 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         FocusControl = EndOfLineAutoWriteComboBox
       end
       object Bevel1: TBevel
-        Left = 0
+        Left = 64
         Top = 32
-        Width = 258
+        Width = 194
         Height = 3
         Shape = bsTopLine
       end
@@ -157,13 +157,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         TabOrder = 8
         OnClick = CheckBoxClick
       end
-      object EndOfLineTypeComboBox: TComboBoxEx
+      object EndOfLineTypeComboBox: TComboBox
         Left = 46
         Top = 43
         Width = 57
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 3
         OnChange = ComboBoxChange
       end
@@ -177,13 +176,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         OnExit = CharEditExit
         OnKeyPress = CharEditKeyPress
       end
-      object EndOfLineAutoWriteComboBox: TComboBoxEx
+      object EndOfLineAutoWriteComboBox: TComboBox
         Left = 177
         Top = 67
         Width = 57
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 6
         OnChange = ComboBoxChange
       end
@@ -202,8 +200,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       ImageIndex = 1
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 239
-      ExplicitHeight = 149
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label10: TLabel
         Left = 0
         Top = 3
@@ -284,9 +282,9 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         ParentFont = False
       end
       object Bevel3: TBevel
-        Left = -2
+        Left = 24
         Top = 94
-        Width = 258
+        Width = 232
         Height = 17
         Shape = bsTopLine
       end
@@ -326,9 +324,9 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         ParentFont = False
       end
       object Bevel4: TBevel
-        Left = 0
+        Left = 49
         Top = 152
-        Width = 256
+        Width = 207
         Height = 17
         Shape = bsTopLine
       end
@@ -367,43 +365,39 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Font.Style = []
         ParentFont = False
       end
-      object HeadingConstraintComboBox: TComboBoxEx
+      object HeadingConstraintComboBox: TComboBox
         Left = 158
         Top = 43
         Width = 98
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 5
         OnChange = ComboBoxChange
       end
-      object HeadingQuotedTypeComboBox: TComboBoxEx
+      object HeadingQuotedTypeComboBox: TComboBox
         Left = 67
         Top = 27
         Width = 65
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 2
         OnChange = ComboBoxChange
       end
-      object HeadingPadAlignmentComboBox: TComboBoxEx
+      object HeadingPadAlignmentComboBox: TComboBox
         Left = 72
         Top = 122
         Width = 83
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 8
         OnChange = ComboBoxChange
       end
-      object HeadingPadCharTypeComboBox: TComboBoxEx
+      object HeadingPadCharTypeComboBox: TComboBox
         Left = 72
         Top = 98
         Width = 83
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 6
         OnChange = ComboBoxChange
       end
@@ -417,13 +411,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         OnExit = CharEditExit
         OnKeyPress = CharEditKeyPress
       end
-      object HeadingTruncateTypeComboBox: TComboBoxEx
+      object HeadingTruncateTypeComboBox: TComboBox
         Left = 49
         Top = 156
         Width = 106
-        Height = 22
-        ItemsEx = <>
-        Style = csExDropDownList
+        Height = 21
+        Style = csDropDownList
         TabOrder = 10
         OnChange = ComboBoxChange
       end
@@ -503,8 +496,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       ImageIndex = 3
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 217
-      ExplicitHeight = 133
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object SubstitutionsTopPanel: TPanel
         Left = 0
         Top = 0
@@ -513,7 +506,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 217
         object Label5: TLabel
           Left = 104
           Top = 3
@@ -550,8 +542,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 152
-        ExplicitHeight = 108
         DesignSize = (
           191
           142)
@@ -572,13 +562,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           FocusControl = SubstitutionTokenEdit
         end
         object Bevel7: TBevel
-          Left = 11
+          Left = 118
           Top = 121
-          Width = 176
+          Width = 69
           Height = 8
           Anchors = [akLeft, akTop, akRight]
           Shape = bsTopLine
-          ExplicitWidth = 174
         end
         object Label40: TLabel
           Left = 11
@@ -607,7 +596,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           OnEnter = SubstitutionStringValueEditEnter
           OnExit = SubstitutionStringValueEditExit
           OnKeyPress = SubstitutionStringValueEditKeyPress
-          ExplicitWidth = 115
         end
         object SubstitutionTypeCharRadioButton: TRadioButton
           Left = 9
@@ -702,7 +690,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 108
         object Label38: TLabel
           Left = 0
           Top = 0
@@ -725,8 +712,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Items = <>
           TabOrder = 0
           OnClick = SubstitutionsButtonGroupClick
-          ExplicitWidth = 128
-          ExplicitHeight = 127
         end
         object SubstitutionAddRemovePanel: TPanel
           Left = 0
@@ -736,7 +721,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitTop = 91
           object SubstitutionsAddButton: TButton
             AlignWithMargins = True
             Left = 0
@@ -770,15 +754,15 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       ImageIndex = 2
       ExplicitLeft = 0
       ExplicitTop = 0
-      ExplicitWidth = 217
-      ExplicitHeight = 133
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         256
         167)
       object Bevel5: TBevel
-        Left = 0
+        Left = 115
         Top = 26
-        Width = 254
+        Width = 139
         Height = 17
         Shape = bsTopLine
       end
@@ -822,9 +806,9 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         FocusControl = DesignNewFieldFormatDateTimeEdit
       end
       object Bevel6: TBevel
-        Left = -2
+        Left = 84
         Top = 107
-        Width = 256
+        Width = 170
         Height = 17
         Shape = bsTopLine
       end
@@ -925,7 +909,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'Edit7'
         OnExit = StringEditExit
         OnKeyPress = StringEditKeyPress
-        ExplicitWidth = 73
       end
       object DesignNewFieldFormatDateTimeEdit: TEdit
         Left = 182
@@ -937,7 +920,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'Edit7'
         OnExit = StringEditExit
         OnKeyPress = StringEditKeyPress
-        ExplicitWidth = 73
       end
       object DesignNewFieldStylesIntegerEdit: TEdit
         Left = 51
@@ -969,7 +951,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'Edit7'
         OnExit = DesignNewFieldStylesDecimalEditExit
         OnKeyPress = DesignNewFieldStylesDecimalEditKeyPress
-        ExplicitWidth = 55
       end
       object DesignNewFieldStylesDateTimeEdit: TEdit
         Left = 182
@@ -981,7 +962,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'Edit7'
         OnExit = DesignNewFieldStylesDateTimeEditExit
         OnKeyPress = DesignNewFieldStylesDateTimeEditKeyPress
-        ExplicitWidth = 55
       end
       object DesignNewFieldStylesIntegerButton: TButton
         Left = 107
@@ -1028,7 +1008,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         ParentFont = False
         TabOrder = 10
         OnClick = DesignNewFieldStylesDecimalButtonClick
-        ExplicitLeft = 238
       end
       object DesignNewFieldStylesDateTimeButton: TButton
         Left = 239
@@ -1045,7 +1024,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         ParentFont = False
         TabOrder = 14
         OnClick = DesignNewFieldStylesDateTimeButtonClick
-        ExplicitLeft = 238
       end
       object DesignNewFieldStylesBooleanEdit: TEdit
         Left = 51
@@ -1057,7 +1035,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'DesignNewFieldFormatBooleanEdit'
         OnExit = DesignNewFieldStylesBooleanEditExit
         OnKeyPress = DesignNewFieldStylesBooleanEditKeyPress
-        ExplicitWidth = 186
       end
       object DesignNewFieldsStyleBooleanButton: TButton
         Left = 239
@@ -1074,7 +1051,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         ParentFont = False
         TabOrder = 16
         OnClick = DesignNewFieldsStyleBooleanButtonClick
-        ExplicitLeft = 238
       end
       object DesignNewFieldTrueTextEdit: TEdit
         Left = 51
@@ -1096,16 +1072,11 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Text = 'Edit7'
         OnExit = StringEditExit
         OnKeyPress = StringEditKeyPress
-        ExplicitWidth = 73
       end
     end
     object FileTabSheet: TTabSheet
       Caption = 'Declare'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 217
-      ExplicitHeight = 133
       object FileParametersValueListEditor: TValueListEditor
         Left = 0
         Top = 107
@@ -1118,8 +1089,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           'Name'
           'Value')
         Visible = False
-        ExplicitWidth = 263
-        ExplicitHeight = 75
         ColWidths = (
           96
           158)
@@ -1132,7 +1101,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 217
         DesignSize = (
           256
           107)
@@ -1183,13 +1151,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           TabOrder = 0
           OnClick = CheckBoxClick
         end
-        object MetaReferenceTypeComboBox: TComboBoxEx
+        object MetaReferenceTypeComboBox: TComboBox
           Left = 157
           Top = 17
           Width = 96
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           TabOrder = 1
           OnChange = ComboBoxChange
         end
@@ -1203,7 +1170,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Text = 'MetaReferenceEdit'
           OnExit = StringEditExit
           OnKeyPress = StringEditKeyPress
-          ExplicitWidth = 238
         end
       end
     end

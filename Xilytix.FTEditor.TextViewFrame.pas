@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.TextViewFrame;
 
@@ -111,7 +108,6 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Runtime.InteropServices,
   Xilytix.FTEditor.Colors,
   Xilytix.FTEditor.Configuration;
 
@@ -124,7 +120,7 @@ begin
   Point.X := x;
   Point.Y := y;
 
-  Result := TextEdit.Perform(EM_CHARFROMPOS, 0, Point);
+  Result := TextEdit.Perform(EM_CHARFROMPOS, 0, LParam(@Point));
 end;
 
 function TTextViewFrame.CheckDoAutoParse(passText: Boolean): Boolean;
@@ -138,9 +134,9 @@ begin
     if passText then
       newText := TextEdit.Text
     else
-      newText := nil;
+      newText := '';
 
-    FEditEngine.Parse(Self, newText);
+    FEditEngine.Parse(Self, newText, not passText);
     Result := True;
   end;
 end;
@@ -466,7 +462,7 @@ end;
 
 procedure TTextViewFrame.ParseButtonClick(Sender: TObject);
 begin
-  FEditEngine.Parse(Self, nil);
+  FEditEngine.Parse(Self, '', True);
 end;
 
 procedure TTextViewFrame.PopulateActiveCursorInfo(frameChanged, cellChanged: Boolean);
@@ -485,13 +481,13 @@ procedure TTextViewFrame.Prepare(const myEditEngine: TEditEngine; myBinder: TBin
 begin
   inherited;
 
-  Include(FEditEngine.NewOpenTextEvent, HandleEditEngineNewOpenTextEvent);
-  Include(FEditEngine.TextChangeEvent, HandleEditEngineTextChangeEvent);
-  Include(FEditEngine.MetaChangeEvent, HandleEditEngineMetaChangeEvent);
-  Include(FEditEngine.SynchronisedChangeEvent, HandleEditEngineSynchronisedChangeEvent);
-  Include(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Include(FEditEngine.MouseOverChangedEvent, HandleMouseOverChangedEvent);
-  Include(FEditEngine.CursorActiveChangedEvent, HandleCursorActiveChangedEvent);
+  FEditEngine.SubscribeNewOpenTextEvent(HandleEditEngineNewOpenTextEvent);
+  FEditEngine.SubscribeTextChangeEvent(HandleEditEngineTextChangeEvent);
+  FEditEngine.SubscribeMetaChangeEvent(HandleEditEngineMetaChangeEvent);
+  FEditEngine.SubscribeSynchronisedChangeEvent(HandleEditEngineSynchronisedChangeEvent);
+  FEditEngine.SubscribeParseEvent(HandleEditEngineParseEvent);
+  FEditEngine.SubscribeMouseOverChangedEvent(HandleMouseOverChangedEvent);
+  FEditEngine.SubscribeCursorActiveChangedEvent(HandleCursorActiveChangedEvent);
 
   FUpdating := True;
   try
@@ -610,13 +606,13 @@ end;
 
 procedure TTextViewFrame.Unprepare;
 begin
-  Exclude(FEditEngine.NewOpenTextEvent, HandleEditEngineNewOpenTextEvent);
-  Exclude(FEditEngine.TextChangeEvent, HandleEditEngineTextChangeEvent);
-  Exclude(FEditEngine.MetaChangeEvent, HandleEditEngineMetaChangeEvent);
-  Exclude(FEditEngine.SynchronisedChangeEvent, HandleEditEngineSynchronisedChangeEvent);
-  Exclude(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Exclude(FEditEngine.MouseOverChangedEvent, HandleMouseOverChangedEvent);
-  Exclude(FEditEngine.CursorActiveChangedEvent, HandleCursorActiveChangedEvent);
+  FEditEngine.UnsubscribeNewOpenTextEvent(HandleEditEngineNewOpenTextEvent);
+  FEditEngine.UnsubscribeTextChangeEvent(HandleEditEngineTextChangeEvent);
+  FEditEngine.UnsubscribeMetaChangeEvent(HandleEditEngineMetaChangeEvent);
+  FEditEngine.UnsubscribeSynchronisedChangeEvent(HandleEditEngineSynchronisedChangeEvent);
+  FEditEngine.UnsubscribeParseEvent(HandleEditEngineParseEvent);
+  FEditEngine.UnsubscribeMouseOverChangedEvent(HandleMouseOverChangedEvent);
+  FEditEngine.UnsubscribeCursorActiveChangedEvent(HandleCursorActiveChangedEvent);
 
   inherited;
 end;
@@ -634,7 +630,7 @@ end;
 constructor TTextAttributes2.Create;
 begin
   inherited Create;
-  FFormat.cbSize := Marshal.SizeOf(TypeOf(TCharFormat2));
+  FFormat.cbSize := SizeOf(TCharFormat2);
   FFormat.dwMask := CFM_COLOR or CFM_BACKCOLOR or CFM_BOLD or CFM_ITALIC or CFM_UNDERLINE or CFM_STRIKEOUT;
 end;
 

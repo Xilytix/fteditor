@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.FieldsFrame;
 
@@ -133,7 +130,7 @@ end;
 
 function TFieldsFrame.CalculateCaption(field: TFieldedTextField): string;
 begin
-  Result := field.Index.ToString + '.' + FEditEngine.DataTypeAbbr[field.DataType] + ': ' + field.Name;
+  Result := IntToStr(field.Index) + '.' + FEditEngine.DataTypeAbbr[field.DataType] + ': ' + field.Name;
 end;
 
 constructor TFieldsFrame.Create(AOwner: TComponent);
@@ -224,7 +221,7 @@ begin
   if buttonIdx < 0 then
     field := nil
   else
-    field := FieldsButtonGroup.Items[buttonIdx].Data as TFieldedTextField;
+    field := TObject(FieldsButtonGroup.Items[buttonIdx].Data) as TFieldedTextField;
 end;
 
 class function TFieldsFrame.GetTypeCaption: string;
@@ -249,7 +246,7 @@ var
 begin
   for I := 0 to FieldsButtonGroup.Items.Count - 1 do
   begin
-    Field := FieldsButtonGroup.Items[I].Data as TFieldedTextField;
+    Field := TObject(FieldsButtonGroup.Items[I].Data) as TFieldedTextField;
     if Field.HeadingConstraint = fthcNameIsMain then
     begin
       if I = FieldsButtonGroup.ItemIndex then
@@ -351,7 +348,7 @@ begin
   if idx < 0 then
     Field := nil
   else
-    Field := FieldsButtonGroup.Items[Idx].Data as TFieldedTextField;
+    Field := TObject(FieldsButtonGroup.Items[Idx].Data) as TFieldedTextField;
 
   LoadFieldPropertiesFrame(Field, idx);
 end;
@@ -359,11 +356,11 @@ end;
 procedure TFieldsFrame.Prepare(const myEditEngine: TEditEngine; myBinder: TBinder);
 begin
   inherited;
-  Include(FEditEngine.RefreshFieldsControlsEvent, HandleRefreshFieldsControlsEvent);
-  Include(FEditEngine.FieldRemovedEvent, HandleFieldRemovedEvent);
-  Include(FEditEngine.NewOpenTextEvent, HandleNewOpenTextEvent);
-  Include(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Include(FBinder.FieldCaptionChangeEvent, HandleFieldCaptionChangeEvent);
+  FEditEngine.SubscribeRefreshFieldsControlsEvent(HandleRefreshFieldsControlsEvent);
+  FEditEngine.SubscribeFieldRemovedEvent(HandleFieldRemovedEvent);
+  FEditEngine.SubscribeNewOpenTextEvent(HandleNewOpenTextEvent);
+  FEditEngine.SubscribeParseEvent(HandleEditEngineParseEvent);
+  FBinder.SubscribeFieldCaptionChangeEvent(HandleFieldCaptionChangeEvent);
 end;
 
 procedure TFieldsFrame.Refresh;
@@ -428,11 +425,11 @@ end;
 procedure TFieldsFrame.Unprepare;
 begin
   LoadFieldPropertiesFrame(nil, -1);
-  Exclude(FEditEngine.RefreshFieldsControlsEvent, HandleRefreshFieldsControlsEvent);
-  Exclude(FEditEngine.FieldRemovedEvent, HandleFieldRemovedEvent);
-  Exclude(FEditEngine.NewOpenTextEvent, HandleNewOpenTextEvent);
-  Exclude(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Exclude(FBinder.FieldCaptionChangeEvent, HandleFieldCaptionChangeEvent);
+  FEditEngine.UnsubscribeRefreshFieldsControlsEvent(HandleRefreshFieldsControlsEvent);
+  FEditEngine.UnsubscribeFieldRemovedEvent(HandleFieldRemovedEvent);
+  FEditEngine.UnsubscribeNewOpenTextEvent(HandleNewOpenTextEvent);
+  FEditEngine.UnsubscribeParseEvent(HandleEditEngineParseEvent);
+  FBinder.UnsubscribeFieldCaptionChangeEvent(HandleFieldCaptionChangeEvent);
   inherited;
 end;
 

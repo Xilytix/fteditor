@@ -666,10 +666,6 @@ object OptionsForm: TOptionsForm
     object OtherTabSheet: TTabSheet
       Caption = 'Other'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object NumberFromZeroCheckBox: TCheckBox
         Left = 8
         Top = 188

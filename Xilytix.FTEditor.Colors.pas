@@ -1,19 +1,18 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.Colors;
 
 interface
 
 uses
+  Types,
   Graphics,
   XMLIntf,
-  Xilytix.FTEditor.Common;
+  Xilytix.FTEditor.Common,
+  Xilytix.FTEditor.TypedXml;
 
 type
   TColorItemId =
@@ -120,6 +119,7 @@ type
       TColorItemConstant = record
         Id: TColorItemId;
         Name: string;
+        XmlValue: string;
         Example: TResolvedColorId;
         IgnoreBackground: Boolean;
         IgnoreFont: Boolean;
@@ -129,53 +129,55 @@ type
     const
       Constants: TColorItemConstants =
       (
-        (Id: ciActiveFrameHeader; Name: 'Active Frame Header'; Example: rcActiveFrameHeader; IgnoreFont: True),
-        (Id: ciSelectableFrameHeader; Name: 'Selectable Frame Header'; Example: rcSelectableFrameHeader; IgnoreFont: True),
-        (Id: ciReadOnlyFrameHeader; Name: 'Read Only Frame Header'; Example: rcReadOnlyFrameHeader; IgnoreFont: True),
-        (Id: ciControlOk; Name: 'Control Ok'; Example: rcControlOk),
-        (Id: ciControlWarning; Name: 'Control Warning'; Example: rcControlWarning),
-        (Id: ciControlError; Name: 'Control Error'; Example: rcControlError),
-        (Id: ciTextView; Name: 'Text View'; Example: rcTextView),
-        (Id: ciGridView; Name: 'Grid View'; Example: rcGridView),
+        (Id: ciActiveFrameHeader; Name: 'Active Frame Header'; XmlValue: 'ActiveFrameHeader'; Example: rcActiveFrameHeader; IgnoreFont: True),
+        (Id: ciSelectableFrameHeader; Name: 'Selectable Frame Header'; XmlValue: 'SelectableFrameHeader'; Example: rcSelectableFrameHeader; IgnoreFont: True),
+        (Id: ciReadOnlyFrameHeader; Name: 'Read Only Frame Header'; XmlValue: 'ReadOnlyFrameHeader'; Example: rcReadOnlyFrameHeader; IgnoreFont: True),
+        (Id: ciControlOk; Name: 'Control Ok'; XmlValue: 'ControlOk'; Example: rcControlOk),
+        (Id: ciControlWarning; Name: 'Control Warning'; XmlValue: 'ControlWarning'; Example: rcControlWarning),
+        (Id: ciControlError; Name: 'Control Error'; XmlValue: 'ControlError'; Example: rcControlError),
+        (Id: ciTextView; Name: 'Text View'; XmlValue: 'TextView'; Example: rcTextView),
+        (Id: ciGridView; Name: 'Grid View'; XmlValue: 'GridView'; Example: rcGridView),
 
-        (Id: ciFieldNamesRow; Name: 'Field Names Marker'; Example: rcGridFieldNamesRow),
+        (Id: ciFieldNamesRow; Name: 'Field Names Marker'; XmlValue: 'FieldNamesRow'; Example: rcGridFieldNamesRow),
 
-        (Id: ciHeadingRow; Name: 'Heading Marker'; Example: rcGridHeadingRow),
-        (Id: ciHeadingRowError; Name: 'Heading Error Marker'; Example: rcGridHeadingRowError),
-        (Id: ciNewTableRecordRow; Name: 'New Table Marker'; Example: rcGridNewTableRecordRow),
-        (Id: ciNewTableRecordRowAlt; Name: 'New Table Alt Marker'; Example: rcGridNewTableRecordRowAlt),
-        (Id: ciNewTableRecordRowError; Name: 'New Table Error Marker'; Example: rcGridNewTableRecordRowError),
-        (Id: ciRecordRow; Name: 'Record Marker'; Example: rcGridRecordRow),
-        (Id: ciRecordRowAlt; Name: 'Record Alt Marker'; Example: rcGridRecordRowAlt),
-        (Id: ciRecordRowError; Name: 'Record Error Marker'; Example: rcGridRecordRowError),
-        (Id: ciMouseOverRow; Name: 'Mouse Over Heading Marker'; Example: rcGridMouseOverRow),
-        (Id: ciMouseOverRowError; Name: 'Mouse Over Heading Error Marker'; Example: rcGridMouseOverRowError),
+        (Id: ciHeadingRow; Name: 'Heading Marker'; XmlValue: 'HeadingRow'; Example: rcGridHeadingRow),
+        (Id: ciHeadingRowError; Name: 'Heading Error Marker'; XmlValue: 'HeadingRowError'; Example: rcGridHeadingRowError),
+        (Id: ciNewTableRecordRow; Name: 'New Table Marker'; XmlValue: 'NewTableRecordRow'; Example: rcGridNewTableRecordRow),
+        (Id: ciNewTableRecordRowAlt; Name: 'New Table Alt Marker'; XmlValue: 'NewTableRecordRowAlt'; Example: rcGridNewTableRecordRowAlt),
+        (Id: ciNewTableRecordRowError; Name: 'New Table Error Marker'; XmlValue: 'NewTableRecordRowError'; Example: rcGridNewTableRecordRowError),
+        (Id: ciRecordRow; Name: 'Record Marker'; XmlValue: 'RecordRow'; Example: rcGridRecordRow),
+        (Id: ciRecordRowAlt; Name: 'Record Alt Marker'; XmlValue: 'RecordRowAlt'; Example: rcGridRecordRowAlt),
+        (Id: ciRecordRowError; Name: 'Record Error Marker'; XmlValue: 'RecordRowError'; Example: rcGridRecordRowError),
+        (Id: ciMouseOverRow; Name: 'Mouse Over Heading Marker'; XmlValue: 'MouseOverRow'; Example: rcGridMouseOverRow),
+        (Id: ciMouseOverRowError; Name: 'Mouse Over Heading Error Marker'; XmlValue: 'MouseOverRowError'; Example: rcGridMouseOverRowError),
 
-        (Id: ciFieldNamesColumn; Name: 'Field Names Column'; Example: rcGridFieldNamesColumn),
+        (Id: ciFieldNamesColumn; Name: 'Field Names Column'; XmlValue: 'FieldNamesColumn'; Example: rcGridFieldNamesColumn),
 
-        (Id: ciHeadingColumnMod0; Name: 'Heading Column Mod 0'; Example: rcGridHeadingColumnMod0),
-        (Id: ciHeadingColumnMod1; Name: 'Heading Column Mod 1'; Example: rcGridHeadingColumnMod1),
-        (Id: ciHeadingColumnMod2; Name: 'Heading Column Mod 2'; Example: rcGridHeadingColumnMod2),
-        (Id: ciHeadingColumnMod3; Name: 'Heading Column Mod 3'; Example: rcGridHeadingColumnMod3),
-        (Id: ciHeadingColumnError; Name: 'Heading Column Error'; Example: rcGridHeadingColumnError),
+        (Id: ciHeadingColumnMod0; Name: 'Heading Column Mod 0'; XmlValue: 'HeadingColumnMod0'; Example: rcGridHeadingColumnMod0),
+        (Id: ciHeadingColumnMod1; Name: 'Heading Column Mod 1'; XmlValue: 'HeadingColumnMod1'; Example: rcGridHeadingColumnMod1),
+        (Id: ciHeadingColumnMod2; Name: 'Heading Column Mod 2'; XmlValue: 'HeadingColumnMod2'; Example: rcGridHeadingColumnMod2),
+        (Id: ciHeadingColumnMod3; Name: 'Heading Column Mod 3'; XmlValue: 'HeadingColumnMod3'; Example: rcGridHeadingColumnMod3),
+        (Id: ciHeadingColumnError; Name: 'Heading Column Error'; XmlValue: 'HeadingColumnError'; Example: rcGridHeadingColumnError),
 
-        (Id: ciRecordColumnMod0; Name: 'Record Column Mod 0'; Example: rcGridRecordColumnMod0),
-        (Id: ciRecordColumnMod0Alt; Name: 'Record Column Mod 0 Alt'; Example: rcGridRecordColumnMod0Alt),
-        (Id: ciRecordColumnMod1; Name: 'Record Column Mod 1'; Example: rcGridRecordColumnMod1),
-        (Id: ciRecordColumnMod1Alt; Name: 'Record Column Mod 1 Alt'; Example: rcGridRecordColumnMod1Alt),
-        (Id: ciRecordColumnMod2; Name: 'Record Column Mod 2'; Example: rcGridRecordColumnMod2),
-        (Id: ciRecordColumnMod2Alt; Name: 'Record Column Mod 2 Alt'; Example: rcGridRecordColumnMod2Alt),
-        (Id: ciRecordColumnMod3; Name: 'Record Column Mod 3'; Example: rcGridRecordColumnMod3),
-        (Id: ciRecordColumnMod3Alt; Name: 'Record Column Mod 3 Alt'; Example: rcGridRecordColumnMod3Alt),
+        (Id: ciRecordColumnMod0; Name: 'Record Column Mod 0'; XmlValue: 'RecordColumnMod0'; Example: rcGridRecordColumnMod0),
+        (Id: ciRecordColumnMod0Alt; Name: 'Record Column Mod 0 Alt'; XmlValue: 'RecordColumnMod0Alt'; Example: rcGridRecordColumnMod0Alt),
+        (Id: ciRecordColumnMod1; Name: 'Record Column Mod 1'; XmlValue: 'RecordColumnMod1'; Example: rcGridRecordColumnMod1),
+        (Id: ciRecordColumnMod1Alt; Name: 'Record Column Mod 1 Alt'; XmlValue: 'RecordColumnMod1Alt'; Example: rcGridRecordColumnMod1Alt),
+        (Id: ciRecordColumnMod2; Name: 'Record Column Mod 2'; XmlValue: 'RecordColumnMod2'; Example: rcGridRecordColumnMod2),
+        (Id: ciRecordColumnMod2Alt; Name: 'Record Column Mod 2 Alt'; XmlValue: 'RecordColumnMod2Alt'; Example: rcGridRecordColumnMod2Alt),
+        (Id: ciRecordColumnMod3; Name: 'Record Column Mod 3'; XmlValue: 'RecordColumnMod3'; Example: rcGridRecordColumnMod3),
+        (Id: ciRecordColumnMod3Alt; Name: 'Record Column Mod 3 Alt'; XmlValue: 'RecordColumnMod3Alt'; Example: rcGridRecordColumnMod3Alt),
 
-        (Id: ciRecordCellError; Name: 'Record Cell Error'; Example: rcGridRecordCellError),
-        (Id: ciMouseOverCell; Name: 'Mouse Over Cell'; Example: rcGridMouseOverCell),
-        (Id: ciMouseOverCellError; Name: 'Mouse Over Cell Error'; Example: rcGridMouseOverCellError),
-        (Id: ciFocusedCell; Name: 'Focused Cell'; Example: rcGridFocusedCell),
-        (Id: ciFocusedCellError; Name: 'Focused Cell Error'; Example: rcGridFocusedCellError),
+        (Id: ciRecordCellError; Name: 'Record Cell Error'; XmlValue: 'RecordCellError'; Example: rcGridRecordCellError),
+        (Id: ciMouseOverCell; Name: 'Mouse Over Cell'; XmlValue: 'MouseOverCell'; Example: rcGridMouseOverCell),
+        (Id: ciMouseOverCellError; Name: 'Mouse Over Cell Error'; XmlValue: 'MouseOverCellError'; Example: rcGridMouseOverCellError),
+        (Id: ciFocusedCell; Name: 'Focused Cell'; XmlValue: 'FocusedCell'; Example: rcGridFocusedCell),
+        (Id: ciFocusedCellError; Name: 'Focused Cell Error'; XmlValue: 'FocusedCellError'; Example: rcGridFocusedCellError),
 
-        (Id: ciBeyondBoundary; Name: 'BeyondBoundary'; Example: rcGridBeyondBoundary)
+        (Id: ciBeyondBoundary; Name: 'BeyondBoundary'; XmlValue: 'BeyondBoundary'; Example: rcGridBeyondBoundary)
       );
+
+      XmlTag_Item = 'Item';
 
       XmlTag_Id = 'Id';
       XmlTag_Background = 'Bkgd';
@@ -183,22 +185,23 @@ type
       XmlTag_FontStyles = 'FontStyles';
 
     var
-      [XmlAttribute]
+//      [XmlAttribute]
       Id: TColorItemId;
-      [XmlIgnore]
+//      [XmlIgnore]
       Background: TColor;
-      [XmlIgnore]
+//      [XmlIgnore]
       Font: TColor;
-      [XmlAttribute]
+//      [XmlAttribute]
       FontStyles: TFontStyles;
 
     class constructor Create;
 
-    procedure StringsToColors;
-    procedure ColorsToStrings;
+    procedure SaveToXml(XmlNode: ITypedXmlElement);
+    procedure LoadFromXml(XmlNode: ITypedXmlElement);
+    class function TryGetIdFromXml(XmlNode: ITypedXmlElement; out IdValue: TColorItemId): Boolean; static;
 
-    procedure SaveToXml(XmlNode: IXMLNode);
-    procedure LoadFromXml(XmlNode: IXMLNode);
+    class function ColorItemIdToXmlValue(Id: TColorItemId): string; static;
+    class function TryXmlValueToColorItemId(const XmlValue: string; out ColorItemId: TColorItemId): Boolean; static;
   end;
   TColorItemValues = array[TColorItemId] of TColorItemValue;
 
@@ -206,19 +209,19 @@ type
   strict private
     const
       XmlTag_Root = 'ColorScheme';
+      FileExtension = 'xml';
+      FileNamePrefix = 'fcs';
 
     var
       FName: string;
       FValues: TColorItemValues;
 
-      procedure LoadFromXml(Node: IXMLNode);
-      procedure SaveToXml(XmlNode: IXMLNode);
+      procedure LoadFromXml(XmlNode: ITypedXmlElement);
+      procedure SaveToXml(XmlNode: ITypedXmlElement);
 
   public
     const
       DefaultSchemeName = '<Default>';
-      FileExtension = 'ftecs';
-      FileNameFirstChar = TCommon.SafeFileNamePrefix;
 
     property Name: string read FName write FName;
     property Values: TColorItemValues read FValues write FValues;
@@ -232,6 +235,8 @@ type
     class function NameToFileName(const value: string): string;
     class function TryFileNameToName(const fileName: string; out schemeName: string): Boolean;
     class function NameToFilePath(const value: string): string;
+
+    class function GetSchemeNames(const FolderPath: string): TStringDynArray;
   end;
 
 
@@ -378,11 +383,11 @@ type
 
     class function GetNames(id: TColorItemId): string; static;
   public
-    procedure Reset;
-    procedure LoadFromScheme(scheme: TColorScheme);
+    procedure LoadFromDefault;
+    procedure LoadFromXml(XmlNode: ITypedXmlElement);
+    procedure SaveToXml(XmlNode: ITypedXmlElement);
 
-    procedure PrepareForSerialize;
-    procedure ProcessDeserialize;
+    procedure LoadFromScheme(scheme: TColorScheme);
 
     function Resolve: TResolvedColors;
 
@@ -480,34 +485,39 @@ begin
   Result := TColorItemValue.Constants[id].Name;
 end;
 
+procedure TColorItems.LoadFromDefault;
+begin
+  CopyDefaultValues(FValues);
+end;
+
 procedure TColorItems.LoadFromScheme(scheme: TColorScheme);
 begin
   FValues := scheme.Values;
 end;
 
-procedure TColorItems.PrepareForSerialize;
+procedure TColorItems.LoadFromXml(XmlNode: ITypedXmlElement);
 var
-  I: TColorItemId;
+  I: Integer;
+  ChildNode: IXmlNode;
+  ChildElement: ITypedXmlElement;
+  IdValue: TColorItemId;
 begin
-  for I := Low(FValues) to High(FValues) do
-  begin
-    FValues[I].ColorsToStrings;
-  end;
-end;
+  TColorItems.CopyDefaultValues(FValues);
 
-procedure TColorItems.ProcessDeserialize;
-var
-  I: TColorItemId;
-begin
-  for I := Low(FValues) to High(FValues) do
+  for I := 0 to XmlNode.ChildNodes.Count-1 do
   begin
-    FValues[I].StringsToColors;
+    ChildNode := XmlNode.ChildNodes[I];
+    if (ChildNode.NodeType = ntElement) and SameText(ChildNode.NodeName, TColorItemValue.XmlTag_Item) then
+    begin
+      ChildElement := ChildNode as ITypedXmlElement;
+      if TColorItemValue.TryGetIdFromXml(ChildElement, IdValue) then
+      begin
+        FValues[IdValue].LoadFromXml(ChildElement);
+      end;
+    end;
   end;
-end;
 
-procedure TColorItems.Reset;
-begin
-  CopyDefaultValues(FValues);
+  Resolve;
 end;
 
 function TColorItems.Resolve: TResolvedColors;
@@ -565,6 +575,18 @@ begin
                ResolvedColors);
 end;
 
+procedure TColorItems.SaveToXml(XmlNode: ITypedXmlElement);
+var
+  Id: TColorItemId;
+  ItemElement: ITypedXmlElement;
+begin
+  for Id := Low(FValues) to High(FValues) do
+  begin
+    ItemElement := XmlNode.AddElement(TColorItemValue.XmlTag_Item);
+    FValues[Id].SaveToXml(ItemElement);
+  end;
+end;
+
 procedure TColorItems.SetBackgrounds(id: TColorItemId; const Value: TColor);
 begin
   FValues[id].Background := Value;
@@ -582,10 +604,9 @@ end;
 
 { TColorItemValue }
 
-procedure TColorItemValue.ColorsToStrings;
+class function TColorItemValue.ColorItemIdToXmlValue(Id: TColorItemId): string;
 begin
-  BackgroundAsString := ColorToString(Background);
-  FontAsString := ColorToString(Font);
+  Result := Constants[Id].XmlValue;
 end;
 
 class constructor TColorItemValue.Create;
@@ -601,26 +622,62 @@ begin
   end;
 end;
 
-procedure TColorItemValue.LoadFromXml(XmlNode: IXMLNode);
+procedure TColorItemValue.LoadFromXml(XmlNode: ITypedXmlElement);
+var
+  ColorValue: TColor;
+  FontStylesValue: TFontStyles;
 begin
+  // already got Id
 
-end;
-
-procedure TColorItemValue.SaveToXml(XmlNode: IXMLNode);
-begin
-  XmlNode.Attributes[XmlTag_Id] :=
-end;
-
-procedure TColorItemValue.StringsToColors;
-begin
-  if BackgroundAsString <> '' then
+  if XmlNode.TryGetColorAttr(XmlTag_Background, ColorValue) then
   begin
-    Background := StringToColor(BackgroundAsString);
+    Background := ColorValue;
   end;
 
-  if FontAsString <> '' then
+  if XmlNode.TryGetColorAttr(XmlTag_Font, ColorValue) then
   begin
-    Font := StringToColor(FontAsString);
+    Font := ColorValue;
+  end;
+
+  if XmlNode.TryGetFontStylesAttr(XmlTag_FontStyles, FontStylesValue) then
+  begin
+    FontStyles := FontStylesValue;
+  end;
+end;
+
+procedure TColorItemValue.SaveToXml(XmlNode: ITypedXmlElement);
+begin
+  XmlNode.StringAttr[XmlTag_Id] := ColorItemIdToXmlValue(Id);
+  XmlNode.ColorAttr[XmlTag_Background] := Background;
+  XmlNode.ColorAttr[XmlTag_Font] := Font;
+  XmlNode.FontStylesAttr[XmlTag_FontStyles] := FontStyles;
+end;
+
+class function TColorItemValue.TryGetIdFromXml(
+  XmlNode: ITypedXmlElement; out IdValue: TColorItemId): Boolean;
+var
+  XmlValue: string;
+begin
+  if not XmlNode.TryGetStringAttr(XmlTag_Id, XmlValue) then
+    Result := False
+  else
+    Result := TryXmlValueToColorItemId(XmlValue, IdValue);
+end;
+
+class function TColorItemValue.TryXmlValueToColorItemId(
+  const XmlValue: string; out ColorItemId: TColorItemId): Boolean;
+var
+  Id: TColorItemId;
+begin
+  Result := False;
+  for Id := Low(Constants) to High(Constants) do
+  begin
+    if InvariantSameString(Constants[Id].XmlValue, XmlValue, True) then
+    begin
+      ColorItemId := Id;
+      Result := True;
+      Break;
+    end;
   end;
 end;
 
@@ -642,8 +699,7 @@ end;
 class function TColorScheme.CreateFromFile(const schemeName: string): TColorScheme;
 var
   FilePath: string;
-  XMLDocument: IXMLDocument;
-  RootNode: IXmlNode;
+  XMLDocument: ITypedXMLDocument;
   Strm: TFileStream;
 begin
   FilePath := NameToFilePath(schemeName);
@@ -653,7 +709,7 @@ begin
   begin
     Strm := TFileStream.Create(FilePath, fmOpenRead or fmShareDenyWrite);
     try
-      XMLDocument := TXmlDocument.Create('') as IXMLDocument;
+      XMLDocument := TTypedXmlDocument.Create('');
       XMLDocument.LoadFromStream(Strm);
     finally
       Strm.Free;
@@ -661,8 +717,30 @@ begin
 
     Result := TColorScheme.Create;
     Result.Name := schemeName;
-    Result.LoadFromXml(XMLDocument.DocumentElement);
+    Result.LoadFromXml(XMLDocument.RootElement);
   end;
+end;
+
+class function TColorScheme.GetSchemeNames(
+  const FolderPath: string): TStringDynArray;
+var
+  I: Integer;
+  FileNames: TStringDynArray;
+  Name: string;
+  Count: Integer;
+begin
+  FileNames := TDirectory.GetFiles(FolderPath, FileNamePrefix + '*.' + FileExtension);
+  Count := 0;
+  SetLength(Result, Length(FileNames));
+  for I := Low(FileNames) to High(FileNames) do
+  begin
+    if TryFileNameToName(FileNames[I], Name) then
+    begin
+      Result[Count] := Name;
+      Inc(Count);
+    end;
+  end;
+  SetLength(Result, Count);
 end;
 
 class function TColorScheme.IsDefaultName(const value: string): Boolean;
@@ -670,14 +748,32 @@ begin
   Result := InvariantSameString(Value, DefaultSchemeName, True);
 end;
 
-procedure TColorScheme.LoadFromXml(Node: IXMLNode);
+procedure TColorScheme.LoadFromXml(XmlNode: ITypedXmlElement);
+var
+  I: Integer;
+  ChildNode: IXmlNode;
+  ChildElement: ITypedXmlElement;
+  IdValue: TColorItemId;
 begin
+  TColorItems.CopyDefaultValues(FValues);
 
+  for I := 0 to XmlNode.ChildNodes.Count-1 do
+  begin
+    ChildNode := XmlNode.ChildNodes[I];
+    if (ChildNode.NodeType = ntElement) and SameText(ChildNode.NodeName, TColorItemValue.XmlTag_Item) then
+    begin
+      ChildElement := ChildNode as ITypedXmlElement;
+      if TColorItemValue.TryGetIdFromXml(ChildElement, IdValue) then
+      begin
+        FValues[IdValue].LoadFromXml(ChildElement);
+      end;
+    end;
+  end;
 end;
 
 class function TColorScheme.NameToFileName(const value: string): string;
 begin
-  Result := TCommon.SafeFileNameEncode(value) + '.' + FileExtension;
+  Result := FileNamePrefix + TCommon.SafeFileNameEncode(value) + '.' + FileExtension;
 end;
 
 class function TColorScheme.NameToFilePath(const value: string): string;
@@ -689,16 +785,16 @@ end;
 procedure TColorScheme.SaveToFile;
 var
   FilePath: string;
-  XMLDocument: IXMLDocument;
-  RootNode: IXmlNode;
+  XMLDocument: ITypedXmlDocument;
+  RootNode: ITypedXmlElement;
   Strm: TFileStream;
 begin
   TCommon.EnsureColorSchemaFolderExists;
 
   FilePath := NameToFilePath(Name);
-  XMLDocument := TXMLDocument.Create('') as IXMLDocument;
+  XMLDocument := TTypedXmlDocument.Create('');
   XMLDocument.Active := True;
-  RootNode := XMLDocument.AddChild(XmlTag_Root) as IXMLNode;
+  RootNode := XMLDocument.AddElement(XmlTag_Root);
 
   SaveToXml(RootNode);
 
@@ -710,17 +806,27 @@ begin
   end;
 end;
 
-procedure TColorScheme.SaveToXml(XmlNode: IXMLNode);
+procedure TColorScheme.SaveToXml(XmlNode: ITypedXmlElement);
+var
+  Id: TColorItemId;
+  ItemElement: ITypedXmlElement;
 begin
-
+  for Id := Low(FValues) to High(FValues) do
+  begin
+    ItemElement := XmlNode.AddElement(TColorItemValue.XmlTag_Item);
+    FValues[Id].SaveToXml(ItemElement);
+  end;
 end;
 
 class function TColorScheme.TryFileNameToName(const fileName: string; out schemeName: string): Boolean;
 var
   NoExtFileName: string;
+  EncodedName: string;
 begin
   NoExtFileName := TPath.GetFileNameWithoutExtension(fileName);
-  Result := TCommon.TrySafeFileNameDecode(NoExtFileName, schemeName) = 0;
+  EncodedName := Copy(NoExtFileName, Length(FileNamePrefix) + 1, MaxInt);
+  Result := TCommon.TrySafeFileNameDecode(EncodedName, SchemeName);
 end;
 
 end.
+

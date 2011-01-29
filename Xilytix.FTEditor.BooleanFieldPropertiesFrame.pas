@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.BooleanFieldPropertiesFrame;
 
@@ -45,7 +42,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Globalization,
+  Rtti,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.StandardFields,
   Xilytix.FTEditor.Binder;
 
@@ -93,14 +91,19 @@ end;
 
 procedure TBooleanFieldPropertiesFrame.StylesButtonClick(Sender: TObject);
 var
+  Value: TValue;
+  Styles: TBooleanStyles;
   NewValue: string;
   DefaultStyles: TBooleanStyles;
 begin
   DefaultStyles := TFieldedTextField_Boolean.DefaultStyles;
 
+  Value := FBinder.GetPropertyValue(StylesEdit, FFieldIndex);
+  Styles := Value.AsType<TBooleanStyles>;
+
   if FBinder.EditBooleanStyles(Self,
                                StylesEdit.Text,
-                               FBinder.GetPropertyValue(StylesEdit, FFieldIndex) as TBooleanStyles,
+                               Styles,
                                DefaultStyles,
                                NewValue) then
   begin

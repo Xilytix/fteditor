@@ -7,9 +7,9 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     Top = 154
     Width = 157
     Height = 199
-    ExplicitTop = 176
+    ExplicitTop = 154
     ExplicitWidth = 157
-    ExplicitHeight = 179
+    ExplicitHeight = 199
     inherited Bevel5: TBevel
       Width = 156
       ExplicitWidth = 157
@@ -22,43 +22,34 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     Top = 154
     Width = 157
     Height = 199
-    ExplicitTop = 176
-    ExplicitWidth = 161
-    ExplicitHeight = 175
+    ExplicitTop = 154
+    ExplicitWidth = 157
+    ExplicitHeight = 199
     inherited FixedWidthPageControl: TPageControl
       Width = 157
       Height = 172
-      ExplicitWidth = 161
-      ExplicitHeight = 148
+      ExplicitWidth = 157
+      ExplicitHeight = 172
       inherited ValueTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 180
-        ExplicitHeight = 110
-        inherited ValuePadAlignmentComboBox: TComboBoxEx
+        ExplicitWidth = 149
+        ExplicitHeight = 144
+        inherited ValuePadAlignmentComboBox: TComboBox
           TabOrder = 0
-          ExplicitWidth = 88
         end
-        inherited ValuePadCharTypeComboBox: TComboBoxEx
+        inherited ValuePadCharTypeComboBox: TComboBox
           TabOrder = 2
-          ExplicitWidth = 88
-        end
-        inherited ValueTruncateTypeComboBox: TComboBoxEx
-          ExplicitWidth = 113
         end
         inherited ValuePadCharEdit: TEdit
           TabOrder = 1
         end
       end
       inherited HeadingTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 161
-        ExplicitHeight = 153
-        inherited HeadingPadAlignmentComboBox: TComboBoxEx
+        ExplicitWidth = 149
+        ExplicitHeight = 144
+        inherited HeadingPadAlignmentComboBox: TComboBox
           TabOrder = 0
         end
-        inherited HeadingPadCharTypeComboBox: TComboBoxEx
+        inherited HeadingPadCharTypeComboBox: TComboBox
           TabOrder = 2
         end
         inherited HeadingPadCharEdit: TEdit
@@ -68,13 +59,13 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     end
     inherited FxiedWidthTopPanel: TPanel
       Width = 157
-      ExplicitWidth = 179
+      ExplicitWidth = 157
     end
   end
   inherited TopPanel: TPanel
     Width = 157
     Height = 154
-    ExplicitWidth = 169
+    ExplicitWidth = 157
     ExplicitHeight = 154
     inherited DataTypeLabel: TLabel
       Width = 34
@@ -91,11 +82,9 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     end
     inherited NameEdit: TEdit
       TabOrder = 8
-      ExplicitWidth = 122
     end
-    inherited HeadingConstraintComboBox: TComboBoxEx
+    inherited HeadingConstraintComboBox: TComboBox
       TabOrder = 7
-      ExplicitWidth = 82
     end
     object ConstantValueEdit: TEdit [9]
       Left = 53
@@ -107,7 +96,6 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
       Text = 'ConstantValueEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
-      ExplicitWidth = 112
     end
     inherited NullConstantCheckBox: TCheckBox
       Top = 93
@@ -136,10 +124,6 @@ inherited StringFieldPropertiesFrame: TStringFieldPropertiesFrame
     end
     inherited HeadingsEdit: TEdit
       TabOrder = 9
-      ExplicitWidth = 104
-    end
-    inherited HeadingsButton: TButton
-      ExplicitLeft = 142
     end
   end
 end

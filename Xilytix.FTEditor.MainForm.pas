@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.MainForm;
 
@@ -31,7 +28,7 @@ type
     NewTextAction: TAction;
     MainMenuPanel: TPanel;
     Label1: TLabel;
-    LayoutConfigurationsComboBox: TComboBoxEx;
+    LayoutConfigurationsComboBox: TComboBox;
     ConfigureLayoutButton: TButton;
     OpenTextAction: TFileOpen;
     SaveTextAction: TAction;
@@ -148,7 +145,7 @@ type
       FEditEngine: TEditEngine;
       FBinder: TBinder;
 
-      FLayoutConfigurations: TLayoutConfigurations;
+//      FLayoutConfigurations: TLayoutConfigurations;
       FActiveLayoutConfiguration: TLayoutConfiguration;
       FSourceFrames: TSourceFrames;
 
@@ -157,7 +154,7 @@ type
 
       FActiveSourceSummary: TActiveSourceSummary;
 
-    procedure HandleAddFrameEvent(sender: TLayoutFrame; frame: TLayoutableFrame; config: XmlElement);
+    procedure HandleAddFrameEvent(sender: TLayoutFrame; frame: TLayoutableFrame; Slot: TLayoutConfiguration.TFrameSlotId{config: XmlElement});
     procedure HandleRemoveFrameEvent(sender: TLayoutFrame; frame: TLayoutableFrame);
     procedure HandleRequestActiveSourceEvent(sender: TSourceFrame);
     procedure HandleSourceModeChangeEvent(sender: TSourceFrame; oldMode: TSourceMode);
@@ -173,12 +170,12 @@ type
     function HandleRequestNewConfigurationEvent: TLayoutConfiguration;
     procedure HandleRequestDeleteConfigurationEvent(configurationToDelete: TLayoutConfiguration);
 
-    procedure CreateDefaultLayoutConfigurations;
     procedure SetDefaultActiveLayoutConfiguration;
     function CreateDefaultLayoutConfiguration: TLayoutConfiguration;
     function CreateCompactConfiguration: TLayoutConfiguration;
     function CreateSequencesLayoutConfiguration: TLayoutConfiguration;
 
+    procedure CheckCreateInitialLayoutConfigurations;
     function CheckDuplicateConfigurationNameExists(aName: string): Boolean;
 
     procedure UpdateLayoutConfigurationsComboBox;
@@ -209,9 +206,11 @@ implementation
 {$R *.dfm}
 
 uses
-  System.IO,
+  Types,
+  IOUtils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Common,
+  Xilytix.FTEditor.TypedXml,
   Xilytix.FTEditor.EditData,
   Xilytix.FTEditor.EditorFrame,
   Xilytix.FTEditor.OptionsForm,
@@ -265,16 +264,36 @@ begin
   end;
 end;
 
+procedure TMainForm.CheckCreateInitialLayoutConfigurations;
+var
+  Names: TStringDynArray;
+  LayoutConfiguration: TLayoutConfiguration;
+begin
+  Names := TLayoutConfiguration.GetSavedNames(TCommon.LayoutConfigurationsFolder);
+  if Length(Names) = 0 then
+  begin
+    LayoutConfiguration := CreateDefaultLayoutConfiguration;
+    LayoutConfiguration.SaveToFile;
+    LayoutConfiguration.Free;
+    LayoutConfiguration := CreateCompactConfiguration;
+    LayoutConfiguration.SaveToFile;
+    LayoutConfiguration.Free;
+    LayoutConfiguration := CreateSequencesLayoutConfiguration;
+    LayoutConfiguration.SaveToFile;
+    LayoutConfiguration.Free;
+  end;
+end;
+
 function TMainForm.CheckDuplicateConfigurationNameExists(aName: string): Boolean;
 var
   I: Integer;
 begin
   Result := False;
-  for I := 0 to FLayoutConfigurations.Count - 1 do
+  for I := 0 to LayoutConfigurationsComboBox.Items.Count - 1 do
   begin
-    if (FLayoutConfigurations[I] <> FActiveLayoutConfiguration)
+    if (LayoutConfigurationsComboBox.Items[I] <> FActiveLayoutConfiguration.Name)
        and
-       (System.&String.Compare(aName, FLayoutConfigurations[I].Name, True) = 0) then
+       SameText(LayoutConfigurationsComboBox.Items[I], aName) then
     begin
       Result := True;
       Break;
@@ -323,8 +342,7 @@ end;
 
 function TMainForm.CreateCompactConfiguration: TLayoutConfiguration;
 begin
-  Result := FLayoutConfigurations.New;
-  Result.Name := '<Compact>';
+  Result := TLayoutConfiguration.Create('<Compact>', nil);
 
   Result.LeftHalfId := TLayoutConfiguration.THalfId.lhA;
   Result.RightHalfId := TLayoutConfiguration.THalfId.lhB;
@@ -349,14 +367,11 @@ begin
   Result.HalfB.Tabbed := True;
 
   Result.Check;
-
-  UpdateLayoutConfigurationsComboBox;
 end;
 
 function TMainForm.CreateDefaultLayoutConfiguration: TLayoutConfiguration;
 begin
-  Result := FLayoutConfigurations.New;
-  Result.Name := DefaultLayoutConfigurationName;
+  Result := TLayoutConfiguration.Create(DefaultLayoutConfigurationName, nil);
 
   Result.LeftHalfId := TLayoutConfiguration.THalfId.lhA;
   Result.RightHalfId := TLayoutConfiguration.THalfId.lhB;
@@ -379,23 +394,11 @@ begin
   Result.HalfB.RightFrameFill := False;
 
   Result.Check;
-
-  UpdateLayoutConfigurationsComboBox;
-end;
-
-procedure TMainForm.CreateDefaultLayoutConfigurations;
-var
-  LayoutConfiguration: TLayoutConfiguration;
-begin
-  LayoutConfiguration := CreateDefaultLayoutConfiguration;
-  LayoutConfiguration := CreateCompactConfiguration;
-  LayoutConfiguration := CreateSequencesLayoutConfiguration;
 end;
 
 function TMainForm.CreateSequencesLayoutConfiguration: TLayoutConfiguration;
 begin
-  Result := FLayoutConfigurations.New;
-  Result.Name := '<Sequences>';
+  Result := TLayoutConfiguration.Create('<Sequences>', nil);
 
   Result.LeftHalfId := TLayoutConfiguration.THalfId.lhA;
   Result.RightHalfId := TLayoutConfiguration.THalfId.lhB;
@@ -418,8 +421,6 @@ begin
   Result.HalfB.RightFrameFill := False;
 
   Result.Check;
-
-  UpdateLayoutConfigurationsComboBox;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -430,18 +431,18 @@ begin
   FCommandLineParser := TCommandLineParser.Create;
   FCommandLineParser.Parse;
 
-  Configuration := TConfiguration.Load;
+  Configuration := TConfiguration.Create;
 
   FEditEngine := TEditEngine.Create;
-  Include(FEditEngine.TextModifiedChangeEvent, HandleTextModifiedChangeEvent);
-  Include(FEditEngine.MetaModifiedChangeEvent, HandleMetaModifiedChangeEvent);
-  Include(FEditEngine.SynchronisedChangeEvent, HandleSynchronisedChangeEvent);
-  Include(FEditEngine.SequencesChangeEvent, HandleSequencesChangeEvent);
-  Include(FEditEngine.FieldedTextFilePathSetEvent, HandleFieldedTextFilePathSetEvent);
-  Include(FEditEngine.MouseOverChangedEvent, HandleMouseOverChangedEvent);
+  FEditEngine.SubscribeTextModifiedChangeEvent(HandleTextModifiedChangeEvent);
+  FEditEngine.SubscribeMetaModifiedChangeEvent(HandleMetaModifiedChangeEvent);
+  FEditEngine.SubscribeSynchronisedChangeEvent(HandleSynchronisedChangeEvent);
+  FEditEngine.SubscribeSequencesChangeEvent(HandleSequencesChangeEvent);
+  FEditEngine.SubscribeFieldedTextFilePathSetEvent(HandleFieldedTextFilePathSetEvent);
+  FEditEngine.SubscribeMouseOverChangedEvent(HandleMouseOverChangedEvent);
 
   FBinder := TBinder.Create(FEditEngine);
-  Include(FBinder.ErrorCountChangeEvent, HandleErrorCountChangeEvent);
+  FBinder.SubscribeErrorCountChangeEvent(HandleErrorCountChangeEvent);
 
   Configuration.TriggerUpdatedEvent;
 
@@ -470,17 +471,21 @@ begin
   OpenMetaAction.Dialog.DefaultExt := TCommon.MetaFileNameExtension;
   SaveMetaAsAction.Dialog.Filter := MetaFileNameFilter;
   SaveMetaAsAction.Dialog.DefaultExt := TCommon.MetaFileNameExtension;
+
+  CheckCreateInitialLayoutConfigurations;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SaveConfiguration;
+  Configuration.Free;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 var
   ActiveLayoutConfigurationName: string;
 begin
+  Configuration.Load;
   if not FDoneFirstFormShow then
   begin
     if Configuration.MainWindowMaximised then
@@ -494,30 +499,30 @@ begin
       Width := Configuration.MainWindowWidth;
     end;
 
-    FLayoutConfigurations := TLayoutConfigurations.Create;
-    FLayoutConfigurations.Load(Configuration.LayoutConfigurations);
+{    FLayoutConfigurations := TLayoutConfigurations.Create;
+    FLayoutConfigurations.LoadFromXml(Configuration.LayoutConfigurations);
     if FLayoutConfigurations.Count = 0 then
     begin
       CreateDefaultLayoutConfigurations;
-    end;
+    end;}
 
     FLayoutFrame := TLayoutFrame.Create(Self);
     FLayoutFrame.Align := alClient;
     FLayoutFrame.Parent := Self;
-    Include(FLayoutFrame.AddFrameEvent, HandleAddFrameEvent);
-    Include(FLayoutFrame.RemoveFrameEvent, HandleRemoveFrameEvent);
+    FLayoutFrame.SubscribeAddFrameEvent(HandleAddFrameEvent);
+    FLayoutFrame.SubscribeRemoveFrameEvent(HandleRemoveFrameEvent);
 
 
     ActiveLayoutConfigurationName := Configuration.ActiveLayoutConfigurationName;
-    FActiveLayoutConfiguration := FLayoutConfigurations.Get(ActiveLayoutConfigurationName);
-    UpdateLayoutConfigurationsComboBox;
-
+//    FActiveLayoutConfiguration := FLayoutConfigurations.Get(ActiveLayoutConfigurationName);
     if not Assigned(FActiveLayoutConfiguration) then
     begin
       SetDefaultActiveLayoutConfiguration;
     end;
 
     ConfigureLayoutFrame;
+
+    UpdateLayoutConfigurationsComboBox;
 
     if FCommandLineParser.ErrorDescription <> '' then
       MessageDlg('Invalid Command Line: ' + FCommandLineParser.ErrorDescription, mtWarning, [mbOk], 0)
@@ -568,15 +573,20 @@ begin
   end;
 end;
 
-procedure TMainForm.HandleAddFrameEvent(sender: TLayoutFrame; frame: TLayoutableFrame; config: XmlElement);
+procedure TMainForm.HandleAddFrameEvent(sender: TLayoutFrame; frame: TLayoutableFrame; Slot: TLayoutConfiguration.TFrameSlotId{config: XmlElement});
+var
+  Config: ITypedXmlElement;
 begin
   TEditorFrame(frame).Prepare(FEditEngine, FBinder);
 
   if frame is TSourceFrame then
   begin
-    Include(TSourceFrame(frame).RequestActiveSourceEvent, HandleRequestActiveSourceEvent);
-    Include(TSourceFrame(frame).SourceModeChangeEvent, HandleSourceModeChangeEvent);
+    TSourceFrame(frame).SubscribeRequestActiveSourceEvent(HandleRequestActiveSourceEvent);
+    TSourceFrame(frame).SubscribeSourceModeChangeEvent(HandleSourceModeChangeEvent);
   end;
+
+  Config := FActiveLayoutConfiguration.FrameSlotConfigs[Slot];
+
 
   if Assigned(config) then
   begin
@@ -591,7 +601,7 @@ end;
 
 procedure TMainForm.HandleFieldedTextFilePathSetEvent;
 begin
-  StatusBar.Panels[piFileName].Text := Path.GetFileName(FEditEngine.TextFilePath);
+  StatusBar.Panels[piFileName].Text := TPath.GetFileName(FEditEngine.TextFilePath);
 end;
 
 procedure TMainForm.HandleLayoutConfigurationChange;
@@ -640,30 +650,30 @@ begin
     else
     begin
       FilePos := Cell.FilePos;
-      MouseOverLineNrEdit.Text := Cell.LineNumber.ToString;
-      MouseOverLinePosEdit.Text := Cell.LinePos.ToString;
-      MouseOverFilePosEdit.Text := FilePos.ToString;
-      MouseOverFieldPosEdit.Text := Cell.ActiveIndex.ToString;
+      MouseOverLineNrEdit.Text := IntToStr(Cell.LineNumber);
+      MouseOverLinePosEdit.Text := IntToStr(Cell.LinePos);
+      MouseOverFilePosEdit.Text := IntToStr(FilePos);
+      MouseOverFieldPosEdit.Text := IntToStr(Cell.ActiveIndex);
       MouseOverFieldValueEdit.Text := Cell.ValueAsString;
-      MouseOverFieldTextEdit.Text := FEditEngine.Text.Substring(FilePos, Cell.TextLength);
+      MouseOverFieldTextEdit.Text := Copy(FEditEngine.Text, FilePos+1, Cell.TextLength);
       MouseOverFieldHeadingEdit.Text := FEditEngine.Heading[FEditEngine.MouseOverColIdx];
       if Cell.Row.Heading then
       begin
-        MouseOverRecordNrEdit.Text := 'H' + Cell.Row.Number.ToString;
+        MouseOverRecordNrEdit.Text := 'H' + IntToStr(Cell.Row.Number);
         MouseOverFieldNameEdit.Text := Cell.SequenceItem.Field.Name;
-        MouseOverFieldIndexEdit.Text := Cell.SequenceItem.Field.Index.ToString;
+        MouseOverFieldIndexEdit.Text := IntToStr(Cell.SequenceItem.Field.Index);
         MouseOverTableNrEdit.Text := '';
         MouseOverSeqNameEdit.Text := Cell.SequenceItem.Owner.Name;
-        MouseOverItemIndexEdit.Text := Cell.SequenceItem.Index.ToString;
+        MouseOverItemIndexEdit.Text := IntToStr(Cell.SequenceItem.Index);
       end
       else
       begin
-        MouseOverRecordNrEdit.Text := Cell.Row.Number.ToString;
+        MouseOverRecordNrEdit.Text := IntToStr(Cell.Row.Number);
         MouseOverFieldNameEdit.Text := Cell.SequenceItem.Field.Name;
-        MouseOverFieldIndexEdit.Text := Cell.SequenceItem.Field.Index.ToString;
-        MouseOverTableNrEdit.Text := Cell.Row.TableNr.ToString;
+        MouseOverFieldIndexEdit.Text := IntToStr(Cell.SequenceItem.Field.Index);
+        MouseOverTableNrEdit.Text := IntToStr(Cell.Row.TableNr);
         MouseOverSeqNameEdit.Text := Cell.SequenceItem.Owner.Name;
-        MouseOverItemIndexEdit.Text := Cell.SequenceItem.Index.ToString;
+        MouseOverItemIndexEdit.Text := IntToStr(Cell.SequenceItem.Index);
       end;
     end;
   end;
@@ -675,8 +685,8 @@ begin
 
   if frame is TSourceFrame then
   begin
-    Exclude(TSourceFrame(frame).RequestActiveSourceEvent, HandleRequestActiveSourceEvent);
-    Exclude(TSourceFrame(frame).SourceModeChangeEvent, HandleSourceModeChangeEvent);
+    TSourceFrame(frame).UnsubscribeRequestActiveSourceEvent(HandleRequestActiveSourceEvent);
+    TSourceFrame(frame).UnsubscribeSourceModeChangeEvent(HandleSourceModeChangeEvent);
   end;
 end;
 
@@ -713,14 +723,13 @@ end;
 
 procedure TMainForm.HandleRequestDeleteConfigurationEvent(configurationToDelete: TLayoutConfiguration);
 begin
-  FLayoutConfigurations.Remove(configurationToDelete);
   UpdateLayoutConfigurationsComboBox;
 end;
 
 function TMainForm.HandleRequestNewConfigurationEvent: TLayoutConfiguration;
 begin
   SaveConfiguration;
-  Result := FLayoutConfigurations.New;
+  Result := TLayoutConfiguration.Create('', nil);
   FActiveLayoutConfiguration := Result;
   UpdateLayoutConfigurationsComboBox;
   LoadComboBoxLayoutConfiguration;
@@ -880,10 +889,18 @@ end;
 procedure TMainForm.LoadComboBoxLayoutConfiguration;
 var
   ItemIndex: Integer;
+  LayoutName: string;
+  NewLayoutConfiguration: TLayoutConfiguration;
 begin
   ItemIndex := LayoutConfigurationsComboBox.ItemIndex;
-  FActiveLayoutConfiguration := LayoutConfigurationsComboBox.ItemsEx[ItemIndex].Data as TLayoutConfiguration;
-  ConfigureLayoutFrame;
+  LayoutName := LayoutConfigurationsComboBox.Items[ItemIndex];
+  NewLayoutConfiguration := TLayoutConfiguration.CreateFromFile(LayoutName);
+  if Assigned(NewLayoutConfiguration) then
+  begin
+    FActiveLayoutConfiguration.Free;
+    FActiveLayoutConfiguration := NewLayoutConfiguration;
+    ConfigureLayoutFrame;
+  end;
 end;
 
 procedure TMainForm.MouseOverPanelSplitterMoved(Sender: TObject);
@@ -1191,8 +1208,8 @@ end;
 procedure TMainForm.SaveConfiguration(includeExplicitSizes: Boolean);
 var
   ActiveLayoutConfigurationName: string;
-  Element: XmlElement;
-  FrameSlotConfigs: TLayoutConfiguration.TFrameSlotConfigs;
+//  Element: ITypedXmlElement;
+//  FrameSlotConfigs: TLayoutConfiguration.TFrameSlotConfigs;
   ExplicitSizes: TLayoutConfiguration.TExplicitSizesRec;
   WindowStateMaximised: Boolean;
 begin
@@ -1212,19 +1229,15 @@ begin
   begin
     ActiveLayoutConfigurationName := FActiveLayoutConfiguration.Name;
 
-    FrameSlotConfigs := FActiveLayoutConfiguration.GenerateBlankFrameSlotConfigs(Configuration.XmlElementHolder);
-    FLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs, ExplicitSizes);
-    FActiveLayoutConfiguration.AssignFrameSlotConfigs(FrameSlotConfigs);
+//    FrameSlotConfigs := FActiveLayoutConfiguration.GenerateBlankFrameSlotConfigs(Configuration.XmlElementHolder);
+//    FLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs, ExplicitSizes);
+//    FActiveLayoutConfiguration.AssignFrameSlotConfigs(FrameSlotConfigs);
     if includeExplicitSizes then
     begin
       FActiveLayoutConfiguration.AssignExplicitSizes(ExplicitSizes);
     end;
   end;
   Configuration.ActiveLayoutConfigurationName := ActiveLayoutConfigurationName;
-
-  Element := Configuration.LayoutConfigurations;
-  Element.RemoveAll;
-  FLayoutConfigurations.Save(Element);
 
   Configuration.Save;
 end;
@@ -1263,13 +1276,11 @@ end;
 
 procedure TMainForm.SetDefaultActiveLayoutConfiguration;
 begin
-  FActiveLayoutConfiguration := FLayoutConfigurations.Get(DefaultLayoutConfigurationName);
+  FActiveLayoutConfiguration := TLayoutConfiguration.CreateFromFile(DefaultLayoutConfigurationName);
   if not Assigned(FActiveLayoutConfiguration) then
   begin
     FActiveLayoutConfiguration := CreateDefaultLayoutConfiguration;
-    FLayoutConfigurations.Add(FActiveLayoutConfiguration);
   end;
-  UpdateLayoutConfigurationsComboBox;
 end;
 
 procedure TMainForm.SetDefaultMetaCharEncoding;
@@ -1277,8 +1288,8 @@ begin
   try
     FEditEngine.MetaCharEncodingName := Configuration.DefaultMetaCharEncodingName;
   except
-    FEditEngine.MetaCharEncodingName := Configuration.GetDefaultDefaultMetaCharEncodingName;
-    Configuration.DefaultMetaCharEncodingName := Configuration.GetDefaultDefaultMetaCharEncodingName;
+    FEditEngine.MetaCharEncodingName := Configuration.DefaultDefaultMetaCharEncodingName;
+    Configuration.DefaultMetaCharEncodingName := Configuration.DefaultDefaultMetaCharEncodingName;
   end;
 end;
 
@@ -1287,8 +1298,8 @@ begin
   try
     FEditEngine.TextCharEncodingName := Configuration.DefaultTextCharEncodingName;
   except
-    FEditEngine.TextCharEncodingName := Configuration.GetDefaultDefaultTextCharEncodingName;
-    Configuration.DefaultTextCharEncodingName := Configuration.GetDefaultDefaultTextCharEncodingName;
+    FEditEngine.TextCharEncodingName := Configuration.DefaultDefaultTextCharEncodingName;
+    Configuration.DefaultTextCharEncodingName := Configuration.DefaultDefaultTextCharEncodingName;
   end;
 end;
 
@@ -1320,20 +1331,28 @@ end;
 procedure TMainForm.UpdateLayoutConfigurationsComboBox;
 var
   I: Integer;
-  ItemIndex: Integer;
+  SelectedName: string;
+  SavedNames: TStringDynArray;
+  ItemIdx: Integer;
 begin
-  ItemIndex := -1;
+  if Assigned(FActiveLayoutConfiguration) then
+    SelectedName := FActiveLayoutConfiguration.Name
+  else
+    SelectedName := '';
+
   LayoutConfigurationsComboBox.Items.Clear;
-  for I := 0 to FLayoutConfigurations.Count - 1 do
+  ItemIdx := -1;
+  SavedNames := TLayoutConfiguration.GetSavedNames(TCommon.LayoutConfigurationsFolder);
+  for I := Low(SavedNames) to High(SavedNames) do
   begin
-    LayoutConfigurationsComboBox.ItemsEx.AddItem(FLayoutConfigurations[I].Name, -1, -1, -1, 0, FLayoutConfigurations[I]);
-    if FLayoutConfigurations[I] = FActiveLayoutConfiguration then
+    LayoutConfigurationsComboBox.Items.Add(SavedNames[I]);
+    if SavedNames[I] = SelectedName then
     begin
-      ItemIndex := I;
+      ItemIdx := I;
     end;
   end;
 
-  LayoutConfigurationsComboBox.ItemIndex := ItemIndex;
+  LayoutConfigurationsComboBox.ItemIndex := ItemIdx;
 end;
 
 procedure TMainForm.UpdateActiveSourceSummary;

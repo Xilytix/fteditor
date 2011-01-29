@@ -3,7 +3,7 @@ object UrlForm: TUrlForm
   Top = 81
   BorderIcons = []
   Caption = 'Enter URL'
-  ClientHeight = 91
+  ClientHeight = 80
   ClientWidth = 501
   Color = clBtnFace
   Constraints.MaxHeight = 118
@@ -17,7 +17,7 @@ object UrlForm: TUrlForm
   OnCreate = FormCreate
   DesignSize = (
     501
-    91)
+    80)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel

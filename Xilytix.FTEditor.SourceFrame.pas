@@ -1,18 +1,13 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SourceFrame;
 
 interface
 
 uses
-  System.Xml,
-  System.ComponentModel,
   Windows,
   Messages,
   SysUtils,
@@ -22,9 +17,7 @@ uses
   Controls,
   Forms,
   Dialogs,
-  Borland.Vcl.StdCtrls,
-  Borland.Vcl.ComCtrls,
-  Borland.Vcl.ExtCtrls,
+  Xilytix.FTEditor.TypedXml,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditorFrame, StdCtrls, ComCtrls, ExtCtrls;
@@ -34,9 +27,6 @@ type
 
   TSourceMode = (smSelectable, smLatched, smReadOnly);
   TSourceState = (ssActive, ssSelectable, ssReadOnly);
-
-  TRequestActiveSourceEvent = procedure(sender: TSourceFrame) of object;
-  TSourceModeChangeEvent = procedure(sender: TSourceFrame; oldMode: TSourceMode) of object;
 
   TSourceFrame = class(TEditorFrame)
     TopFlowPanel: TFlowPanel;
@@ -92,7 +82,15 @@ type
     RecordsEdit: TEdit;
     procedure FrameEnter(Sender: TObject);
     procedure SourceModeComboBoxChange(Sender: TObject);
+  public
+    type
+      TRequestActiveSourceDelegate = procedure(sender: TSourceFrame) of object;
+      TSourceModeChangeDelegate = procedure(sender: TSourceFrame; oldMode: TSourceMode) of object;
+
   private
+    type
+      TRequestActiveSourceDelegates = array of TRequestActiveSourceDelegate;
+      TSourceModeChangeDelegates = array of TSourceModeChangeDelegate;
     const
       MetaTag_TopFlowPanelHeight = 'TopFlowPanelHeight';
       MetaTag_SourceMode = 'SourceMode';
@@ -101,10 +99,14 @@ type
     var
       FSourceMode: TSourceMode;
       FSourceState: TSourceState;
-      FRequestActiveSourceEvent: TRequestActiveSourceEvent;
-      FSourceModeChangeEvent: TSourceModeChangeEvent;
+
+      FRequestActiveSourceDelegates: TRequestActiveSourceDelegates;
+      FSourceModeChangeDelegates: TSourceModeChangeDelegates;
 
     procedure HandleSynchronisedChangeEvent;
+
+    procedure NotifyRequestActiveSource;
+    procedure NotifySourceModeChange(oldMode: TSourceMode);
 
     procedure SetTopPanelColor;
 
@@ -129,8 +131,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
 
-    procedure LoadFromXml(config: XmlElement); override;
-    procedure SaveToXml(config: XmlElement); override;
+    procedure LoadFromXml(Element: ITypedXmlElement); override;
+    procedure SaveToXml(Element: ITypedXmlElement); override;
 
     procedure Prepare(const myEditEngine: TEditEngine; myBinder: TBinder); override;
     procedure Unprepare; override;
@@ -139,8 +141,10 @@ type
     property SourceState: TSourceState read FSourceState write SetSourceState;
     property Active: Boolean read GetActive;
 
-    property RequestActiveSourceEvent: TRequestActiveSourceEvent add FRequestActiveSourceEvent remove FRequestActiveSourceEvent;
-    property SourceModeChangeEvent: TSourceModeChangeEvent add FSourceModeChangeEvent remove FSourceModeChangeEvent;
+    procedure SubscribeRequestActiveSourceEvent(Delegate: TRequestActiveSourceDelegate);
+    procedure UnsubscribeRequestActiveSourceEvent(Delegate: TRequestActiveSourceDelegate);
+    procedure SubscribeSourceModeChangeEvent(Delegate: TSourceModeChangeDelegate);
+    procedure UnsubscribeSourceModeChangeEvent(Delegate: TSourceModeChangeDelegate);
   end;
 
   TSourceFrames = array of TSourceFrame;
@@ -150,7 +154,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Globalization,
+  Xilytix.FieldedText.Utils,
   Xilytix.FTEditor.EditData,
   Xilytix.FTEditor.LayoutConfiguration,
   Xilytix.FTEditor.Colors,
@@ -162,9 +166,9 @@ constructor TSourceFrame.Create(AOwner: TComponent);
 begin
   inherited;
 
-  SourceModeComboBox.ItemsEx.AddItem('Selectable', -1, -1, -1, -1, smSelectable);
-  SourceModeComboBox.ItemsEx.AddItem('Latched', -1, -1, -1, -1, smLatched);
-  SourceModeComboBox.ItemsEx.AddItem('Read Only', -1, -1, -1, -1, smReadOnly);
+  SourceModeComboBox.ItemsEx.AddItem('Selectable', -1, -1, -1, -1, Pointer(smSelectable));
+  SourceModeComboBox.ItemsEx.AddItem('Latched', -1, -1, -1, -1, Pointer(smLatched));
+  SourceModeComboBox.ItemsEx.AddItem('Read Only', -1, -1, -1, -1, Pointer(smReadOnly));
 
   SourceModeComboBox.ItemIndex := 0;
 end;
@@ -173,7 +177,7 @@ procedure TSourceFrame.FrameEnter(Sender: TObject);
 begin
   if SourceMode = smSelectable then
   begin
-    FRequestActiveSourceEvent(Self);
+    NotifyRequestActiveSource;
   end;
 end;
 
@@ -224,29 +228,53 @@ begin
     ClearInfo
   else
   begin
-    LineCountEdit.Text := FEditEngine.LineCount.ToString;
-    CharsEdit.Text := FEditEngine.CharCount.ToString;
-    RecordsEdit.Text := FEditEngine.RecordCount.ToString;
+    LineCountEdit.Text := IntToStr(FEditEngine.LineCount);
+    CharsEdit.Text := IntToStr(FEditEngine.CharCount);
+    RecordsEdit.Text := IntToStr(FEditEngine.RecordCount);
   end;
 
   PopulateActiveCursorInfo(True, True);
 end;
 
-procedure TSourceFrame.LoadFromXml(config: XmlElement);
+procedure TSourceFrame.LoadFromXml(Element: ITypedXmlElement);
 begin
   inherited;
 
-  if config.HasAttribute(MetaTag_TopFlowPanelHeight) then
+  if Element.HasAttribute(MetaTag_TopFlowPanelHeight) then
   begin
-    TopFlowPanel.Height := TLayoutConfiguration.XmlValueToInteger(config.GetAttribute(MetaTag_TopFlowPanelHeight));
+    TopFlowPanel.Height := TLayoutConfiguration.XmlValueToInteger(Element.GetAttribute(MetaTag_TopFlowPanelHeight));
   end;
-  if config.HasAttribute(MetaTag_SourceMode) then
+  if Element.HasAttribute(MetaTag_SourceMode) then
   begin
-    SourceModeAsXmlValue := config.GetAttribute(MetaTag_SourceMode);
+    SourceModeAsXmlValue := Element.GetAttribute(MetaTag_SourceMode);
   end;
-  if config.HasAttribute(MetaTag_SourceState) then
+  if Element.HasAttribute(MetaTag_SourceState) then
   begin
-    SourceStateAsXmlValue := config.GetAttribute(MetaTag_SourceState);
+    SourceStateAsXmlValue := Element.GetAttribute(MetaTag_SourceState);
+  end;
+end;
+
+procedure TSourceFrame.NotifyRequestActiveSource;
+var
+  I: Integer;
+  Delegates: TRequestActiveSourceDelegates;
+begin
+  Delegates := Copy(FRequestActiveSourceDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I](Self);
+  end;
+end;
+
+procedure TSourceFrame.NotifySourceModeChange(oldMode: TSourceMode);
+var
+  I: Integer;
+  Delegates: TSourceModeChangeDelegates;
+begin
+  Delegates := Copy(FSourceModeChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I](Self, OldMode);
   end;
 end;
 
@@ -282,27 +310,27 @@ begin
         ClearInfo
       else
       begin
-        FieldPosEdit.Text := Cell.ActiveIndex.ToString;
+        FieldPosEdit.Text := IntToStr(Cell.ActiveIndex);
         FieldValueEdit.Text := Cell.ValueAsString;
-        FieldTextEdit.Text := FEditEngine.Text.Substring(Cell.FilePos, Cell.TextLength);
+        FieldTextEdit.Text := Copy(FEditEngine.Text, Cell.FilePos+1, Cell.TextLength);
         FieldHeadingEdit.Text := FEditEngine.Heading[FEditEngine.CursorActiveColIdx];
         if Cell.Row.Heading then
         begin
-          RecordNrEdit.Text := 'H' + Cell.Row.Number.ToString;
+          RecordNrEdit.Text := 'H' + IntToStr(Cell.Row.Number);
           FieldNameEdit.Text := Cell.SequenceItem.Field.Name;
-          FieldIndexEdit.Text := Cell.SequenceItem.Field.Index.ToString;
+          FieldIndexEdit.Text := IntToStr(Cell.SequenceItem.Field.Index);
           TableNrEdit.Text := '';
           SeqNameEdit.Text := Cell.SequenceItem.Owner.Name;
-          ItemIndexEdit.Text := Cell.SequenceItem.Index.ToString;
+          ItemIndexEdit.Text := IntToStr(Cell.SequenceItem.Index);
         end
         else
         begin
-          RecordNrEdit.Text := Cell.Row.Number.ToString;
+          RecordNrEdit.Text := IntToStr(Cell.Row.Number);
           FieldNameEdit.Text := Cell.SequenceItem.Field.Name;
-          FieldIndexEdit.Text := Cell.SequenceItem.Field.Index.ToString;
-          TableNrEdit.Text := Cell.Row.TableNr.ToString;
+          FieldIndexEdit.Text := IntToStr(Cell.SequenceItem.Field.Index);
+          TableNrEdit.Text := IntToStr(Cell.Row.TableNr);
           SeqNameEdit.Text := Cell.SequenceItem.Owner.Name;
-          ItemIndexEdit.Text := Cell.SequenceItem.Index.ToString;
+          ItemIndexEdit.Text := IntToStr(Cell.SequenceItem.Index);
         end;
       end;
     end;
@@ -312,7 +340,7 @@ end;
 procedure TSourceFrame.Prepare(const myEditEngine: TEditEngine; myBinder: TBinder);
 begin
   inherited;
-  Include(FEditEngine.SynchronisedChangeEvent, HandleSynchronisedChangeEvent);
+  FEditEngine.SubscribeSynchronisedChangeEvent(HandleSynchronisedChangeEvent);
 end;
 
 procedure TSourceFrame.ProcessConfigurationChange;
@@ -322,13 +350,13 @@ begin
   SetTopPanelColor;
 end;
 
-procedure TSourceFrame.SaveToXml(config: XmlElement);
+procedure TSourceFrame.SaveToXml(Element: ITypedXmlElement);
 begin
   inherited;
 
-  config.SetAttribute(MetaTag_TopFlowPanelHeight, TLayoutConfiguration.IntegerToXmlValue(TopFlowPanel.Height));
-  config.SetAttribute(MetaTag_SourceMode, SourceModeAsXmlValue);
-  config.SetAttribute(MetaTag_SourceState, SourceStateAsXmlValue);
+  Element.SetAttribute(MetaTag_TopFlowPanelHeight, TLayoutConfiguration.IntegerToXmlValue(TopFlowPanel.Height));
+  Element.SetAttribute(MetaTag_SourceMode, SourceModeAsXmlValue);
+  Element.SetAttribute(MetaTag_SourceState, SourceStateAsXmlValue);
 end;
 
 procedure TSourceFrame.SetSourceMode(const Value: TSourceMode);
@@ -352,11 +380,11 @@ end;
 
 procedure TSourceFrame.SetSourceModeAsXmlValue(const Value: string);
 begin
-  if System.&String.Compare(Value, 'Latched', True, CultureInfo.InvariantCulture) = 0 then
+  if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'Latched', True) then
     SourceMode := smLatched
   else
   begin
-    if System.&String.Compare(Value, 'ReadOnly', True, CultureInfo.InvariantCulture) = 0 then
+    if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'ReadOnly', True) then
       SourceMode := smReadOnly
     else
       SourceMode := smSelectable;
@@ -377,11 +405,11 @@ end;
 
 procedure TSourceFrame.SetSourceStateAsXmlValue(const Value: string);
 begin
-  if System.&String.Compare(Value, 'Active', True, CultureInfo.InvariantCulture) = 0 then
+  if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'Active', True) then
     SourceState := ssActive
   else
   begin
-    if System.&String.Compare(Value, 'ReadOnly', True, CultureInfo.InvariantCulture) = 0 then
+    if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'ReadOnly', True) then
       SourceState := ssReadOnly
     else
       SourceState := ssSelectable;
@@ -411,14 +439,86 @@ var
   OldMode: TSourceMode;
 begin
   OldMode := FSourceMode;
-  FSourceMode := (SourceModeComboBox.ItemsEx[SourceModeComboBox.ItemIndex].Data) as TSourceMode;
-  FSourceModeChangeEvent(Self, OldMode);
+  FSourceMode := TSourceMode(SourceModeComboBox.ItemsEx[SourceModeComboBox.ItemIndex].Data);
+  NotifySourceModeChange(OldMode);
+end;
+
+procedure TSourceFrame.SubscribeRequestActiveSourceEvent(
+  Delegate: TRequestActiveSourceDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FRequestActiveSourceDelegates);
+  SetLength(FRequestActiveSourceDelegates, Idx + 1);
+  FRequestActiveSourceDelegates[Idx] := Delegate;
+end;
+
+procedure TSourceFrame.SubscribeSourceModeChangeEvent(
+  Delegate: TSourceModeChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FSourceModeChangeDelegates);
+  SetLength(FSourceModeChangeDelegates, Idx + 1);
+  FSourceModeChangeDelegates[Idx] := Delegate;
 end;
 
 procedure TSourceFrame.Unprepare;
 begin
-  Exclude(FEditEngine.SynchronisedChangeEvent, HandleSynchronisedChangeEvent);
+  FEditEngine.UnsubscribeSynchronisedChangeEvent(HandleSynchronisedChangeEvent);
   inherited;
+end;
+
+procedure TSourceFrame.UnsubscribeRequestActiveSourceEvent(
+  Delegate: TRequestActiveSourceDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TRequestActiveSourceDelegate;
+begin
+  Idx := -1;
+  for I := Low(FRequestActiveSourceDelegates) to High(FRequestActiveSourceDelegates) do
+  begin
+    ExistingDelegate := FRequestActiveSourceDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FRequestActiveSourceDelegates[Idx] := FRequestActiveSourceDelegates[High(FRequestActiveSourceDelegates)];
+    SetLength(FRequestActiveSourceDelegates, Length(FRequestActiveSourceDelegates)-1);
+  end;
+end;
+
+procedure TSourceFrame.UnsubscribeSourceModeChangeEvent(
+  Delegate: TSourceModeChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TSourceModeChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FSourceModeChangeDelegates) to High(FSourceModeChangeDelegates) do
+  begin
+    ExistingDelegate := FSourceModeChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FSourceModeChangeDelegates[Idx] := FSourceModeChangeDelegates[High(FSourceModeChangeDelegates)];
+    SetLength(FSourceModeChangeDelegates, Length(FSourceModeChangeDelegates)-1);
+  end;
 end;
 
 end.

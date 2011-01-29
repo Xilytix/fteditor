@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequenceRedirect_DecimalPropertiesFrame;
 
@@ -14,7 +11,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs,
   Xilytix.FieldedText.Sequence,
-  Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls, System.ComponentModel,
+  Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame,
   StdCtrls, ComCtrls;
 
 type
@@ -63,7 +60,7 @@ begin
 
   Inc(FLoadingControlsCount);
   try
-    FBinder.LoadRedirectDecimalEdit(ValueEdit, Redirect);
+    FBinder.LoadRedirectCurrencyEdit(ValueEdit, Redirect);
   finally
     Dec(FLoadingControlsCount);
   end;

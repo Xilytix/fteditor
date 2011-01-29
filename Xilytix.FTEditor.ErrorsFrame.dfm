@@ -46,7 +46,6 @@ inherited ErrorsFrame: TErrorsFrame
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1012
     object LinePanel: TPanel
       AlignWithMargins = True
       Left = 4

@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.NumberStylesForm;
 
@@ -41,7 +38,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
-    FValue: TDotNetNumberStyles;
+    FValue: TCompositeDotNetNumberStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
 
@@ -56,7 +53,7 @@ type
     { Public declarations }
 
     property AsString: string read GetAsString;
-    procedure SetAsString(asStringValue: string; fallBack, default: NumberStyles);
+    procedure SetAsString(asStringValue: string; fallBack, default: TDotNetNumberStyles);
   end;
 
 var
@@ -72,13 +69,11 @@ begin
 end;
 
 procedure TNumberStylesForm.CompositeClick(Sender: TObject);
-var
-  CompositeValue: Integer;
 begin
   if not FLoadingControls then
   begin
-    CompositeValue := (Sender as TRadioButton).Tag;
-    FValue := NumberStyles(CompositeValue);
+    FValue.AsInteger := (Sender as TRadioButton).Tag;
+
     LoadControls;
   end;
 end;
@@ -93,27 +88,27 @@ end;
 
 procedure TNumberStylesForm.FormCreate(Sender: TObject);
 begin
-  AnyRadioButton.Tag := Integer(NumberStyles.Any);
-  CurrencyRadioButton.Tag := Integer(NumberStyles.Currency);
-  FloatRadioButton.Tag := Integer(NumberStyles.Float);
-  HexNumberRadioButton.Tag := Integer(NumberStyles.HexNumber);
-  IntegerRadioButton.Tag := Integer(NumberStyles.Integer);
-  NoneRadioButton.Tag := Integer(NumberStyles.None);
-  NumberRadioButton.Tag := Integer(NumberStyles.Number);
+  AnyRadioButton.Tag := TCompositeDotNetNumberStyles.CreateAny.AsInteger;
+  CurrencyRadioButton.Tag := TCompositeDotNetNumberStyles.CreateCurrency.AsInteger;
+  FloatRadioButton.Tag := TCompositeDotNetNumberStyles.CreateFloat.AsInteger;
+  HexNumberRadioButton.Tag := TCompositeDotNetNumberStyles.CreateHexNumber.AsInteger;
+  IntegerRadioButton.Tag := TCompositeDotNetNumberStyles.CreateInteger.AsInteger;
+  NoneRadioButton.Tag := TCompositeDotNetNumberStyles.CreateNone.AsInteger;
+  NumberRadioButton.Tag := TCompositeDotNetNumberStyles.CreateNumber.AsInteger;
 
-  AllowCurrencySymbolCheckBox.Tag := Integer(NumberStyles.AllowCurrencySymbol);
-  AllowDecimalPointCheckBox.Tag := Integer(NumberStyles.AllowDecimalPoint);
-  AllowExponentCheckBox.Tag := Integer(NumberStyles.AllowExponent);
-  AllowHexSpecifierCheckBox.Tag := Integer(NumberStyles.AllowHexSpecifier);
-  AllowLeadingSignCheckBox.Tag := Integer(NumberStyles.AllowLeadingSign);
-  AllowParenthesesCheckBox.Tag := Integer(NumberStyles.AllowParentheses);
-  AllowThousandsCheckBox.Tag := Integer(NumberStyles.AllowThousands);
-  AllowTrailingSignCheckBox.Tag := Integer(NumberStyles.AllowTrailingSign);
+  AllowCurrencySymbolCheckBox.Tag := Integer(dnnsAllowCurrencySymbol);
+  AllowDecimalPointCheckBox.Tag := Integer(dnnsAllowDecimalPoint);
+  AllowExponentCheckBox.Tag := Integer(dnnsAllowExponent);
+  AllowHexSpecifierCheckBox.Tag := Integer(dnnsAllowHexSpecifier);
+  AllowLeadingSignCheckBox.Tag := Integer(dnnsAllowLeadingSign);
+  AllowParenthesesCheckBox.Tag := Integer(dnnsAllowParentheses);
+  AllowThousandsCheckBox.Tag := Integer(dnnsAllowThousands);
+  AllowTrailingSignCheckBox.Tag := Integer(dnnsAllowTrailingSign);
 end;
 
 function TNumberStylesForm.GetAsString: string;
 begin
-  Result := Enum(FValue).ToString;
+  Result := FValue.AsString;
 end;
 
 procedure TNumberStylesForm.LoadControls;
@@ -141,19 +136,16 @@ begin
   end;
 end;
 
-procedure TNumberStylesForm.SetAsString(asStringValue: string; fallBack, default: NumberStyles);
+procedure TNumberStylesForm.SetAsString(asStringValue: string; fallBack, default: TDotNetNumberStyles);
 begin
-  if asStringValue.Trim = '' then
-    FValue := default
+  asStringValue := Trim(asStringValue);
+  if asStringValue= '' then
+    FValue.Styles := default
   else
   begin
-    try
-      FValue := Enum.Parse(TypeOf(NumberStyles), asStringValue, True) as NumberStyles;
-    except
-      on ArgumentException do
-      begin
-        FValue := fallBack;
-      end;
+    if not TCompositeDotNetNumberStyles.TryStrToStyles(asStringValue, FValue.Styles) then
+    begin
+      FValue.Styles := fallBack;
     end;
   end;
 
@@ -162,12 +154,12 @@ end;
 
 procedure TNumberStylesForm.SetCheckBox(checkBox: TCheckBox);
 begin
-  checkBox.Checked := (Integer(FValue) and checkBox.Tag) = checkBox.Tag;
+  checkBox.Checked := (FValue.AsInteger and checkBox.Tag) = checkBox.Tag;
 end;
 
 procedure TNumberStylesForm.SetRadioButton(button: TRadioButton);
 begin
-  button.Checked := Integer(FValue) = button.Tag;
+  button.Checked := FValue.AsInteger = button.Tag;
 end;
 
 procedure TNumberStylesForm.StyleClick(Sender: TObject);
@@ -180,9 +172,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      FValue := FValue or NumberStyles(StyleValue)
+      Include(FValue.Styles, TDotNetNumberStyle(StyleValue))
     else
-      FValue := FValue and NumberStyles(not StyleValue);
+      Exclude(FValue.Styles, TDotNetNumberStyle(StyleValue));
 
     LoadControls;
   end;

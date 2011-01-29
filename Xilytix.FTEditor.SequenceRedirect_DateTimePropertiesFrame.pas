@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequenceRedirect_DateTimePropertiesFrame;
 
@@ -12,8 +9,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame, Borland.Vcl.StdCtrls, Borland.Vcl.ComCtrls,
-  System.ComponentModel, ComCtrls, StdCtrls;
+  Dialogs, Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame,
+  ComCtrls, StdCtrls;
 
 type
   TSequenceRedirect_DateTimePropertiesFrame = class(TSequenceRedirect_BasePropertiesFrame)
