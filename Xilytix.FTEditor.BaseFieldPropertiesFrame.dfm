@@ -39,13 +39,12 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       ParentFont = False
     end
     object Bevel5: TBevel
-      Left = 3
+      Left = 35
       Top = 8
-      Width = 160
+      Width = 128
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Shape = bsTopLine
-      ExplicitWidth = 159
     end
     object DelimitedValueLabel: TLabel
       Left = 3
@@ -55,13 +54,12 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       Caption = 'Value'
     end
     object Bevel6: TBevel
-      Left = 3
+      Left = 48
       Top = 85
-      Width = 156
+      Width = 111
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Shape = bsTopLine
-      ExplicitWidth = 165
     end
     object DelimitedHeadingLabel: TLabel
       Left = 3
@@ -70,23 +68,21 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       Height = 13
       Caption = 'Heading'
     end
-    object ValueQuotedComboBox: TComboBoxEx
+    object ValueQuotedComboBox: TComboBox
       Left = 63
       Top = 14
       Width = 92
-      Height = 22
-      ItemsEx = <>
-      Style = csExDropDownList
+      Height = 21
+      Style = csDropDownList
       TabOrder = 0
       OnChange = ComboBoxChange
     end
-    object HeadingQuotedComboBox: TComboBoxEx
+    object HeadingQuotedComboBox: TComboBox
       Left = 63
       Top = 92
       Width = 92
-      Height = 22
-      ItemsEx = <>
-      Style = csExDropDownList
+      Height = 21
+      Style = csDropDownList
       TabOrder = 3
       OnChange = ComboBoxChange
     end
@@ -160,20 +156,14 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 211
-    ExplicitWidth = 173
-    ExplicitHeight = 271
     object FixedWidthPageControl: TPageControl
       Left = 0
       Top = 27
       Width = 159
       Height = 173
-      ActivePage = ValueTabSheet
+      ActivePage = HeadingTabSheet
       Align = alClient
       TabOrder = 1
-      ExplicitTop = 25
-      ExplicitWidth = 364
-      ExplicitHeight = 179
       object ValueTabSheet: TTabSheet
         Caption = 'Value'
         DesignSize = (
@@ -196,9 +186,9 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           FocusControl = ValuePadCharTypeComboBox
         end
         object Bevel3: TBevel
-          Left = 0
+          Left = 24
           Top = 4
-          Width = 165
+          Width = 141
           Height = 17
           Shape = bsTopLine
         end
@@ -226,9 +216,9 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           FocusControl = ValuePadEoFCharEdit
         end
         object Bevel4: TBevel
-          Left = 0
+          Left = 49
           Top = 83
-          Width = 165
+          Width = 116
           Height = 17
           Shape = bsTopLine
         end
@@ -263,29 +253,25 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           Caption = 'Null Char'
           FocusControl = ValueNullCharEdit
         end
-        object ValuePadAlignmentComboBox: TComboBoxEx
+        object ValuePadAlignmentComboBox: TComboBox
           Left = 64
           Top = 31
           Width = 88
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           OnChange = ComboBoxChange
-          ExplicitWidth = 96
         end
-        object ValuePadCharTypeComboBox: TComboBoxEx
+        object ValuePadCharTypeComboBox: TComboBox
           Left = 64
           Top = 9
           Width = 88
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           OnChange = ComboBoxChange
-          ExplicitWidth = 96
         end
         object ValuePadEoFCharEdit: TEdit
           Left = 124
@@ -297,17 +283,15 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           OnExit = CharEditExit
           OnKeyPress = CharEditKeyPress
         end
-        object ValueTruncateTypeComboBox: TComboBoxEx
+        object ValueTruncateTypeComboBox: TComboBox
           Left = 39
           Top = 88
           Width = 113
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
           OnChange = ComboBoxChange
-          ExplicitWidth = 121
         end
         object ValuePadCharEdit: TEdit
           Left = 35
@@ -375,9 +359,9 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           ParentFont = False
         end
         object Bevel1: TBevel
-          Left = 0
+          Left = 24
           Top = 4
-          Width = 165
+          Width = 141
           Height = 17
           Shape = bsTopLine
         end
@@ -417,9 +401,9 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           ParentFont = False
         end
         object Bevel2: TBevel
-          Left = 0
+          Left = 49
           Top = 83
-          Width = 165
+          Width = 116
           Height = 17
           Shape = bsTopLine
         end
@@ -458,29 +442,25 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           Font.Style = []
           ParentFont = False
         end
-        object HeadingPadAlignmentComboBox: TComboBoxEx
+        object HeadingPadAlignmentComboBox: TComboBox
           Left = 64
           Top = 31
           Width = 88
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
           OnChange = ComboBoxChange
-          ExplicitWidth = 96
         end
-        object HeadingPadCharTypeComboBox: TComboBoxEx
+        object HeadingPadCharTypeComboBox: TComboBox
           Left = 64
           Top = 9
           Width = 88
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           OnChange = ComboBoxChange
-          ExplicitWidth = 96
         end
         object HeadingPadEoFCharEdit: TEdit
           Left = 124
@@ -492,17 +472,15 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
           OnExit = CharEditExit
           OnKeyPress = CharEditKeyPress
         end
-        object HeadingTruncateTypeComboBox: TComboBoxEx
+        object HeadingTruncateTypeComboBox: TComboBox
           Left = 39
           Top = 88
           Width = 113
-          Height = 22
-          ItemsEx = <>
-          Style = csExDropDownList
+          Height = 21
+          Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 4
           OnChange = ComboBoxChange
-          ExplicitWidth = 121
         end
         object HeadingPadCharEdit: TEdit
           Left = 35
@@ -534,7 +512,6 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 167
       object Label9: TLabel
         Left = 3
         Top = 6
@@ -564,7 +541,6 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
     BevelEdges = []
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 166
     DesignSize = (
       159
       177)
@@ -629,7 +605,6 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       Text = 'NameEdit'
       OnExit = StringEditExit
       OnKeyPress = StringEditKeyPress
-      ExplicitWidth = 130
     end
     object IdEdit: TEdit
       Left = 36
@@ -641,35 +616,22 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       OnExit = IntegerEditExit
       OnKeyPress = IntegerEditKeyPress
     end
-    object HeadingConstraintComboBox: TComboBoxEx
+    object HeadingConstraintComboBox: TComboBox
       Left = 77
       Top = 46
       Width = 82
-      Height = 22
-      ItemsEx = <
-        item
-          Caption = '<Default>'
-        end
-        item
-          Caption = 'None'
-        end
-        item
-          Caption = 'All Constant'
-        end
-        item
-          Caption = 'Main Constant'
-        end
-        item
-          Caption = 'Name Constant'
-        end
-        item
-          Caption = 'Name Is Main'
-        end>
-      Style = csExDropDownList
+      Height = 21
+      Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
       OnChange = ComboBoxChange
-      ExplicitWidth = 90
+      Items.Strings = (
+        '<Default>'
+        'None'
+        'All Constant'
+        'Main Constant'
+        'Name Constant'
+        'Name Is Main')
     end
     object NullConstantCheckBox: TCheckBox
       Left = 130
@@ -717,7 +679,6 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       Text = 'HeadingsEdit'
       OnExit = CommaTextEditExit
       OnKeyPress = CommaTextEditKeyPress
-      ExplicitWidth = 112
     end
     object HeadingsButton: TButton
       Left = 142
@@ -734,7 +695,6 @@ object BaseFieldPropertiesFrame: TBaseFieldPropertiesFrame
       ParentFont = False
       TabOrder = 4
       OnClick = HeadingsButtonClick
-      ExplicitLeft = 150
     end
   end
 end

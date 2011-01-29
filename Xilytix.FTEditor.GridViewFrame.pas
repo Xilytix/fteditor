@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.GridViewFrame;
 
@@ -229,9 +226,9 @@ begin
         if ACol = 0 then
         begin
           if Row.Heading then
-            DisplayStr := 'H' + Row.Number.ToString
+            DisplayStr := 'H' + IntToStr(Row.Number)
           else
-            DisplayStr := Row.Number.ToString;
+            DisplayStr := IntToStr(Row.Number);
 
           if not FHasMouse and Configuration.GridTrackMouse and FEditEngine.IsMouseOverRow(Row) then
           begin
@@ -433,9 +430,9 @@ begin
     ActiveCell := FEditEngine.CursorActiveCell;
     if Assigned(ActiveCell) then
     begin
-      LineNrEdit.Text := ActiveCell.LineNumber.ToString;
-      LinePosEdit.Text := ActiveCell.LinePos.ToString;
-      FilePosEdit.Text := ActiveCell.FilePos.ToString;
+      LineNrEdit.Text := IntToStr(ActiveCell.LineNumber);
+      LinePosEdit.Text := IntToStr(ActiveCell.LinePos);
+      FilePosEdit.Text := IntToStr(ActiveCell.FilePos);
     end;
   end;
 end;
@@ -444,12 +441,12 @@ procedure TGridViewFrame.Prepare(const myEditEngine: TEditEngine; myBinder: TBin
 begin
   inherited;
 
-  Include(FEditEngine.NewOpenTextEvent, HandleEditEngineNewOpenTextEvent);
-  Include(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Include(FEditEngine.MetaChangeEvent, HandleEditEngineMetaChangeEvent);
-  Include(FEditEngine.TextChangeEvent, HandleEditEngineTextChangeEvent);
-  Include(FEditEngine.MouseOverChangedEvent, HandleMouseOverChangedEvent);
-  Include(FEditEngine.CursorActiveChangedEvent, HandleCursorActiveChangedEvent);
+  FEditEngine.SubscribeNewOpenTextEvent(HandleEditEngineNewOpenTextEvent);
+  FEditEngine.SubscribeParseEvent(HandleEditEngineParseEvent);
+  FEditEngine.SubscribeMetaChangeEvent(HandleEditEngineMetaChangeEvent);
+  FEditEngine.SubscribeTextChangeEvent(HandleEditEngineTextChangeEvent);
+  FEditEngine.SubscribeMouseOverChangedEvent(HandleMouseOverChangedEvent);
+  FEditEngine.SubscribeCursorActiveChangedEvent(HandleCursorActiveChangedEvent);
 
   ProcessConfigurationChange;
 
@@ -502,12 +499,12 @@ end;
 
 procedure TGridViewFrame.Unprepare;
 begin
-  Exclude(FEditEngine.NewOpenTextEvent, HandleEditEngineNewOpenTextEvent);
-  Exclude(FEditEngine.ParseEvent, HandleEditEngineParseEvent);
-  Exclude(FEditEngine.MetaChangeEvent, HandleEditEngineMetaChangeEvent);
-  Exclude(FEditEngine.TextChangeEvent, HandleEditEngineTextChangeEvent);
-  Exclude(FEditEngine.MouseOverChangedEvent, HandleMouseOverChangedEvent);
-  Exclude(FEditEngine.CursorActiveChangedEvent, HandleCursorActiveChangedEvent);
+  FEditEngine.UnsubscribeNewOpenTextEvent(HandleEditEngineNewOpenTextEvent);
+  FEditEngine.UnsubscribeParseEvent(HandleEditEngineParseEvent);
+  FEditEngine.UnsubscribeMetaChangeEvent(HandleEditEngineMetaChangeEvent);
+  FEditEngine.UnsubscribeTextChangeEvent(HandleEditEngineTextChangeEvent);
+  FEditEngine.UnsubscribeMouseOverChangedEvent(HandleMouseOverChangedEvent);
+  FEditEngine.UnsubscribeCursorActiveChangedEvent(HandleCursorActiveChangedEvent);
 
   inherited;
 end;

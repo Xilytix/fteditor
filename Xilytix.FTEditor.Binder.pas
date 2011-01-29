@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.Binder;
 
@@ -13,18 +10,19 @@ interface
 uses
   Classes,
   Variants,
+  SysUtils,
   Controls,
   StdCtrls,
   ComCtrls,
+  TypInfo,
+  Rtti,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Configuration;
 
 type
-  TErrorCountChangeEvent = procedure of object;
-  TFieldCaptionChangeEvent = procedure of object;
-  TSequenceCaptionChangeEvent = procedure of object;
 
   TBinder = class
   public
@@ -145,6 +143,10 @@ type
         piRedirectInvokationDelay
       );
 
+      TErrorCountChangeDelegate = procedure of object;
+      TFieldCaptionChangeDelegate = procedure of object;
+      TSequenceCaptionChangeDelegate = procedure of object;
+
   strict private
     type
       TControlTag = class
@@ -159,14 +161,20 @@ type
 
       TPropertyRec = record
         Id: TPropertyId;
-        Name: string;
         Cat: TEditEngine.TPropertyCategory;
+        Name: string;
         CatRefresh: Boolean;
         FullRefresh: Boolean;
         ForceRefresh: Boolean;
         CaptionChange: Boolean;
       end;
       TPropertyArray = array[TPropertyId] of TPropertyRec;
+
+      TPropertyTypeInfoArray = array[TPropertyId] of PTypeInfo;
+
+      TErrorCountChangeDelegates = array of TErrorCountChangeDelegate;
+      TFieldCaptionChangeDelegates = array of TFieldCaptionChangeDelegate;
+      TSequenceCaptionChangeDelegates = array of TSequenceCaptionChangeDelegate;
 
     const
       PropArray: TPropertyArray =
@@ -287,6 +295,9 @@ type
 
     class constructor Create;
 
+    class var
+      PropertyTypeInfoArray: TPropertyTypeInfoArray;
+
     var
       FEditEngine: TEditEngine;
 
@@ -294,50 +305,54 @@ type
 
       FErrorCount: Integer;
 
-      FErrorCountChangeEvent: TErrorCountChangeEvent;
-      FFieldCaptionChangeEvent: TFieldCaptionChangeEvent;
-      FSsirCaptionChangeEvent: TSequenceCaptionChangeEvent;
+      FErrorCountChangeDelegates: TErrorCountChangeDelegates;
+      FFieldCaptionChangeDelegates: TFieldCaptionChangeDelegates;
+      FSsirCaptionChangeDelegates: TSequenceCaptionChangeDelegates;
+
+    procedure NotifyErrorCountChange;
+    procedure NotifyFieldCaptionChange;
+    procedure NotifySsirCaptionChange;
 
     procedure ClearEditError(edit: TEdit);
     procedure SetEditError(edit: TEdit);
 
     function CheckRefresh(id: TPropertyId; modified: Boolean): Boolean;
 
-    function CalculateDisplayCharEncoding: Encoding;
+    function CalculateDisplayCharEncoding: TEncoding;
     function CharToDisplayHex(value: Char): string;
     function TryDisplayHexToChar(hexStr: string; out value: Char): Boolean;
     function CharToDisplayDecimal(value: Char): string;
-    function TryDisplayDecimalToChar(decimalStr: string; out value: Char): Boolean;
+    function TryDisplayDecimalToChar(const decimalStr: string; out value: Char): Boolean;
     function IsViewableChar(value: Char): Boolean;
-    function TryCalculateNonViewableCharFormat(value: string;
+    function TryCalculateNonViewableCharFormat(const value: string;
                                                out format: TNonViewableCharFormat;
                                                out hexDecValue: string): Boolean;
     function FormatNonViewableChar(value: Char; format: TNonViewableCharFormat): string;
-    function TryParseNonViewableCharDisplay(display: string; out value: Char): Boolean;
+    function TryParseNonViewableCharDisplay(const display: string; out value: Char): Boolean;
 
-    function TryParseCommaTextDisplay(display: string): Boolean;
-    function TryParseIntegerDisplay(display: string; out value: Integer): Boolean;
-    function TryParseInt64Display(display: string; out value: Int64): Boolean;
-    function TryParseDoubleDisplay(display: string; out value: Double): Boolean;
-    function TryParseDecimalDisplay(display: string; out value: Decimal): Boolean;
+    function TryParseCommaTextDisplay(const display: string): Boolean;
+    function TryParseIntegerDisplay(const display: string; out value: Integer): Boolean;
+    function TryParseInt64Display(const display: string; out value: Int64): Boolean;
+    function TryParseDoubleDisplay(const display: string; out value: Double): Boolean;
+    function TryParseCurrencyDisplay(const display: string; out value: Currency): Boolean;
 
-    function TryParseNumberStylesDisplay(display: string; out value: NumberStyles): Boolean;
-    function TryParseDateTimeStylesDisplay(display: string; out value: DateTimeStyles): Boolean;
-    function TryParseBooleanStylesDisplay(display: string; out value: TBooleanStyles): Boolean;
+    function TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyles): Boolean;
+    function TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyles): Boolean;
+    function TryParseBooleanStylesDisplay(const display: string; out value: TBooleanStyles): Boolean;
 
     function GetPropertyName(id: TPropertyId): string;
     function GetCharValue(id: TPropertyId; idx: Integer): Char;
 
-    function GetPropertyValue(id: TPropertyId; idx: Integer): TObject; overload;
-    function GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TObject; overload;
-    function GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TObject; overload;
+    function GetPropertyValue(id: TPropertyId; idx: Integer): TValue; overload;
+    function GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TValue; overload;
+    function GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TValue; overload;
 
     procedure SaveCharEdit(edit: TEdit; idx: Integer); overload;
     procedure SaveStringEdit(edit: TEdit; idx: Integer); overload;
     procedure SaveIntegerEdit(edit: TEdit; idx: Integer);
     procedure SaveInt64Edit(edit: TEdit; idx: Integer); overload;
     procedure SaveDoubleEdit(edit: TEdit; idx: Integer); overload;
-    procedure SaveDecimalEdit(edit: TEdit; idx: Integer); overload;
+    procedure SaveCurrencyEdit(edit: TEdit; idx: Integer); overload;
 
     procedure SaveStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
     procedure SaveInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
@@ -353,8 +368,8 @@ type
     procedure SetEditWarning(edit: TEdit);
     procedure ClearEditWarning(edit: TEdit);
 
-    function EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: NumberStyles; out NewValue: string): Boolean;
-    function EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: DateTimeStyles; out NewValue: string): Boolean;
+    function EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyles; out NewValue: string): Boolean;
+    function EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyles; out NewValue: string): Boolean;
     function EditBooleanStyles(formOwner: TComponent; asString: string; fallback, default: TBooleanStyles; out NewValue: string): Boolean;
 
     procedure LoadStringEdit(edit: TEdit; idx: Integer);
@@ -397,21 +412,21 @@ type
     procedure HandleRedirectDoubleEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
     procedure HandleRedirectDoubleEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 
-    procedure LoadDecimalEdit(edit: TEdit; idx: Integer);
+    procedure LoadCurrencyEdit(edit: TEdit; idx: Integer);
     procedure HandleDecimalEditKeyPress(edit: TEdit; idx: Integer; var key: Char);
     procedure HandleDecimalEditExit(edit: TEdit; idx: Integer);
 
-    procedure LoadRedirectDecimalEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
     procedure HandleRedirectDecimalEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
     procedure HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 
     procedure LoadNumberStylesEdit(edit: TEdit; idx: Integer);
-    procedure SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: NumberStyles);
-    procedure HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: NumberStyles; var key: Char);
+    procedure SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyles);
+    procedure HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyles; var key: Char);
 
     procedure LoadDateTimeStylesEdit(edit: TEdit; idx: Integer);
-    procedure SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: DateTimeStyles);
-    procedure HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: DateTimeStyles; var key: Char);
+    procedure SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles);
+    procedure HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles; var key: Char);
 
     procedure LoadBooleanStylesEdit(edit: TEdit; idx: Integer);
     procedure SaveBooleanStylesEdit(edit: TEdit; idx: Integer; default: TBooleanStyles);
@@ -434,55 +449,58 @@ type
     procedure LoadRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedTextSequenceRedirect);
     procedure SaveRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedTextSequenceRedirect);
 
-    procedure LoadComboBox(comboBox: TComboBoxEx; idx: Integer);
-    procedure HandleComboBoxChange(comboBox: TComboBoxEx; idx: Integer);
+    procedure LoadComboBox(comboBox: TComboBox; idx: Integer);
+    procedure HandleComboBoxChange(comboBox: TComboBox; idx: Integer);
 
-    procedure LoadRedirectComboBox(comboBox: TComboBoxEx; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectComboBoxChange(comboBox: TComboBoxEx; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectComboBox(comboBox: TComboBox; redirect: TFieldedTextSequenceRedirect);
+    procedure HandleRedirectComboBoxChange(comboBox: TComboBox; redirect: TFieldedTextSequenceRedirect);
 
     procedure SetSequenceItemField(sequenceItem: TFieldedTextSequenceItem; value: TObject);
     procedure SetRedirectSequence(redirect: TFieldedTextSequenceRedirect; value: TObject);
 
-    class procedure PrepareEndOfLineTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PrepareHeadingConstraintComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PrepareQuotedTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PreparePadAlignmentComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PreparePadCharTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PrepareTruncateTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
-    class procedure PrepareMetaReferenceTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+    class procedure PrepareEndOfLineTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareHeadingConstraintComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareQuotedTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PreparePadAlignmentComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PreparePadCharTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareTruncateTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareMetaReferenceTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 
-    class procedure PrepareRedirectInvokationDelayComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+    class procedure PrepareRedirectInvokationDelayComboBox(comboBox: TComboBox; id: TPropertyId);
 
-    class function TagToPropertyId(value: Variant): TPropertyId;
-    class function CreateControlTag(value: TPropertyId): Variant;
+    class function TagToPropertyId(value: Integer): TPropertyId;
+    class function CreateControlTag(value: TPropertyId): Integer;
 
-    function GetPropertyValue(control: TWinControl; idx: Integer): TObject; overload;
-    procedure SetPropertyValue(id: TPropertyId; idx: Integer; value: TObject; out modified: Boolean);
+    function GetPropertyValue(control: TWinControl; idx: Integer): TValue; overload;
+    procedure SetPropertyValue(id: TPropertyId; idx: Integer; const value: TValue; out modified: Boolean);
 
-    function GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TObject; overload;
-    procedure SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; value: TObject;
+    function GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TValue; overload;
+    procedure SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; const value: TValue;
                                            out modified: Boolean);
 
-    function GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TObject; overload;
-    procedure SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; value: TObject;
+    function GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TValue; overload;
+    procedure SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; const value: TValue;
                                        out modified: Boolean);
 
-    property ErrorCountChangeEvent: TErrorCountChangeEvent add FErrorCountChangeEvent remove FErrorCountChangeEvent;
-    property FieldCaptionChangeEvent: TFieldCaptionChangeEvent add FFieldCaptionChangeEvent remove FFieldCaptionChangeEvent;
-    property SsirCaptionChangeEvent: TSequenceCaptionChangeEvent add FSsirCaptionChangeEvent remove FSsirCaptionChangeEvent;
+    procedure SubscribeErrorCountChangeEvent(Delegate: TErrorCountChangeDelegate);
+    procedure UnsubscribeErrorCountChangeEvent(Delegate: TErrorCountChangeDelegate);
+    procedure SubscribeFieldCaptionChangeEvent(Delegate: TFieldCaptionChangeDelegate);
+    procedure UnsubscribeFieldCaptionChangeEvent(Delegate: TFieldCaptionChangeDelegate);
+    procedure SubscribeSsirCaptionChangeEvent(Delegate: TSequenceCaptionChangeDelegate);
+    procedure UnsubscribeSsirCaptionChangeEvent(Delegate: TSequenceCaptionChangeDelegate);
   end;
 
 implementation
 
 uses
-  System.Reflection,
-  Borland.Vcl.ListActns,
+  Math,
+  Character,
   Xilytix.FieldedText.CommaText,
   Xilytix.FieldedText.Sequence,
+  Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Colors,
   Xilytix.FTEditor.NumberStylesForm,
-  Xilytix.FTEditor.DateTimeStylesForm,
   Xilytix.FTEditor.BooleanStylesForm;
 
 { Binder }
@@ -510,15 +528,16 @@ var
   Text: string;
   Error: Boolean;
   Id: TPropertyId;
-  Value: TBooleanStyles;
+  Styles: TBooleanStyles;
+  Value: TValue;
   Modified: Boolean;
 begin
   Text := edit.Text;
   if Text <> '' then
-    Error := not TryParseBooleanStylesDisplay(Text, Value)
+    Error := not TryParseBooleanStylesDisplay(Text, Styles)
   else
   begin
-    Value := default;
+    Styles := default;
     Error := False;
   end;
 
@@ -527,7 +546,8 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    Value := TValue.From<TBooleanStyles>(Styles);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -577,7 +597,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -591,53 +611,44 @@ var
   Id: TPropertyId;
   Modified: Boolean;
 begin
-  try
-    Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, edit.Text, Modified);
-    if not CheckRefresh(Id, Modified) then
-    begin
-      LoadCultureEdit(edit, idx);
-    end;
-  except
-    on E: TargetInvocationException do
-    begin
-      if E.InnerException is ArgumentException then
-        SetEditError(edit)
-      else
-        raise;
-    end;
+  Id := TagToPropertyId(edit.Tag);
+  SetPropertyValue(Id, idx, edit.Text, Modified);
+  if not CheckRefresh(Id, Modified) then
+  begin
+    LoadCultureEdit(edit, idx);
   end;
 end;
 
 procedure TBinder.SaveDateTimePickers(datePicker, timePicker: TDateTimePicker; idx: Integer);
 var
   Id: TPropertyId;
-  Value: DateTime;
+  Value: TDateTime;
   Modified: Boolean;
 begin
   Id := TagToPropertyId(datePicker.Tag);
   Value := datePicker.Date + datePicker.Time;
-  SetPropertyValue(Id, idx, Value as TObject, Modified);
+  SetPropertyValue(Id, idx, Value, Modified);
   if not CheckRefresh(Id, Modified) then
   begin
     LoadDateTimePickers(datePicker, timePicker, idx);
   end;
 end;
 
-procedure TBinder.SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: DateTimeStyles);
+procedure TBinder.SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles);
 var
   Text: string;
   Error: Boolean;
   Id: TPropertyId;
-  Value: DateTimeStyles;
+  Styles: TDotNetDateTimeStyles;
+  Value: TValue;
   Modified: Boolean;
 begin
   Text := edit.Text;
   if Text <> '' then
-    Error := not TryParseDateTimeStylesDisplay(Text, Value)
+    Error := not TryParseDateTimeStylesDisplay(Text, Styles)
   else
   begin
-    Value := default;
+    Styles := default;
     Error := False;
   end;
 
@@ -646,7 +657,8 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    Value := TValue.From<TDotNetDateTimeStyles>(Styles);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -658,39 +670,44 @@ end;
 procedure TBinder.SaveDecimalEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 var
   Id: TPropertyId;
-  Value: Decimal;
+  CurrencyValue: Currency;
+  Value: TValue;
   Modified: Boolean;
 begin
-  if not TryParseDecimalDisplay(edit.Text, Value) then
+  if not TryParseCurrencyDisplay(edit.Text, CurrencyValue) then
     SetEditError(edit)
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetRedirectPropertyValue(Id, redirect, Value as TObject, Modified);
+    Value := TValue.From<Currency>(CurrencyValue);
+    SetRedirectPropertyValue(Id, redirect, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
-      LoadRedirectDecimalEdit(edit, redirect);
+      LoadRedirectCurrencyEdit(edit, redirect);
     end;
   end;
 end;
 
-procedure TBinder.SaveDecimalEdit(edit: TEdit; idx: Integer);
+procedure TBinder.SaveCurrencyEdit(edit: TEdit; idx: Integer);
 var
   Id: TPropertyId;
-  Value: Decimal;
+  CurrencyValue: Currency;
+  Value: TValue;
   Modified: Boolean;
 begin
-  if not TryParseDecimalDisplay(edit.Text, Value) then
+  if not TryParseCurrencyDisplay(edit.Text, CurrencyValue) then
     SetEditError(edit)
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+
+    Value := TValue.From<Currency>(CurrencyValue);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
-      LoadDecimalEdit(edit, idx);
+      LoadCurrencyEdit(edit, idx);
     end;
   end;
 end;
@@ -706,7 +723,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -726,7 +743,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -746,7 +763,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetRedirectPropertyValue(Id, redirect, Value as TObject, Modified);
+    SetRedirectPropertyValue(Id, redirect, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -766,7 +783,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -775,20 +792,21 @@ begin
   end;
 end;
 
-procedure TBinder.SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: NumberStyles);
+procedure TBinder.SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyles);
 var
   Text: string;
   Error: Boolean;
   Id: TPropertyId;
-  Value: NumberStyles;
+  Styles: TDotNetNumberStyles;
+  Value: TValue;
   Modified: Boolean;
 begin
   Text := edit.Text;
   if Text <> '' then
-    Error := not TryParseNumberStylesDisplay(Text, Value)
+    Error := not TryParseNumberStylesDisplay(Text, Styles)
   else
   begin
-    Value := default;
+    Styles := default;
     Error := False;
   end;
 
@@ -797,7 +815,8 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetPropertyValue(Id, idx, Value as TObject, Modified);
+    Value := TValue.From<TDotNetNumberStyles>(Styles);
+    SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin
@@ -810,12 +829,12 @@ procedure TBinder.SaveRedirectDateTimePickers(datePicker, timePicker: TDateTimeP
   redirect: TFieldedTextSequenceRedirect);
 var
   Id: TPropertyId;
-  Value: DateTime;
+  Value: TDateTime;
   Modified: Boolean;
 begin
   Id := TagToPropertyId(datePicker.Tag);
-  Value := datePicker.Date.Date + datePicker.Time.Time;
-  SetRedirectPropertyValue(Id, redirect, Value as TObject, Modified);
+  Value := datePicker.DateTime;
+  SetRedirectPropertyValue(Id, redirect, Value, Modified);
   if not CheckRefresh(Id, Modified) then
   begin
     LoadRedirectDateTimePickers(datePicker, timePicker, redirect);
@@ -850,66 +869,66 @@ begin
   end;
 end;
 
-function TBinder.CalculateDisplayCharEncoding: Encoding;
+function TBinder.CalculateDisplayCharEncoding: TEncoding;
 begin
   case Configuration.DisplayCharEncodingType of
-    deAscii: Result := Encoding.ASCII;
-    deUtf8: Result := Encoding.UTF8;
+    deAscii: Result := TEncoding.ASCII;
+    deUtf8: Result := TEncoding.UTF8;
     deNamed: Result := Configuration.NamedDisplayCharEncoding;
     deFile: Result := FEditEngine.TextCharEncoding;
     else
     begin
       Assert(False);
-      Result := Encoding.UTF8;
+      Result := TEncoding.UTF8;
     end;
   end;
 end;
 
-class function TBinder.TagToPropertyId(value: Variant): TPropertyId;
+class function TBinder.TagToPropertyId(value: Integer): TPropertyId;
 begin
   Result := TControlTag(value).PropertyId;
 end;
 
-function TBinder.TryCalculateNonViewableCharFormat(value: string;
-                                                      out format: TNonViewableCharFormat;
-                                                      out hexDecValue: string): Boolean;
+function TBinder.TryCalculateNonViewableCharFormat(const value: string;
+                                                   out format: TNonViewableCharFormat;
+                                                   out hexDecValue: string): Boolean;
 begin
   Result := True;
-  if value.Length < 2 then
+  if Length(value) < 2 then
     Result := False
   else
   begin
     case value[1] of
       '0':
       begin
-        if (value.Length = 2) or (System.Char.ToUpper(value[2]) <> 'X') then
+        if (Length(value) = 2) or (TCharacter.ToUpper(value[2]) <> 'X') then
           Result := False
         else
         begin
           format := nv0xHex;
-          hexDecValue := value.Substring(2);
+          hexDecValue := Copy(value, 3, MaxInt);
         end
       end;
       '$':
       begin
         format := nvDollarHex;
-        hexDecValue := value.Substring(1);
+        hexDecValue := Copy(value, 2, MaxInt);
       end;
       '#':
       begin
-        if (value.Length = 2) or (value[2] <> '$') then
+        if (Length(value) = 2) or (value[2] <> '$') then
         begin
           format := nvHashDecimal;
-          hexDecValue := value.Substring(1);
+          hexDecValue := Copy(value, 2, MaxInt);
         end
         else
         begin
-          if value.Length < 3 then
+          if Length(value) < 3 then
             Result := False
           else
           begin
             format := nvHashDollarHex;
-            hexDecValue := value.Substring(2);
+            hexDecValue := Copy(value, 3, MaxInt);
           end;
         end;
       end;
@@ -920,8 +939,8 @@ end;
 
 function TBinder.CharToDisplayDecimal(value: Char): string;
 var
-  Culture: CultureInfo;
-  CharEncoding: Encoding;
+  Culture: TFieldedTextLocaleSettings;
+  CharEncoding: TEncoding;
   Bytes: TBytes;
   ResultDouble: Double;
   ResultInt64: Int64;
@@ -933,25 +952,25 @@ begin
   ResultDouble := 0;
   for I := Low(Bytes) to High(Bytes) do
   begin
-    ResultDouble := ResultDouble + ResultDouble * Math.Pow(256, I);
+    ResultDouble := ResultDouble + ResultDouble * Math.IntPower(256.0, I);
   end;
-  ResultInt64 := Convert.ToInt64(Math.Round(ResultDouble));
-  Result := ResultInt64.ToString('D', Culture);
+  ResultInt64 := Round(ResultDouble);
+  Result := Culture.IntToStr(ResultInt64);
 end;
 
 function TBinder.CharToDisplayHex(value: Char): string;
 var
-  CharEncoding: Encoding;
+  CharEncoding: TEncoding;
   Bytes: TBytes;
-  ResultBuilder: StringBuilder;
+  ResultBuilder: TStringBuilder;
   I: Integer;
 begin
   CharEncoding := CalculateDisplayCharEncoding;
   Bytes := CharEncoding.GetBytes(value);
-  ResultBuilder := StringBuilder.Create;
+  ResultBuilder := TStringBuilder.Create;
   for I := Low(Bytes) to High(Bytes) do
   begin
-    ResultBuilder.Append(Bytes[I].ToString('X2', CultureInfo.InvariantCulture));
+    ResultBuilder.Append(IntToHex(Bytes[I], 2));
   end;
   Result := ResultBuilder.ToString;
 end;
@@ -963,20 +982,8 @@ function TBinder.CheckRefresh(id: TPropertyId; modified: Boolean): Boolean;
     if PropArray[Id].CaptionChange then
     begin
       case PropArray[Id].Cat of
-        pcField:
-        begin
-          if Assigned(FFieldCaptionChangeEvent) then
-          begin
-            FFieldCaptionChangeEvent;
-          end;
-        end;
-        pcSequence:
-        begin
-          if Assigned(FSsirCaptionChangeEvent) then
-          begin
-            FSsirCaptionChangeEvent;
-          end;
-        end;
+        pcField: NotifyFieldCaptionChange;
+        pcSequence: NotifySsirCaptionChange;
         else Assert(False);
       end;
     end;
@@ -1033,7 +1040,7 @@ begin
     Dec(FErrorCount);
     if not FConfigurationChanged then
     begin
-      FErrorCountChangeEvent;
+      NotifyErrorCountChange;
     end;
   end;
 end;
@@ -1057,6 +1064,98 @@ begin
     if PropArray[PropId].Id <> PropId then
     begin
       raise Exception.Create('PropArray out of order');
+    end;
+
+    case PropId of
+      piCultureName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piDelimiterChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piQuoteChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piLineCommentChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piEndOfLineChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piSubstitutionChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piHeadingPadChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piHeadingTruncateChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piHeadingEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piIgnoreBlankLines: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piAllowEndOfLineInQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piStuffedEmbeddedQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piIgnoreExtraChars: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piHeadingAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piHeadingWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piSubstitutionsEnabled: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piDeclared: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piHeadingLineCount: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
+      piMainHeadingLineIndex: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
+      piNewBooleanFieldFalseText: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewBooleanFieldTrueText: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewIntegerFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewFloatFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewDateTimeFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewDecimalFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNewBooleanFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TBooleanStyles);
+      piNewIntegerFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piNewFloatFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piNewDateTimeFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyles);
+      piNewDecimalFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piEndOfLineType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineType);
+      piEndOfLineAutoWriteType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineAutoWriteType);
+      piHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextHeadingConstraint);
+      piHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
+      piHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
+      piHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
+      piHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piSubstitutionType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSubstitutionType);
+      piSubstitutionToken: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piSubstitutionValue: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piMetaReferenceType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TMetaReferenceType);
+      piMetaReference: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piId: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
+      piFieldHeadings: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piFieldHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextHeadingConstraint);
+      piConstant: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piNull: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piFixedWidth: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piValueQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
+      piValueAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piValueWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piFieldHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
+      piFieldHeadingAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piFieldHeadingWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piWidth: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
+      piValuePadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
+      piValuePadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
+      piValuePadChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piValueEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piValueTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piValueTruncateChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piValueNullChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piFieldHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
+      piFieldHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
+      piFieldHeadingPadChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piFieldHeadingEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piFieldHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piFieldHeadingTruncateChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
+      piStringValue: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piBooleanValue: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piFalseText: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piTrueText: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piBooleanStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TBooleanStyles);
+      piNumberFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piNumberStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piIntegerValue: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
+      piFloatValue: PropertyTypeInfoArray[PropId] := TypeInfo(Double);
+      piDecimalValue: PropertyTypeInfoArray[PropId] := TypeInfo(Currency);
+      piDateTimeFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piDateTimeValue: PropertyTypeInfoArray[PropId] := TypeInfo(TDateTime);
+      piDateTimeStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyles);
+      piSequenceName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
+      piIsRoot: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piSequenceItemField: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequenceItem);
+      piRedirectSequence: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequence);
+      piRedirectValue: PropertyTypeInfoArray[PropId] := nil;
+      piRedirectInvokationDelay: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType);
+      else raise Exception.Create('Property TypeInfo not set');
     end;
   end;
 end;
@@ -1085,12 +1184,12 @@ begin
   end;
 end;
 
-function TBinder.EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: DateTimeStyles;
+function TBinder.EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyles;
   out NewValue: string): Boolean;
-var
-  Form: TDateTimeStylesForm;
+//var
+//  Form: TDateTimeStylesForm;
 begin
-  Form := TDateTimeStylesForm.Create(formOwner);
+{  Form := TDateTimeStylesForm.Create(formOwner);
   try
     Form.SetAsString(asString, fallBack, default);
     Result := Form.ShowModal = mrOk;
@@ -1100,10 +1199,11 @@ begin
     end;
   finally
     Form.Release;
-  end;
+  end;}
+  Result := False;
 end;
 
-function TBinder.EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: NumberStyles;
+function TBinder.EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyles;
   out NewValue: string): Boolean;
 var
   Form: TNumberStylesForm;
@@ -1138,10 +1238,10 @@ end;
 
 function TBinder.GetCharValue(id: TPropertyId; idx: Integer): Char;
 var
-  Value: TObject;
+  Value: TValue;
 begin
   Value := GetPropertyValue(id, idx);
-  Result := Value as Char;
+  Result := Value.AsType<Char>;
 end;
 
 function TBinder.GetPropertyName(id: TPropertyId): string;
@@ -1149,10 +1249,13 @@ begin
   if PropArray[id].Name <> '' then
     Result := PropArray[id].Name
   else
-    Result := Enum(id).ToString.Substring(2);
+  begin
+    Result := GetEnumName(TypeInfo(TPropertyId), Ord(id));
+    Result := Copy(Result, 3, MaxInt);
+  end;
 end;
 
-function TBinder.GetPropertyValue(control: TWinControl; idx: Integer): TObject;
+function TBinder.GetPropertyValue(control: TWinControl; idx: Integer): TValue;
 var
   Id: TPropertyId;
 begin
@@ -1160,7 +1263,7 @@ begin
   Result := GetPropertyValue(Id, idx);
 end;
 
-function TBinder.GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TObject;
+function TBinder.GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TValue;
 var
   Id: TPropertyId;
 begin
@@ -1168,7 +1271,7 @@ begin
   Result := GetRedirectPropertyValue(Id, redirect);
 end;
 
-function TBinder.GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TObject;
+function TBinder.GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TValue;
 var
   Name: string;
 begin
@@ -1176,7 +1279,7 @@ begin
   Result := FEditEngine.RedirectProperties[Name, redirect];
 end;
 
-function TBinder.GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TObject;
+function TBinder.GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TValue;
 var
   Name: string;
 begin
@@ -1184,7 +1287,7 @@ begin
   Result := FEditEngine.SequenceItemProperties[Name, sequenceItem];
 end;
 
-function TBinder.GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TObject;
+function TBinder.GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TValue;
 var
   Id: TPropertyId;
 begin
@@ -1192,7 +1295,7 @@ begin
   Result := GetSequenceItemPropertyValue(Id, sequenceItem);
 end;
 
-function TBinder.GetPropertyValue(id: TPropertyId; idx: Integer): TObject;
+function TBinder.GetPropertyValue(id: TPropertyId; idx: Integer): TValue;
 var
   Name: string;
   Cat: TEditEngine.TPropertyCategory;
@@ -1231,14 +1334,14 @@ var
   Modified: Boolean;
 begin
   Id := TagToPropertyId(checkBox.Tag);
-  SetPropertyValue(Id, idx, checkBox.Checked as TObject, Modified);
+  SetPropertyValue(Id, idx, checkBox.Checked, Modified);
   if not CheckRefresh(Id, Modified) then
   begin
     LoadCheckBox(checkBox, idx);
   end;
 end;
 
-procedure TBinder.HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: DateTimeStyles; var key: Char);
+procedure TBinder.HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1249,14 +1352,14 @@ end;
 
 procedure TBinder.HandleDecimalEditExit(edit: TEdit; idx: Integer);
 begin
-  SaveDecimalEdit(edit, idx);
+  SaveCurrencyEdit(edit, idx);
 end;
 
 procedure TBinder.HandleDecimalEditKeyPress(edit: TEdit; idx: Integer; var key: Char);
 begin
   if Key = #13 then
   begin
-    SaveDecimalEdit(edit, idx);
+    SaveCurrencyEdit(edit, idx);
     Key := #0;
   end;
 end;
@@ -1275,18 +1378,20 @@ begin
   end;
 end;
 
-procedure TBinder.HandleComboBoxChange(comboBox: TComboBoxEx; idx: Integer);
+procedure TBinder.HandleComboBoxChange(comboBox: TComboBox; idx: Integer);
 var
   ItemIndex: Integer;
   Id: TPropertyId;
-  Value: TObject;
+  ComboBoxValue: TObject;
+  Value: TValue;
   Modified: Boolean;
 begin
   ItemIndex := comboBox.ItemIndex;
   if ItemIndex >= 0 then
   begin
     Id := TagToPropertyId(comboBox.Tag);
-    Value := comboBox.ItemsEx[ItemIndex].Data;
+    ComboBoxValue := comboBox.Items.Objects[ItemIndex];
+    Value := TValue.FromOrdinal(PropertyTypeInfoArray[Id], Integer(ComboBoxValue));
     SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
@@ -1338,7 +1443,7 @@ begin
   end;
 end;
 
-procedure TBinder.HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: NumberStyles; var key: Char);
+procedure TBinder.HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyles; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1353,7 +1458,7 @@ var
   Modified: Boolean;
 begin
   Id := TagToPropertyId(radioButton.Tag);
-  SetPropertyValue(Id, idx, radioButton.Checked as TObject, Modified);
+  SetPropertyValue(Id, idx, radioButton.Checked, Modified);
   if not CheckRefresh(Id, Modified) then
   begin
     LoadRadioButton(radioButton, idx);
@@ -1366,26 +1471,28 @@ var
   Modified: Boolean;
 begin
   Id := TagToPropertyId(checkBox.Tag);
-  SetRedirectPropertyValue(Id, redirect, checkBox.Checked as TObject, Modified);
+  SetRedirectPropertyValue(Id, redirect, checkBox.Checked, Modified);
   if not CheckRefresh(Id, Modified) then
   begin
     LoadRedirectCheckBox(checkBox, redirect);
   end;
 end;
 
-procedure TBinder.HandleRedirectComboBoxChange(comboBox: TComboBoxEx;
+procedure TBinder.HandleRedirectComboBoxChange(comboBox: TComboBox;
   redirect: TFieldedTextSequenceRedirect);
 var
   ItemIndex: Integer;
   Id: TPropertyId;
-  Value: TObject;
+  ComboBoxValue: TObject;
+  Value: TValue;
   Modified: Boolean;
 begin
   ItemIndex := comboBox.ItemIndex;
   if ItemIndex >= 0 then
   begin
     Id := TagToPropertyId(comboBox.Tag);
-    Value := comboBox.ItemsEx[ItemIndex].Data;
+    ComboBoxValue := comboBox.Items.Objects[ItemIndex];
+    Value.FromOrdinal(PropertyTypeInfoArray[Id], Integer(ComboBoxValue));
     SetRedirectPropertyValue(Id, redirect, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
@@ -1467,23 +1574,25 @@ end;
 
 function TBinder.IsViewableChar(value: Char): Boolean;
 begin
-  Result := value.IsLetterOrDigit(value)
+  Result := TCharacter.IsLetterOrDigit(value)
             or
-            value.IsPunctuation(value)
+            TCharacter.IsPunctuation(value)
             or
-            value.IsNumber(value)
+            TCharacter.IsNumber(value)
             or
-            value.IsSymbol(value);
+            TCharacter.IsSymbol(value);
 end;
 
 procedure TBinder.LoadBooleanStylesEdit(edit: TEdit; idx: Integer);
 var
-  Value: TBooleanStyles;
-  Culture: CultureInfo;
+  Value: TValue;
+  Styles: TCompositeBooleanStyles;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as TBooleanStyles;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  Styles.Styles := Value.AsType<TBooleanStyles>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Enum(Value).ToString;
+  edit.Text := Styles.AsString;
   ClearEditError(edit);
 end;
 
@@ -1522,78 +1631,81 @@ end;
 
 procedure TBinder.LoadCheckBox(checkBox: TCheckBox; idx: Integer);
 var
-  Value: TObject;
+  Value: TValue;
 begin
   Value := GetPropertyValue(TagToPropertyId(checkBox.Tag), idx);
-  checkBox.Checked := Value as Boolean;
+  checkBox.Checked := Value.AsBoolean;
 end;
 
 procedure TBinder.LoadCultureEdit(edit: TEdit; idx: Integer);
+var
+  Value: TValue;
 begin
-  edit.Text := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as string;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  edit.Text := Value.AsString;
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadDateTimePickers(datePicker, timePicker: TDateTimePicker; idx: Integer);
 var
-  Value: DateTime;
-  DateValue: TDateTime;
-  TimeValue: TDateTime;
+  Value: TValue;
 begin
-  Value := GetPropertyValue(TagToPropertyId(datePicker.Tag), idx) as DateTime;
-  if TDateTime.TryEncodeDate(Value.Year, Value.Month, Value.Day, DateValue) then
-    datePicker.Date := DateValue
-  else
-    datePicker.Date := 0.0;
-  if TDateTime.TryEncodeTime(Value.Hour, Value.Minute, Value.Second, Value.Millisecond, TimeValue) then
-    timePicker.Time := TimeValue
-  else
-    timePicker.Time := 0.0;
+  Value := GetPropertyValue(TagToPropertyId(datePicker.Tag), idx);
+  datePicker.DateTime := Value.AsType<TDateTime>;
 end;
 
 procedure TBinder.LoadDateTimeStylesEdit(edit: TEdit; idx: Integer);
 var
-  Value: DateTimeStyles;
-  Culture: CultureInfo;
+  Value: TValue;
+  Styles: TCompositeDotNetDateTimeStyles;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as DateTimeStyles;
-  Culture := FEditEngine.DisplayCulture;
-  edit.Text := Enum(Value).ToString;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  Styles.Styles := Value.AsType<TDotNetDateTimeStyles>;
+  edit.Text := Styles.AsString;
   ClearEditError(edit);
 end;
 
-procedure TBinder.LoadDecimalEdit(edit: TEdit; idx: Integer);
+procedure TBinder.LoadCurrencyEdit(edit: TEdit; idx: Integer);
 var
-  ValueAsObject: TObject;
-  Culture: CultureInfo;
+  Value: TValue;
+  CurrencyValue: Currency;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  ValueAsObject := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
   Culture := FEditEngine.DisplayCulture;
 
-  if not Assigned(ValueAsObject) then
-    edit.Text := ''
-  else
-    edit.Text := (ValueAsObject as Decimal).ToString(Culture);
+  CurrencyValue := Value.AsCurrency;
+
+  edit.Text := Culture.CurrToStr(CurrencyValue);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadDoubleEdit(edit: TEdit; idx: Integer);
 var
-  Value: Double;
-  Culture: CultureInfo;
+  Value: TValue;
+  DoubleValue: Double;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as Double;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Value.ToString(Culture);
+
+  DoubleValue := Value.AsType<Double>;
+
+  edit.Text := Culture.FloatToStr(DoubleValue);
   ClearEditError(edit);
 end;
 
-procedure TBinder.LoadComboBox(comboBox: TComboBoxEx; idx: Integer);
+procedure TBinder.LoadComboBox(comboBox: TComboBox; idx: Integer);
 var
-  Value: TObject;
+  Value: TValue;
+  ValueAsInt64: Int64;
+  ValueAsInt: Integer;
 begin
   Value := GetPropertyValue(TagToPropertyId(comboBox.Tag), idx);
-  comboBox.ItemIndex := comboBox.Items.IndexOfObject(Value);
+  ValueAsInt64 := Value.AsOrdinal;
+  ValueAsInt := Integer(ValueAsInt64);
+
+  comboBox.ItemIndex := comboBox.Items.IndexOfObject(TObject(ValueAsInt));
 end;
 
 procedure TBinder.LoadCommaTextEdit(edit: TEdit; idx: Integer);
@@ -1603,228 +1715,275 @@ end;
 
 procedure TBinder.LoadInt64Edit(edit: TEdit; idx: Integer);
 var
-  Value: Int64;
-  Culture: CultureInfo;
+  Value: TValue;
+  Int64Value: Int64;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as Int64;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  Int64Value := Value.AsType<Int64>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Value.ToString(Culture);
+  edit.Text := Culture.IntToStr(Int64Value);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadIntegerEdit(edit: TEdit; idx: Integer);
 var
-  Value: Integer;
-  Culture: CultureInfo;
+  Value: TValue;
+  IntegerValue: Integer;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as Integer;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  IntegerValue := Value.AsInteger;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Value.ToString(Culture);
+  edit.Text := Culture.IntToStr(IntegerValue);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadNumberStylesEdit(edit: TEdit; idx: Integer);
 var
-  Value: NumberStyles;
-  Culture: CultureInfo;
+  Value: TValue;
+  Styles: TCompositeDotNetNumberStyles;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as NumberStyles;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  Styles.Styles := Value.AsType<TDotNetNumberStyles>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Enum(Value).ToString;
+  edit.Text := Styles.AsString;
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadRadioButton(radioButton: TRadioButton; idx: Integer);
 var
-  Value: TObject;
+  Value: TValue;
 begin
   Value := GetPropertyValue(TagToPropertyId(radioButton.Tag), idx);
-  radioButton.Checked := Value as Boolean;
+  radioButton.Checked := Value.AsBoolean;
 end;
 
 procedure TBinder.LoadRedirectCheckBox(checkBox: TCheckBox; redirect: TFieldedTextSequenceRedirect);
 var
-  Value: TObject;
+  Value: TValue;
 begin
   Value := GetRedirectPropertyValue(TagToPropertyId(checkBox.Tag), redirect);
-  checkBox.Checked := Value as Boolean;
+  checkBox.Checked := Value.AsBoolean;
 end;
 
-procedure TBinder.LoadRedirectComboBox(comboBox: TComboBoxEx;
+procedure TBinder.LoadRedirectComboBox(comboBox: TComboBox;
   redirect: TFieldedTextSequenceRedirect);
 var
-  Value: TObject;
+  Value: TValue;
+  ValueAsInt: Integer;
 begin
   Value := GetRedirectPropertyValue(TagToPropertyId(comboBox.Tag), redirect);
-  comboBox.ItemIndex := comboBox.Items.IndexOfObject(Value);
+  ValueAsInt := Value.AsType<Integer>;
+
+  comboBox.ItemIndex := comboBox.Items.IndexOfObject(TObject(ValueAsInt));
 end;
 
 procedure TBinder.LoadRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker;
   redirect: TFieldedTextSequenceRedirect);
 var
-  Value: DateTime;
-  DateValue: TDateTime;
-  TimeValue: TDateTime;
+  Value: TValue;
 begin
-  Value := GetRedirectPropertyValue(TagToPropertyId(datePicker.Tag), redirect) as DateTime;
-  if TDateTime.TryEncodeDate(Value.Year, Value.Month, Value.Day, DateValue) then
-    datePicker.Date := DateValue
-  else
-    datePicker.Date := 0.0;
-  if TDateTime.TryEncodeTime(Value.Hour, Value.Minute, Value.Second, Value.Millisecond, TimeValue) then
-    timePicker.Time := TimeValue
-  else
-    timePicker.Time := 0.0;
+  Value := GetRedirectPropertyValue(TagToPropertyId(datePicker.Tag), redirect);
+  datePicker.DateTime := Value.AsType<TDateTime>;
 end;
 
-procedure TBinder.LoadRedirectDecimalEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 var
-  ValueAsObject: TObject;
-  Culture: CultureInfo;
+  Value: TValue;
+  CurrencyValue: Currency;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  ValueAsObject := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect);
+  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect);
+  CurrencyValue := Value.AsType<Currency>;
   Culture := FEditEngine.DisplayCulture;
 
-  if not Assigned(ValueAsObject) then
-    edit.Text := ''
-  else
-    edit.Text := (ValueAsObject as Decimal).ToString(Culture);
+  edit.Text := Culture.CurrToStr(CurrencyValue);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadRedirectDoubleEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 var
-  Value: Double;
-  Culture: CultureInfo;
+  Value: TValue;
+  DoubleValue: Double;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect) as Double;
+  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect);
+  DoubleValue := Value.AsType<Double>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Value.ToString(Culture);
+  edit.Text := Culture.FloatToStr(DoubleValue);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadRedirectInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
 var
-  Value: Int64;
-  Culture: CultureInfo;
+  Value: TValue;
+  Int64Value: Int64;
+  Culture: TFieldedTextLocaleSettings;
 begin
-  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect) as Int64;
+  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect);
+  Int64Value := Value.AsType<Int64>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Value.ToString(Culture);
+  edit.Text := Culture.IntToStr(Int64Value);
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadRedirectStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+var
+  Value: TValue;
+  StringValue: string;
 begin
-  edit.Text := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect) as string;
+  Value := GetRedirectPropertyValue(TagToPropertyId(edit.Tag), redirect);
+  StringValue := Value.AsString;
+  edit.Text := StringValue;
   ClearEditError(edit);
 end;
 
 procedure TBinder.LoadStringEdit(edit: TEdit; idx: Integer);
+var
+  Value: TValue;
 begin
-  edit.Text := GetPropertyValue(TagToPropertyId(edit.Tag), idx) as string;
+  Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
+  edit.Text := Value.AsString;
   ClearEditError(edit);
 end;
 
-class procedure TBinder.PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+procedure TBinder.NotifyErrorCountChange;
+var
+  I: Integer;
+  Delegates: TErrorCountChangeDelegates;
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Local', -1, -1, -1, -1, ftewLocal);
-  comboBox.ItemsEx.AddItem('CrLf', -1, -1, -1, -1, ftewCrLf);
-  comboBox.ItemsEx.AddItem('Cr', -1, -1, -1, -1, ftewCr);
-  comboBox.ItemsEx.AddItem('Lf', -1, -1, -1, -1, ftewLf);
+  Delegates := Copy(FErrorCountChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I];
+  end;
+end;
+
+procedure TBinder.NotifyFieldCaptionChange;
+var
+  I: Integer;
+  Delegates: TFieldCaptionChangeDelegates;
+begin
+  Delegates := Copy(FFieldCaptionChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I];
+  end;
+end;
+
+procedure TBinder.NotifySsirCaptionChange;
+var
+  I: Integer;
+  Delegates: TSequenceCaptionChangeDelegates;
+begin
+  Delegates := Copy(FSsirCaptionChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I];
+  end;
+end;
+
+class procedure TBinder.PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+begin
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Local', TObject(ftewLocal));
+  comboBox.Items.AddObject('CrLf', TObject(ftewCrLf));
+  comboBox.Items.AddObject('Cr', TObject(ftewCr));
+  comboBox.Items.AddObject('Lf', TObject(ftewLf));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PrepareEndOfLineTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PrepareEndOfLineTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Auto', -1, -1, -1, -1, ftetAuto);
-  comboBox.ItemsEx.AddItem('Char', -1, -1, -1, -1, ftetChar);
-  comboBox.ItemsEx.AddItem('CrLf', -1, -1, -1, -1, ftetCrLf);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Auto', TObject(ftetAuto));
+  comboBox.Items.AddObject('Char', TObject(ftetChar));
+  comboBox.Items.AddObject('CrLf', TObject(ftetCrLf));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PrepareHeadingConstraintComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PrepareHeadingConstraintComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('None', -1, -1, -1, -1, fthcNone);
-  comboBox.ItemsEx.AddItem('All Constant', -1, -1, -1, -1, fthcAllConstant);
-  comboBox.ItemsEx.AddItem('Main Constant', -1, -1, -1, -1, fthcMainConstant);
-  comboBox.ItemsEx.AddItem('Name Constant', -1, -1, -1, -1, fthcNameConstant);
-  comboBox.ItemsEx.AddItem('Name Is Main', -1, -1, -1, -1, fthcNameIsMain);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('None', TObject(fthcNone));
+  comboBox.Items.AddObject('All Constant', TObject(fthcAllConstant));
+  comboBox.Items.AddObject('Main Constant', TObject(fthcMainConstant));
+  comboBox.Items.AddObject('Name Constant', TObject(fthcNameConstant));
+  comboBox.Items.AddObject('Name Is Main', TObject(fthcNameIsMain));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PreparePadAlignmentComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PreparePadAlignmentComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Auto', -1, -1, -1, -1, ftpaAuto);
-  comboBox.ItemsEx.AddItem('Left', -1, -1, -1, -1, ftpaLeft);
-  comboBox.ItemsEx.AddItem('Right', -1, -1, -1, -1, ftpaRight);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Auto', TObject(ftpaAuto));
+  comboBox.Items.AddObject('Left', TObject(ftpaLeft));
+  comboBox.Items.AddObject('Right', TObject(ftpaRight));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PreparePadCharTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PreparePadCharTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Auto', -1, -1, -1, -1, ftpcAuto);
-  comboBox.ItemsEx.AddItem('Specified', -1, -1, -1, -1, ftpcSpecified);
-  comboBox.ItemsEx.AddItem('EndOfValue', -1, -1, -1, -1, ftpcEndOfValue);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Auto', TObject(ftpcAuto));
+  comboBox.Items.AddObject('Specified', TObject(ftpcSpecified));
+  comboBox.Items.AddObject('EndOfValue', TObject(ftpcEndOfValue));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PrepareQuotedTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PrepareQuotedTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Never', -1, -1, -1, -1, ftqtNever);
-  comboBox.ItemsEx.AddItem('Always', -1, -1, -1, -1, ftqtAlways);
-  comboBox.ItemsEx.AddItem('Optional', -1, -1, -1, -1, ftqtOptional);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Never', TObject(ftqtNever));
+  comboBox.Items.AddObject('Always', TObject(ftqtAlways));
+  comboBox.Items.AddObject('Optional', TObject(ftqtOptional));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
 class procedure TBinder.PrepareRedirectInvokationDelayComboBox(
-  comboBox: TComboBoxEx; id: TPropertyId);
+  comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('After Field', -1, -1, -1, -1, ftikAfterField);
-  comboBox.ItemsEx.AddItem('After Sequence', -1, -1, -1, -1, ftikAfterSequence);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('After Field', TObject(ftikAfterField));
+  comboBox.Items.AddObject('After Sequence', TObject(ftikAfterSequence));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PrepareTruncateTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PrepareTruncateTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('Left', -1, -1, -1, -1, ftttLeft);
-  comboBox.ItemsEx.AddItem('Right', -1, -1, -1, -1, ftttRight);
-  comboBox.ItemsEx.AddItem('TruncateChar', -1, -1, -1, -1, ftttTruncateChar);
-  comboBox.ItemsEx.AddItem('NullChar', -1, -1, -1, -1, ftttNullChar);
-  comboBox.ItemsEx.AddItem('Exception', -1, -1, -1, -1, ftttException);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Left', TObject(ftttLeft));
+  comboBox.Items.AddObject('Right', TObject(ftttRight));
+  comboBox.Items.AddObject('TruncateChar', TObject(ftttTruncateChar));
+  comboBox.Items.AddObject('NullChar', TObject(ftttNullChar));
+  comboBox.Items.AddObject('Exception', TObject(ftttException));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class procedure TBinder.PrepareMetaReferenceTypeComboBox(comboBox: TComboBoxEx; id: TPropertyId);
+class procedure TBinder.PrepareMetaReferenceTypeComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
-  comboBox.ItemsEx.Clear;
-  comboBox.ItemsEx.AddItem('None', -1, -1, -1, -1, ftmrNone);
-  comboBox.ItemsEx.AddItem('Embedded', -1, -1, -1, -1, ftmrEmbedded);
-  comboBox.ItemsEx.AddItem('File', -1, -1, -1, -1, ftmrFile);
-  comboBox.ItemsEx.AddItem('Url', -1, -1, -1, -1, ftmrUrl);
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('None', TObject(ftmrNone));
+  comboBox.Items.AddObject('Embedded', TObject(ftmrEmbedded));
+  comboBox.Items.AddObject('File', TObject(ftmrFile));
+  comboBox.Items.AddObject('Url', TObject(ftmrUrl));
 
   comboBox.Tag := CreateControlTag(id);
 end;
 
-class function TBinder.CreateControlTag(value: TPropertyId): Variant;
+class function TBinder.CreateControlTag(value: TPropertyId): Integer;
 begin
-  Result := Variant(TControlTag.Create(value));
+  Result := Integer(TControlTag.Create(value));
 end;
 
 procedure TBinder.SetEditError(edit: TEdit);
@@ -1838,7 +1997,7 @@ begin
     TControlTag(edit.Tag).Error := True;
     if not FConfigurationChanged then
     begin
-      FErrorCountChangeEvent;
+      NotifyErrorCountChange;
     end;
   end;
 end;
@@ -1853,7 +2012,7 @@ begin
   end;
 end;
 
-procedure TBinder.SetPropertyValue(id: TPropertyId; idx: Integer; value: TObject; out modified: Boolean);
+procedure TBinder.SetPropertyValue(id: TPropertyId; idx: Integer; const value: TValue; out modified: Boolean);
 var
   Name: string;
   Cat: TEditEngine.TPropertyCategory;
@@ -1863,7 +2022,7 @@ begin
   FEditEngine.SetPropertyValue(Name, idx, Cat, value, modified);
 end;
 
-procedure TBinder.SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; value: TObject;
+procedure TBinder.SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; const value: TValue;
   out modified: Boolean);
 var
   Name: string;
@@ -1888,7 +2047,7 @@ begin
   CheckRefresh(piSequenceItemField, Modified);
 end;
 
-procedure TBinder.SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; value: TObject;
+procedure TBinder.SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; const value: TValue;
   out modified: Boolean);
 var
   Name: string;
@@ -1897,34 +2056,50 @@ begin
   FEditEngine.SetSequenceItemPropertyValue(Name, sequenceItem, value, modified);
 end;
 
-function TBinder.TryDisplayDecimalToChar(decimalStr: string; out value: Char): Boolean;
+procedure TBinder.SubscribeErrorCountChangeEvent(
+  Delegate: TErrorCountChangeDelegate);
 var
-  Culture: CultureInfo;
+  Idx: Integer;
+begin
+  Idx := Length(FErrorCountChangeDelegates);
+  SetLength(FErrorCountChangeDelegates, Idx + 1);
+  FErrorCountChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TBinder.SubscribeFieldCaptionChangeEvent(
+  Delegate: TFieldCaptionChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FFieldCaptionChangeDelegates);
+  SetLength(FFieldCaptionChangeDelegates, Idx + 1);
+  FFieldCaptionChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TBinder.SubscribeSsirCaptionChangeEvent(
+  Delegate: TSequenceCaptionChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FSsirCaptionChangeDelegates);
+  SetLength(FSsirCaptionChangeDelegates, Idx + 1);
+  FSsirCaptionChangeDelegates[Idx] := Delegate;
+end;
+
+function TBinder.TryDisplayDecimalToChar(const decimalStr: string; out value: Char): Boolean;
+var
+  Culture: TFieldedTextLocaleSettings;
   Int64Value: Int64;
   I: Integer;
   Bytes: TBytes;
   BytesLength: Integer;
   PowerValue: Int64;
-  CharEncoding: Encoding;
+  CharEncoding: TEncoding;
   CharCount: Integer;
-  Chars: array of Char;
+  Chars: TCharArray;
 begin
-  Result := True;
   Culture := FEditEngine.DisplayCulture;
-  try
-    Int64Value := System.Int64.Parse(decimalStr, Culture);
-  except
-    on FormatException do
-    begin
-      Int64Value := 0;
-      Result := False;
-    end;
-    on OverflowException do
-    begin
-      Int64Value := 0;
-      Result := False;
-    end;
-  end;
+  Result := Culture.TryStrToInt64(decimalStr, Int64Value);
 
   if Result then
   begin
@@ -1933,7 +2108,7 @@ begin
 
     for I := 7 downto 0 do
     begin
-      PowerValue := Convert.ToInt64(Math.Round(Math.Pow(256, I)));
+      PowerValue := Round(Math.Power(256, I));
       Bytes[I] := Int64Value div PowerValue;
       Int64Value := Int64Value mod PowerValue;
 
@@ -1959,15 +2134,15 @@ end;
 
 function TBinder.TryDisplayHexToChar(hexStr: string; out value: Char): Boolean;
 var
-  Culture: CultureInfo;
-  Int64Value: Int64;
+  Culture: TFieldedTextLocaleSettings;
+  Int64Value: UInt64;
   I: Integer;
   Bytes: TBytes;
   BytesLength: Integer;
   PowerValue: Int64;
-  CharEncoding: Encoding;
+  CharEncoding: TEncoding;
   CharCount: Integer;
-  Chars: array of Char;
+  Chars: TCharArray;
 begin
   Result := True;
   Culture := FEditEngine.DisplayCulture;
@@ -1982,27 +2157,17 @@ begin
     Result := False
   else
   begin
-    try
-      Int64Value := System.Int64.Parse(hexStr, NumberStyles.HexNumber, Culture);
-    except
-      on FormatException do
-      begin
-        Int64Value := 0;
-        Result := False;
-      end;
-      on OverflowException do
-      begin
-        Int64Value := 0;
-        Result := False;
-      end;
-    end;
-
-    if Result then
+    if not Culture.TryHexToUInt64(HexStr, Int64Value) then
+    begin
+      Int64Value := 0;
+      Result := False;
+    end
+    else
     begin
       SetLength(Bytes, BytesLength);
       for I := BytesLength-1 downto 0 do
       begin
-        PowerValue := Convert.ToInt64(Math.Round(Math.Pow(256, I)));
+        PowerValue := Round(Math.Power(256, I));
         Bytes[I] := Int64Value div PowerValue;
         Int64Value := Int64Value mod PowerValue;
       end;
@@ -2020,100 +2185,68 @@ begin
   end;
 end;
 
-function TBinder.TryParseBooleanStylesDisplay(display: string; out value: TBooleanStyles): Boolean;
+function TBinder.TryParseBooleanStylesDisplay(const display: string; out value: TBooleanStyles): Boolean;
+var
+  Styles: TCompositeBooleanStyles;
 begin
-  try
-    value := Enum.Parse(TypeOf(TBooleanStyles), display, True) as TBooleanStyles;
-    Result := True;
-  except
-    on ArgumentException do
-    begin
-      Result := False;
-    end;
+  Result := Styles.Parse(display);
+  if Result then
+  begin
+    Value := Styles.Styles;
   end;
 end;
 
-function TBinder.TryParseCommaTextDisplay(display: string): Boolean;
+function TBinder.TryParseCommaTextDisplay(const display: string): Boolean;
 var
   ErrorDescription: string;
 begin
   Result := TCommaText.StrictValidate(display, ErrorDescription);
 end;
 
-function TBinder.TryParseDateTimeStylesDisplay(display: string; out value: DateTimeStyles): Boolean;
+function TBinder.TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyles): Boolean;
+var
+  Styles: TCompositeDotNetDateTimeStyles;
 begin
-  try
-    value := Enum.Parse(TypeOf(DateTimeStyles), display, True) as DateTimeStyles;
-    Result := True;
-  except
-    on ArgumentException do
-    begin
-      Result := False;
-    end;
+  Result := Styles.Parse(display);
+  if Result then
+  begin
+    Value := Styles.Styles;
   end;
 end;
 
-function TBinder.TryParseDecimalDisplay(display: string; out value: Decimal): Boolean;
+function TBinder.TryParseCurrencyDisplay(const display: string; out value: Currency): Boolean;
 var
-  Culture: CultureInfo;
+  Culture: TFieldedTextLocaleSettings;
 begin
   Culture := FEditEngine.DisplayCulture;
-
-  try
-    value := System.Decimal.Parse(display, Culture);
-    Result := True;
-  except
-    on FormatException do Result := False;
-    on OverflowException do Result := False;
-  end;
+  Result := Culture.TryStrToCurr(display, Value);
 end;
 
-function TBinder.TryParseDoubleDisplay(display: string; out value: Double): Boolean;
+function TBinder.TryParseDoubleDisplay(const display: string; out value: Double): Boolean;
 var
-  Culture: CultureInfo;
+  Culture: TFieldedTextLocaleSettings;
 begin
   Culture := FEditEngine.DisplayCulture;
-
-  try
-    value := System.Double.Parse(display, Culture);
-    Result := True;
-  except
-    on FormatException do Result := False;
-    on OverflowException do Result := False;
-  end;
+  Result := Culture.TryStrToFloat(display, Value);
 end;
 
-function TBinder.TryParseInt64Display(display: string; out value: Int64): Boolean;
+function TBinder.TryParseInt64Display(const display: string; out value: Int64): Boolean;
 var
-  Culture: CultureInfo;
+  Culture: TFieldedTextLocaleSettings;
 begin
   Culture := FEditEngine.DisplayCulture;
-
-  try
-    value := System.Int64.Parse(display, Culture);
-    Result := True;
-  except
-    on FormatException do Result := False;
-    on OverflowException do Result := False;
-  end;
+  Result := Culture.TryStrToInt64(display, value);
 end;
 
-function TBinder.TryParseIntegerDisplay(display: string; out value: Integer): Boolean;
+function TBinder.TryParseIntegerDisplay(const display: string; out value: Integer): Boolean;
 var
-  Culture: CultureInfo;
+  Culture: TFieldedTextLocaleSettings;
 begin
   Culture := FEditEngine.DisplayCulture;
-
-  try
-    value := System.Int32.Parse(display, Culture);
-    Result := True;
-  except
-    on FormatException do Result := False;
-    on OverflowException do Result := False;
-  end;
+  Result := Culture.TryStrToInt(display, value);
 end;
 
-function TBinder.TryParseNonViewableCharDisplay(display: string; out value: Char): Boolean;
+function TBinder.TryParseNonViewableCharDisplay(const display: string; out value: Char): Boolean;
 var
   Format: TNonViewableCharFormat;
   HexDecValue: string;
@@ -2133,16 +2266,92 @@ begin
   end;
 end;
 
-function TBinder.TryParseNumberStylesDisplay(display: string; out value: NumberStyles): Boolean;
+function TBinder.TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyles): Boolean;
+var
+  Styles: TCompositeDotNetNumberStyles;
 begin
-  try
-    value := Enum.Parse(TypeOf(NumberStyles), display, True) as NumberStyles;
-    Result := True;
-  except
-    on ArgumentException do
+  Result := Styles.Parse(display);
+  if Result then
+  begin
+    value := Styles.Styles;
+  end;
+end;
+
+procedure TBinder.UnsubscribeErrorCountChangeEvent(
+  Delegate: TErrorCountChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TErrorCountChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FErrorCountChangeDelegates) to High(FErrorCountChangeDelegates) do
+  begin
+    ExistingDelegate := FErrorCountChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
     begin
-      Result := False;
+      Idx := I;
+      Break;
     end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FErrorCountChangeDelegates[Idx] := FErrorCountChangeDelegates[High(FErrorCountChangeDelegates)];
+    SetLength(FErrorCountChangeDelegates, Length(FErrorCountChangeDelegates)-1);
+  end;
+end;
+
+procedure TBinder.UnsubscribeFieldCaptionChangeEvent(
+  Delegate: TFieldCaptionChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TFieldCaptionChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FFieldCaptionChangeDelegates) to High(FFieldCaptionChangeDelegates) do
+  begin
+    ExistingDelegate := FFieldCaptionChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FFieldCaptionChangeDelegates[Idx] := FFieldCaptionChangeDelegates[High(FFieldCaptionChangeDelegates)];
+    SetLength(FFieldCaptionChangeDelegates, Length(FFieldCaptionChangeDelegates)-1);
+  end;
+end;
+
+procedure TBinder.UnsubscribeSsirCaptionChangeEvent(
+  Delegate: TSequenceCaptionChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TSequenceCaptionChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FSsirCaptionChangeDelegates) to High(FSsirCaptionChangeDelegates) do
+  begin
+    ExistingDelegate := FSsirCaptionChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FSsirCaptionChangeDelegates[Idx] := FSsirCaptionChangeDelegates[High(FSsirCaptionChangeDelegates)];
+    SetLength(FSsirCaptionChangeDelegates, Length(FSsirCaptionChangeDelegates)-1);
   end;
 end;
 
@@ -2163,7 +2372,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    SetRedirectPropertyValue(Id, redirect, Value as TObject, Modified);
+    SetRedirectPropertyValue(Id, redirect, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
     begin

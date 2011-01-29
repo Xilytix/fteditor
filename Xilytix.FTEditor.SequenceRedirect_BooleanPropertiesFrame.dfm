@@ -14,7 +14,7 @@ inherited SequenceRedirect_BooleanPropertiesFrame: TSequenceRedirect_BooleanProp
     Font.Style = [fsBold]
     ParentFont = False
   end
-  inherited InvokationDelayComboBox: TComboBoxEx
+  inherited InvokationDelayComboBox: TComboBox
     TabOrder = 2
   end
   object ValueCheckBox: TCheckBox

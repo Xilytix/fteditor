@@ -5,7 +5,7 @@ inherited GridViewFrame: TGridViewFrame
   ExplicitHeight = 67
   object TopSplitter: TSplitter [0]
     Left = 0
-    Top = 65
+    Top = 17
     Width = 543
     Height = 3
     Cursor = crVSplit
@@ -21,7 +21,7 @@ inherited GridViewFrame: TGridViewFrame
     Width = 543
     TabOrder = 1
     OnClick = FrameComponentClick
-    ExplicitWidth = 559
+    ExplicitWidth = 543
     inherited SourcePanel: TPanel
       Width = 134
       OnClick = FrameComponentClick
@@ -59,8 +59,8 @@ inherited GridViewFrame: TGridViewFrame
     inherited LinePosPanel: TPanel
       Left = 4
       Top = 17
-      ExplicitLeft = 3
-      ExplicitTop = 19
+      ExplicitLeft = 4
+      ExplicitTop = 17
     end
     inherited FilePosPanel: TPanel
       Left = 104
@@ -119,9 +119,9 @@ inherited GridViewFrame: TGridViewFrame
   end
   object Grid: TDrawGrid
     Left = 0
-    Top = 68
+    Top = 20
     Width = 543
-    Height = 26
+    Height = 47
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -136,6 +136,5 @@ inherited GridViewFrame: TGridViewFrame
     OnMouseLeave = GridMouseLeave
     OnMouseMove = GridMouseMove
     OnSelectCell = GridSelectCell
-    ExplicitWidth = 551
   end
 end

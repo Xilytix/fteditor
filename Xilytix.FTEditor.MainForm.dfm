@@ -1,4 +1,8 @@
 object MainForm: TMainForm
+  Left = 368
+  Top = 60
+  Hint = 'Open|Opens an existing Meta file'
+  ActiveControl = AutoParseCheckBox
   Caption = 'FTEditor'
   ClientHeight = 493
   ClientWidth = 891
@@ -9,49 +13,50 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  Left = 368
-  Top = 60
-  ActiveControl = AutoParseCheckBox
+  OldCreateOrder = True
   Visible = True
-  Hint = 'Open|Opens an existing Meta file'
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object MouseOverPanelSplitter: TSplitter
-    Align = alTop
-    AutoSnap = False
-    Cursor = crVSplit
-    MinSize = 15
-    ResizeStyle = rsUpdate
-    Width = 891
     Left = 0
     Top = 89
+    Width = 891
     Height = 3
+    Cursor = crVSplit
+    Align = alTop
+    AutoSnap = False
+    MinSize = 15
+    ResizeStyle = rsUpdate
     OnMoved = MouseOverPanelSplitterMoved
     ExplicitWidth = 404
   end
   object MainMenuPanel: TPanel
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 0
     Left = 0
     Top = 0
     Width = 891
     Height = 22
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 0
     DesignSize = (
       891
       22)
     object Label1: TLabel
-      Caption = '&Layout'
-      FocusControl = LayoutConfigurationsComboBox
       Left = 135
       Top = 4
       Width = 33
       Height = 13
+      Caption = '&Layout'
+      FocusControl = LayoutConfigurationsComboBox
     end
     object StatusBar: TStatusBar
+      Left = 560
+      Top = -1
+      Width = 329
+      Height = 22
       Align = alNone
       Anchors = [akLeft, akTop, akRight]
       Panels = <
@@ -76,41 +81,39 @@ object MainForm: TMainForm
         item
           Width = 50
         end>
-      Left = 560
-      Top = -1
-      Width = 329
-      Height = 22
       OnHint = StatusBarHint
       OnDrawPanel = StatusBarDrawPanel
     end
     object ConfigureLayoutButton: TButton
-      Caption = '&Configure'
-      TabOrder = 2
       Left = 305
       Top = 3
       Width = 51
       Height = 17
+      Caption = '&Configure'
+      TabOrder = 2
       OnClick = ConfigureLayoutButtonClick
     end
-    object LayoutConfigurationsComboBox: TComboBoxEx
-      ItemsEx = <>
-      Style = csExDropDownList
-      ItemHeight = 16
-      TabOrder = 1
+    object LayoutConfigurationsComboBox: TComboBox
       Left = 171
       Top = -1
       Width = 131
-      Height = 22
+      Height = 21
+      Style = csDropDownList
+      TabOrder = 1
       OnChange = LayoutConfigurationsComboBoxChange
     end
     object ActionMainMenuBar: TActionMainMenuBar
+      Left = -1
+      Top = -1
+      Width = 121
+      Height = 22
       UseSystemFont = False
       ActionManager = ActionManager
       Align = alNone
       Caption = 'ActionMainMenuBar'
-      ColorMap.HighlightColor = 14410210
+      ColorMap.HighlightColor = clWhite
       ColorMap.BtnSelectedColor = clBtnFace
-      ColorMap.UnusedColor = 14410210
+      ColorMap.UnusedColor = clWhite
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -118,46 +121,38 @@ object MainForm: TMainForm
       Font.Style = []
       PersistentHotKeys = True
       Spacing = 0
-      Left = -1
-      Top = -1
-      Width = 121
-      Height = 22
     end
     object AutoParseCheckBox: TCheckBox
-      Caption = 'Auto &Parse'
-      TabOrder = 4
       Left = 369
       Top = 3
       Width = 73
       Height = 17
+      Caption = 'Auto &Parse'
+      TabOrder = 4
       OnClick = AutoParseCheckBoxClick
     end
     object AutoGenerateCheckBox: TCheckBox
-      Caption = 'Auto &Generate'
-      TabOrder = 5
       Left = 452
       Top = 3
       Width = 93
       Height = 17
+      Caption = 'Auto &Generate'
+      TabOrder = 5
       OnClick = AutoGenerateCheckBoxClick
     end
   end
   object MouseOverPanel: TFlowPanel
+    Left = 0
+    Top = 22
+    Width = 891
+    Height = 67
     Align = alTop
     BevelEdges = [beTop, beBottom]
     BevelKind = bkFlat
     BevelOuter = bvNone
     FullRepaint = False
     TabOrder = 1
-    Left = 0
-    Top = 22
-    Width = 891
-    Height = 67
     object MouseOverLineNrPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 0
       AlignWithMargins = True
       Left = 4
       Top = 1
@@ -167,30 +162,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 0
       object Label2: TLabel
-        Caption = 'Line Nr'
-        FocusControl = MouseOverLineNrEdit
         Left = 0
         Top = 0
         Width = 33
         Height = 13
+        Caption = 'Line Nr'
+        FocusControl = MouseOverLineNrEdit
       end
       object MouseOverLineNrEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 35
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverLinePosPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 1
       AlignWithMargins = True
       Left = 88
       Top = 1
@@ -200,30 +195,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 1
       object Label3: TLabel
-        Caption = 'Line Pos'
-        FocusControl = MouseOverLinePosEdit
         Left = 0
         Top = 0
         Width = 39
         Height = 13
+        Caption = 'Line Pos'
+        FocusControl = MouseOverLinePosEdit
       end
       object MouseOverLinePosEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 41
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFilePosPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 2
       AlignWithMargins = True
       Left = 178
       Top = 1
@@ -233,30 +228,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 2
       object Label4: TLabel
-        Caption = 'File Pos'
-        FocusControl = MouseOverFilePosEdit
         Left = 0
         Top = 0
         Width = 36
         Height = 13
+        Caption = 'File Pos'
+        FocusControl = MouseOverFilePosEdit
       end
       object MouseOverFilePosEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 38
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverRecordNrPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 10
       AlignWithMargins = True
       Left = 265
       Top = 1
@@ -266,30 +261,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 10
       object Label12: TLabel
-        Caption = 'Record Nr'
-        FocusControl = MouseOverRecordNrEdit
         Left = 0
         Top = 0
         Width = 48
         Height = 13
+        Caption = 'Record Nr'
+        FocusControl = MouseOverRecordNrEdit
       end
       object MouseOverRecordNrEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 49
         Top = 0
         Width = 71
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldPosPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 6
       AlignWithMargins = True
       Left = 393
       Top = 1
@@ -299,30 +294,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 6
       object Label8: TLabel
-        Caption = 'Field Pos'
-        FocusControl = MouseOverFieldPosEdit
         Left = 0
         Top = 0
         Width = 42
         Height = 13
+        Caption = 'Field Pos'
+        FocusControl = MouseOverFieldPosEdit
       end
       object MouseOverFieldPosEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 46
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldNamePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 3
       AlignWithMargins = True
       Left = 488
       Top = 1
@@ -332,30 +327,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 3
       object Label5: TLabel
-        Caption = 'Field Name'
-        FocusControl = MouseOverFieldNameEdit
         Left = 0
         Top = 0
         Width = 52
         Height = 13
+        Caption = 'Field Name'
+        FocusControl = MouseOverFieldNameEdit
       end
       object MouseOverFieldNameEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 54
         Top = 0
         Width = 78
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldIndexPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 4
       AlignWithMargins = True
       Left = 628
       Top = 1
@@ -365,30 +360,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 4
       object Label6: TLabel
-        Caption = 'Field Index'
-        FocusControl = MouseOverFieldIndexEdit
         Left = 0
         Top = 0
         Width = 53
         Height = 13
+        Caption = 'Field Index'
+        FocusControl = MouseOverFieldIndexEdit
       end
       object MouseOverFieldIndexEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 55
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldValuePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 5
       AlignWithMargins = True
       Left = 732
       Top = 1
@@ -398,30 +393,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 5
       object Label7: TLabel
-        Caption = 'Field Value'
-        FocusControl = MouseOverFieldValueEdit
         Left = 0
         Top = 0
         Width = 51
         Height = 13
+        Caption = 'Field Value'
+        FocusControl = MouseOverFieldValueEdit
       end
       object MouseOverFieldValueEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 53
         Top = 0
         Width = 71
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverTableNrPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 11
       AlignWithMargins = True
       Left = 4
       Top = 16
@@ -431,30 +426,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 11
       object Label13: TLabel
-        Caption = 'Table Nr'
-        FocusControl = MouseOverTableNrEdit
         Left = 0
         Top = 0
         Width = 40
         Height = 13
+        Caption = 'Table Nr'
+        FocusControl = MouseOverTableNrEdit
       end
       object MouseOverTableNrEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 42
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverSeqNamePanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 7
       AlignWithMargins = True
       Left = 95
       Top = 16
@@ -464,30 +459,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 7
       object Label9: TLabel
-        Caption = 'Seq Name'
-        FocusControl = MouseOverSeqNameEdit
         Left = 0
         Top = 0
         Width = 48
         Height = 13
+        Caption = 'Seq Name'
+        FocusControl = MouseOverSeqNameEdit
       end
       object MouseOverSeqNameEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 50
         Top = 0
         Width = 78
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverItemIndexPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 8
       AlignWithMargins = True
       Left = 231
       Top = 16
@@ -497,30 +492,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 8
       object Label10: TLabel
-        Caption = 'Item Index'
-        FocusControl = MouseOverItemIndexEdit
         Left = 0
         Top = 0
         Width = 53
         Height = 13
+        Caption = 'Item Index'
+        FocusControl = MouseOverItemIndexEdit
       end
       object MouseOverItemIndexEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 55
         Top = 0
         Width = 41
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldTextPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 9
       AlignWithMargins = True
       Left = 335
       Top = 16
@@ -530,30 +525,30 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 9
       object Label11: TLabel
-        Caption = 'Field Text'
-        FocusControl = MouseOverFieldTextEdit
         Left = 0
         Top = 0
         Width = 47
         Height = 13
+        Caption = 'Field Text'
+        FocusControl = MouseOverFieldTextEdit
       end
       object MouseOverFieldTextEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 49
         Top = 0
         Width = 71
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
     object MouseOverFieldHeadingPanel: TPanel
-      AutoSize = True
-      BevelOuter = bvNone
-      ParentColor = True
-      TabOrder = 12
       AlignWithMargins = True
       Left = 463
       Top = 16
@@ -563,23 +558,27 @@ object MainForm: TMainForm
       Margins.Top = 1
       Margins.Right = 4
       Margins.Bottom = 1
+      AutoSize = True
+      BevelOuter = bvNone
+      ParentColor = True
+      TabOrder = 12
       object Label14: TLabel
-        Caption = 'Field Heading'
-        FocusControl = MouseOverFieldHeadingEdit
         Left = 0
         Top = 0
         Width = 64
         Height = 13
+        Caption = 'Field Heading'
+        FocusControl = MouseOverFieldHeadingEdit
       end
       object MouseOverFieldHeadingEdit: TEdit
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        ReadOnly = True
-        TabOrder = 0
         Left = 66
         Top = 0
         Width = 71
         Height = 13
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        ReadOnly = True
+        TabOrder = 0
       end
     end
   end
@@ -589,277 +588,222 @@ object MainForm: TMainForm
         Items = <
           item
             Action = NewTextAction
-            Tag = 0
           end>
-        Tag = 0
       end
       item
-        Tag = 0
       end
       item
-        Tag = 0
       end
       item
         Items = <
           item
-            Caption = '&File'
             Items = <
               item
                 Action = NewTextAction
-                Tag = 0
               end
               item
                 Action = OpenTextAction
                 ImageIndex = 7
                 ShortCut = 16463
-                Tag = 0
               end
               item
                 Action = SaveTextAction
-                Tag = 0
               end
               item
                 Action = SaveTextAsAction
                 ImageIndex = 30
-                Tag = 0
               end
               item
                 Caption = '-'
-                Tag = 0
               end
               item
                 Action = ResetMetaAction
-                Tag = 0
               end
               item
                 Action = OpenMetaAction
                 ImageIndex = 7
-                Tag = 0
-              end
-              item
-                Action = SaveMetaToReferenceAction
-                Tag = 0
-              end
-              item
-                Action = SaveMetaAsAction
-                ImageIndex = 30
-                Tag = 0
-              end
-              item
-                Caption = '-'
-                Tag = 0
-              end
-              item
-                Action = ExitAction
-                ImageIndex = 43
-                Tag = 0
-              end>
-            Tag = 0
-          end
-          item
-            Caption = 'E&dit'
-            Items = <
-              item
-                Action = CutAction
-                ImageIndex = 0
-                ShortCut = 16472
-                Tag = 0
-              end
-              item
-                Action = CopyAction
-                ImageIndex = 1
-                ShortCut = 16451
-                Tag = 0
-              end
-              item
-                Action = EditPaste1
-                ImageIndex = 2
-                ShortCut = 16470
-                Tag = 0
-              end
-              item
-                Action = EditSelectAll1
-                ShortCut = 16449
-                Tag = 0
-              end>
-            Tag = 0
-          end
-          item
-            Caption = '&Edit'
-            Items = <
-              item
-                Action = CutAction
-                ImageIndex = 0
-                ShortCut = 16472
-                Tag = 0
-              end
-              item
-                Action = CopyAction
-                ImageIndex = 1
-                ShortCut = 16451
-                Tag = 0
-              end>
-            Tag = 0
-          end>
-        Tag = 0
-      end
-      item
-        Tag = 0
-      end
-      item
-        ActionBar = ActionMainMenuBar
-        Items = <
-          item
-            Caption = '&File'
-            Items = <
-              item
-                Action = NewTextAction
-                Tag = 0
-              end
-              item
-                Action = OpenTextAction
-                ImageIndex = 7
-                ShortCut = 16463
-                Tag = 0
-              end
-              item
-                Action = OpenTextFromUrlAction
-                Tag = 0
-              end
-              item
-                Action = SaveTextAction
-                Tag = 0
-              end
-              item
-                Action = SaveTextAsAction
-                ImageIndex = 30
-                Tag = 0
-              end
-              item
-                Caption = '-'
-                Tag = 0
-              end
-              item
-                Action = GenerateAction
-                Tag = 0
-              end
-              item
-                Action = GenerateAsAction
-                ImageIndex = 30
-                Tag = 0
-              end
-              item
-                Caption = '-'
-                Tag = 0
-              end
-              item
-                Action = ResetMetaAction
-                Tag = 0
-              end
-              item
-                Action = OpenMetaAction
-                ImageIndex = 7
-                Tag = 0
-              end
-              item
-                Action = OpenMetaFromUrlAction
-                Tag = 0
               end
               item
                 Action = SaveMetaToReferenceAction
                 Caption = 'Sa&ve Meta To Reference'
-                Tag = 0
               end
               item
                 Action = SaveMetaAsAction
                 ImageIndex = 30
-                Tag = 0
               end
               item
                 Caption = '-'
-                Tag = 0
               end
               item
                 Action = ExitAction
                 ImageIndex = 43
-                Tag = 0
               end>
-            Tag = 0
+            Caption = '&File'
           end
           item
-            Caption = '&Edit'
             Items = <
               item
                 Action = CutAction
                 ImageIndex = 0
                 ShortCut = 16472
-                Tag = 0
               end
               item
                 Action = CopyAction
                 ImageIndex = 1
                 ShortCut = 16451
-                Tag = 0
               end
               item
                 Action = EditPaste1
                 ImageIndex = 2
                 ShortCut = 16470
-                Tag = 0
               end
               item
                 Action = EditSelectAll1
                 ShortCut = 16449
-                Tag = 0
               end>
-            Tag = 0
+            Caption = 'E&dit'
           end
           item
-            Caption = '&Tools'
+            Items = <
+              item
+                Action = CutAction
+                ImageIndex = 0
+                ShortCut = 16472
+              end
+              item
+                Action = CopyAction
+                ImageIndex = 1
+                ShortCut = 16451
+              end>
+            Caption = '&Edit'
+          end>
+      end
+      item
+      end
+      item
+        Items = <
+          item
+            Items = <
+              item
+                Action = NewTextAction
+              end
+              item
+                Action = OpenTextAction
+                ImageIndex = 7
+                ShortCut = 16463
+              end
+              item
+                Action = OpenTextFromUrlAction
+              end
+              item
+                Action = SaveTextAction
+              end
+              item
+                Action = SaveTextAsAction
+                ImageIndex = 30
+              end
+              item
+                Caption = '-'
+              end
+              item
+                Action = GenerateAction
+              end
+              item
+                Action = GenerateAsAction
+                ImageIndex = 30
+              end
+              item
+                Caption = '-'
+              end
+              item
+                Action = ResetMetaAction
+              end
+              item
+                Action = OpenMetaAction
+                ImageIndex = 7
+              end
+              item
+                Action = OpenMetaFromUrlAction
+              end
+              item
+                Action = SaveMetaToReferenceAction
+                Caption = 'Sa&ve Meta To Reference'
+              end
+              item
+                Action = SaveMetaAsAction
+                ImageIndex = 30
+              end
+              item
+                Caption = '-'
+              end
+              item
+                Action = ExitAction
+                ImageIndex = 43
+              end>
+            Caption = '&File'
+          end
+          item
+            Items = <
+              item
+                Action = CutAction
+                ImageIndex = 0
+                ShortCut = 16472
+              end
+              item
+                Action = CopyAction
+                ImageIndex = 1
+                ShortCut = 16451
+              end
+              item
+                Action = EditPaste1
+                ImageIndex = 2
+                ShortCut = 16470
+              end
+              item
+                Action = EditSelectAll1
+                ShortCut = 16449
+              end>
+            Caption = '&Edit'
+          end
+          item
             Items = <
               item
                 Action = MouseOverPanelVisibleAction
                 Caption = '&Mouse Over Toolbar Visible'
-                Tag = 0
               end
               item
                 Caption = '-'
-                Tag = 0
               end
               item
                 Action = OptionsAction
-                Tag = 0
               end
               item
                 Action = CustomizeActionBarsAction
-                Tag = 0
               end>
-            Tag = 0
+            Caption = '&Tools'
           end
           item
-            Caption = '&Help'
             Items = <
               item
                 Action = HelpAction
-                Tag = 0
               end
               item
                 Action = AboutAction
-                Tag = 0
               end>
-            Tag = 0
+            Caption = '&Help'
           end>
-        Tag = 0
+        ActionBar = ActionMainMenuBar
       end>
     Left = 40
     Top = 104
     StyleName = 'XP Style'
     object NewTextAction: TAction
-      Caption = '&New Text'
       Category = 'File'
+      Caption = '&New Text'
       OnExecute = NewTextActionExecute
     end
     object OpenTextAction: TFileOpen
+      Category = 'File'
       Caption = '&Open Text ...'
       Dialog.DefaultExt = 'ftx'
       Dialog.Filter = 
@@ -868,67 +812,67 @@ object MainForm: TMainForm
       Hint = 'Open|Opens an existing text file'
       ImageIndex = 7
       ShortCut = 16463
-      Category = 'File'
       OnAccept = OpenTextActionAccept
     end
     object OpenTextFromUrlAction: TAction
-      Caption = 'Open Text from &URL ...'
       Category = 'File'
+      Caption = 'Open Text from &URL ...'
       OnExecute = OpenTextFromUrlActionExecute
     end
     object SaveTextAction: TAction
-      Caption = '&Save Text'
       Category = 'File'
+      Caption = '&Save Text'
       OnExecute = SaveTextActionExecute
       OnUpdate = SaveTextActionUpdate
     end
     object SaveTextAsAction: TFileSaveAs
+      Category = 'File'
       Caption = 'Save Text &As ...'
       Dialog.Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
       Hint = 'Save As|Saves the active file with a new name'
       ImageIndex = 30
-      Category = 'File'
       OnAccept = SaveTextAsActionAccept
     end
     object GenerateAction: TAction
-      Caption = '&Generate'
       Category = 'File'
+      Caption = '&Generate'
       OnExecute = GenerateActionExecute
       OnUpdate = GenerateActionUpdate
     end
     object GenerateAsAction: TFileSaveAs
+      Category = 'File'
       Caption = 'G&enerate As ...'
       Hint = 'Generate and save to specified file'
       ImageIndex = 30
-      Category = 'File'
       OnAccept = GenerateAsActionAccept
     end
     object ResetMetaAction: TAction
-      Caption = '&Reset Meta'
       Category = 'File'
+      Caption = '&Reset Meta'
       OnExecute = ResetMetaActionExecute
     end
     object OpenMetaAction: TFileOpen
+      Category = 'File'
       Caption = 'Open &Meta ...'
       Dialog.Filter = 'FieldedText Meta File|*.ftm|XML File|*.xml|All Files|*.*'
       Dialog.Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofCreatePrompt, ofEnableSizing]
       Hint = 'Open|Opens an existing Meta file'
       ImageIndex = 7
-      Category = 'File'
       OnAccept = OpenMetaActionAccept
     end
     object OpenMetaFromUrlAction: TAction
-      Caption = 'Open Meta from UR&L ...'
       Category = 'File'
+      Caption = 'Open Meta from UR&L ...'
       OnExecute = OpenMetaFromUrlActionExecute
     end
     object SaveMetaToReferenceAction: TAction
-      Caption = 'Save M&eta To &Reference'
       Category = 'File'
+      Caption = 'Save M&eta To &Reference'
       OnExecute = SaveMetaToReferenceActionExecute
       OnUpdate = SaveMetaToReferenceActionUpdate
     end
     object SaveMetaAsAction: TFileSaveAs
+      Category = 'File'
       Caption = 'Save Me&ta As ...'
       Dialog.DefaultExt = 'ftm'
       Dialog.Filter = 
@@ -937,69 +881,68 @@ object MainForm: TMainForm
       Dialog.Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
       Hint = 'Save As|Saves Meta with a new file name'
       ImageIndex = 30
-      Category = 'File'
       OnAccept = SaveMetaAsActionAccept
     end
     object ExitAction: TFileExit
+      Category = 'File'
       Caption = 'E&xit'
       Hint = 'Exit|Quits the application'
       ImageIndex = 43
-      Category = 'File'
     end
     object CutAction: TEditCut
+      Category = 'Edit'
       Caption = 'Cu&t'
       Hint = 'Cut|Cuts the selection and puts it on the Clipboard'
       ImageIndex = 0
       ShortCut = 16472
-      Category = 'Edit'
     end
     object CopyAction: TEditCopy
+      Category = 'Edit'
       Caption = '&Copy'
       Hint = 'Copy|Copies the selection and puts it on the Clipboard'
       ImageIndex = 1
       ShortCut = 16451
-      Category = 'Edit'
     end
     object EditPaste1: TEditPaste
+      Category = 'Edit'
       Caption = '&Paste'
       Hint = 'Paste|Inserts Clipboard contents'
       ImageIndex = 2
       ShortCut = 16470
-      Category = 'Edit'
     end
     object EditSelectAll1: TEditSelectAll
+      Category = 'Edit'
       Caption = 'Select &All'
       Hint = 'Select All|Selects the entire document'
       ShortCut = 16449
-      Category = 'Edit'
     end
     object OptionsAction: TAction
-      Caption = '&Options'
       Category = 'Tools'
+      Caption = '&Options'
       OnExecute = OptionsActionExecute
     end
     object CustomizeActionBarsAction: TCustomizeActionBars
-      CustomizeDlg.StayOnTop = False
-      Caption = '&Customize'
       Category = 'Tools'
+      Caption = '&Customize'
+      CustomizeDlg.StayOnTop = False
     end
     object AboutAction: TAction
-      Caption = '&About'
       Category = 'Help'
+      Caption = '&About'
       OnExecute = AboutActionExecute
     end
     object MouseOverPanelVisibleAction: TAction
-      Caption = 'Mouse Over Toolbar Visible'
       Category = 'Tools'
       AutoCheck = True
+      Caption = 'Mouse Over Toolbar Visible'
       OnExecute = MouseOverPanelVisibleActionExecute
       OnUpdate = MouseOverPanelVisibleActionUpdate
     end
     object HelpAction: TBrowseURL
+      Category = 'Help'
       Caption = '&Help'
       Hint = 'Go to Help Web Page'
       URL = 'http://www.xilytix.com/FieldedText/Editor/HtmlHelp'
-      Category = 'Help'
     end
   end
 end

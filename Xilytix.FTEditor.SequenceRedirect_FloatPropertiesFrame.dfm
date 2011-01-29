@@ -21,7 +21,7 @@ inherited SequenceRedirect_FloatPropertiesFrame: TSequenceRedirect_FloatProperti
     Height = 13
     Caption = 'Value'
   end
-  inherited InvokationDelayComboBox: TComboBoxEx
+  inherited InvokationDelayComboBox: TComboBox
     TabOrder = 2
   end
   object ValueEdit: TEdit

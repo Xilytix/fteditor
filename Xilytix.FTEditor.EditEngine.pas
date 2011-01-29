@@ -1,39 +1,21 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.EditEngine;
 
 interface
 
 uses
+  SysUtils,
   Forms,
+  Rtti,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditData;
 
 type
-  TMetaRefreshControlsEvent = procedure of object;
-  TFieldRemovedEvent = procedure(field: TFieldedTextField) of object;
-
-  TErrorEvent = procedure(errorText: string) of object;
-  TSuccessEvent = procedure of object;
-  TParseEvent = procedure of object;
-  TGenerateEvent = procedure of object;
-  TTextChangeEvent = procedure(source: TFrame) of object;
-  TTextModifiedChangeEvent = procedure of object;
-  TMetaChangeEvent = procedure of object;
-  TMetaModifiedChangeEvent = procedure of object;
-  TSynchronisedChangeEvent = procedure of object;
-  TSequencesChangeEvent = procedure of object;
-  TMouseOverChangedEvent = procedure of object;
-  TCursorActiveChangedEvent = procedure(frameChanged, cellChanged: Boolean) of object;
-  TFieldedTextFilePathSetEvent = procedure of object;
-  TNewOpenTextEvent = procedure of object;
-
   TEditEngine = class
   public
     type
@@ -48,6 +30,23 @@ type
         pcSequence
       );
 
+      TMetaRefreshControlsDelegate = procedure of object;
+      TFieldRemovedDelegate = procedure(field: TFieldedTextField) of object;
+      TErrorDelegate = procedure(errorText: string) of object;
+      TSuccessDelegate = procedure of object;
+      TParseDelegate = procedure of object;
+      TGenerateDelegate = procedure of object;
+      TTextChangeDelegate = procedure(source: TFrame) of object;
+      TTextModifiedChangeDelegate = procedure of object;
+      TMetaChangeDelegate = procedure of object;
+      TMetaModifiedChangeDelegate = procedure of object;
+      TSynchronisedChangeDelegate = procedure of object;
+      TSequencesChangeDelegate = procedure of object;
+      TMouseOverChangedDelegate = procedure of object;
+      TCursorActiveChangedDelegate = procedure(frameChanged, cellChanged: Boolean) of object;
+      TFieldedTextFilePathSetDelegate = procedure of object;
+      TNewOpenTextDelegate = procedure of object;
+
   strict private
     type
       TDataTypeAbbrRec = record
@@ -55,6 +54,24 @@ type
         Abbr: string;
       end;
       TDataTypeAbbrArray = array[TFieldedTextFieldDataType] of TDataTypeAbbrRec;
+
+      TMetaRefreshControlsDelegates = array of TMetaRefreshControlsDelegate;
+      TFieldRemovedDelegates = array of TFieldRemovedDelegate;
+      TErrorDelegates = array of TErrorDelegate;
+      TSuccessDelegates = array of TSuccessDelegate;
+      TParseDelegates = array of TParseDelegate;
+      TGenerateDelegates = array of TGenerateDelegate;
+      TTextChangeDelegates = array of TTextChangeDelegate;
+      TTextModifiedChangeDelegates = array of TTextModifiedChangeDelegate;
+      TMetaChangeDelegates = array of TMetaChangeDelegate;
+      TMetaModifiedChangeDelegates = array of TMetaModifiedChangeDelegate;
+      TSynchronisedChangeDelegates = array of TSynchronisedChangeDelegate;
+      TSequencesChangeDelegates = array of TSequencesChangeDelegate;
+      TMouseOverChangedDelegates = array of TMouseOverChangedDelegate;
+      TCursorActiveChangedDelegates = array of TCursorActiveChangedDelegate;
+      TFieldedTextFilePathSetDelegates = array of TFieldedTextFilePathSetDelegate;
+      TNewOpenTextDelegates = array of TNewOpenTextDelegate;
+
     const
       DataTypeAbbrs: TDataTypeAbbrArray =
       (
@@ -77,7 +94,7 @@ type
       FSynchronised: Boolean;
       FSynchronising: Boolean;
 
-      FDisplayCulture: CultureInfo;
+      FDisplayCulture: TFieldedTextLocaleSettings;
 
       FMouseOverColIdx: Integer;
       FMouseOverCell: TCell;
@@ -90,26 +107,26 @@ type
       FCursorActiveRichPos: Integer;
       FCursorActiveFrame: TFrame;
 
-      FRefreshMainControlsEvent: TMetaRefreshControlsEvent;
-      FRefreshFieldsControlsEvent: TMetaRefreshControlsEvent;
-      FRefreshSequencesControlsEvent: TMetaRefreshControlsEvent;
-      FFieldRemovedEvent: TFieldRemovedEvent;
-      FErrorEvent: TErrorEvent;
-      FSuccessEvent: TSuccessEvent;
-      FParseEvent: TParseEvent;
-      FGenerateEvent: TGenerateEvent;
-      FTextChangeEvent: TTextChangeEvent;
-      FTextModifiedChangeEvent: TTextModifiedChangeEvent;
-      FMetaChangeEvent: TMetaChangeEvent;
-      FMetaModifiedChangeEvent: TMetaModifiedChangeEvent;
-      FSynchronisedChangeEvent: TSynchronisedChangeEvent;
-      FSequencesChangeEvent: TSequencesChangeEvent;
-      FMouseOverChangedEvent: TMouseOverChangedEvent;
-      FCursorActiveChangedEvent: TCursorActiveChangedEvent;
-      FFieldedTextFilePathSetEvent: TFieldedTextFilePathSetEvent;
-      FNewOpenTextEvent: TNewOpenTextEvent;
+      FRefreshMainControlsDelegates: TMetaRefreshControlsDelegates;
+      FRefreshFieldsControlsDelegates: TMetaRefreshControlsDelegates;
+      FRefreshSequencesControlsDelegates: TMetaRefreshControlsDelegates;
+      FFieldRemovedDelegates: TFieldRemovedDelegates;
+      FErrorDelegates: TErrorDelegates;
+      FSuccessDelegates: TSuccessDelegates;
+      FParseDelegates: TParseDelegates;
+      FGenerateDelegates: TGenerateDelegates;
+      FTextChangeDelegates: TTextChangeDelegates;
+      FTextModifiedChangeDelegates: TTextModifiedChangeDelegates;
+      FMetaChangeDelegates: TMetaChangeDelegates;
+      FMetaModifiedChangeDelegates: TMetaModifiedChangeDelegates;
+      FSynchronisedChangeDelegates: TSynchronisedChangeDelegates;
+      FSequencesChangeDelegates: TSequencesChangeDelegates;
+      FMouseOverChangedDelegates: TMouseOverChangedDelegates;
+      FCursorActiveChangedDelegates: TCursorActiveChangedDelegates;
+      FFieldedTextFilePathSetDelegates: TFieldedTextFilePathSetDelegates;
+      FNewOpenTextDelegates: TNewOpenTextDelegates;
 
-    procedure HandleParseEvent(sender: TFieldedText; eventType: TFieldedTextParseEventType; var stop: Boolean);
+    procedure HandleParseEvent(sender: TFieldedText; eventType: TFieldedText.TParseEventType; var stop: Boolean);
     procedure HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
     procedure HandleRecordFieldsBeginEvent(sender: TFieldedText; var stop: Boolean);
     procedure HandleFieldValueEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
@@ -119,34 +136,48 @@ type
                                field: TFieldedTextField);
     procedure HandleConfigurationUpdatedEvent;
 
-    procedure TriggerRefreshMainControlsEvent;
-    procedure TriggerRefreshFieldsControlsEvent;
-    procedure TriggerRefreshSequencesControlsEvent;
-    procedure TriggerFieldRemovedEvent(field: TFieldedTextField);
-
-    procedure TriggerSequencesChangeEvent;
+    procedure NotifyRefreshMainControls;
+    procedure NotifyRefreshFieldsControls;
+    procedure NotifyRefreshSequencesControls;
+    procedure NotifyFieldRemoved(field: TFieldedTextField);
+    procedure NotifyError(const errorText: string);
+    procedure NotifySuccess;
+    procedure NotifyParse;
+    procedure NotifyGenerate;
+    procedure NotifyTextChange(source: TFrame);
+    procedure NotifyTextModifiedChange;
+    procedure NotifyMetaChange;
+    procedure NotifyMetaModifiedChange;
+    procedure NotifySynchronisedChange;
+    procedure NotifySequencesChange;
+    procedure NotifyMouseOverChanged;
+    procedure NotifyCursorActiveChanged(frameChanged, cellChanged: Boolean);
+    procedure NotifyFieldedTextFilePathSet;
+    procedure NotifyNewOpenText;
 
     function CalculateFieldedTextErrorText(errorCode: TFieldedTextErrorCode): string;
 
+    function SameValue(const Value1, Value2: TValue): Boolean;
+
     function GetDataTypeAbbr(&type: TFieldedTextFieldDataType): string;
 
-    function GetCulture: CultureInfo;
+    function GetCulture: TFieldedTextLocaleSettings;
     function GetFields(idx: Integer): TFieldedTextField;
     function GetFieldCount: Integer;
     function GetHeadingLineCount: Integer;
 
-    function GetMainProperties(name: string): TObject;
-    procedure SetMainProperties(name: string; const Value: TObject);
-    function GetFieldProperties(name: string; idx: Integer): TObject;
-    procedure SetFieldProperties(name: string; idx: Integer; const Value: TObject);
-    function GetSubstitutionProperties(name: string; idx: Integer): TObject;
-    procedure SetSubstitutionProperties(name: string; idx: Integer; const Value: TObject);
-    function GetSequenceProperties(name: string; idx: Integer): TObject;
-    procedure SetSequenceProperties(name: string; idx: Integer; const Value: TObject);
-    function GetSequenceItemProperties(name: string; sequenceItem: TFieldedTextSequenceItem): TObject;
-    procedure SetSequenceItemProperties(name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TObject);
-    function GetRedirectProperties(name: string; redirect: TFieldedTextSequenceRedirect): TObject;
-    procedure SetRedirectProperties(name: string; redirect: TFieldedTextSequenceRedirect; const Value: TObject);
+    function GetMainProperties(const name: string): TValue;
+    procedure SetMainProperties(const name: string; const Value: TValue);
+    function GetFieldProperties(const Name: string; idx: Integer): TValue;
+    procedure SetFieldProperties(const name: string; idx: Integer; const Value: TValue);
+    function GetSubstitutionProperties(const name: string; idx: Integer): TValue;
+    procedure SetSubstitutionProperties(const name: string; idx: Integer; const Value: TValue);
+    function GetSequenceProperties(const name: string; idx: Integer): TValue;
+    procedure SetSequenceProperties(const name: string; idx: Integer; const Value: TValue);
+    function GetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem): TValue;
+    procedure SetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TValue);
+    function GetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect): TValue;
+    procedure SetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue);
 
     function GetSequenceCount: Integer;
     function GetSequences(idx: Integer): TFieldedTextSequence;
@@ -155,8 +186,8 @@ type
     function GetSubstitutionToken(idx: Integer): Char;
     function GetSubstitutionType(idx: Integer): TFieldedTextSubstitutionType;
     function GetSubstitutionValue(idx: Integer): string;
-    function GetProperties(name: string; idx: Integer; cat: TPropertyCategory): TObject;
-    function GetMetaReferenceType: TFieldedTextMetaReferenceType;
+    function GetProperties(name: string; idx: Integer; cat: TPropertyCategory): TValue;
+    function GetMetaReferenceType: TFieldedText.TMetaReferenceType;
     function GetMetaReference: string;
 
     function GetMetaLoadErrorDescription: string;
@@ -178,11 +209,11 @@ type
 
     function GetText: string;
     function GetTextFilePath: string;
-    function GetTextCharEncoding: Encoding;
+    function GetTextCharEncoding: TEncoding;
     function GetTextCharEncodingName: string;
     procedure SetTextCharEncodingName(const Value: string);
 
-    function GetMetaCharEncoding: Encoding;
+    function GetMetaCharEncoding: TEncoding;
     function GetMetaCharEncodingName: string;
     procedure SetMetaCharEncodingName(const Value: string);
 
@@ -197,19 +228,19 @@ type
     procedure SetMetaModified(const Value: Boolean);
     procedure SetSynchronised(const Value: Boolean);
 
-    property MainProperties[name: string]: TObject read GetMainProperties write SetMainProperties;
-    property FieldProperties[name: string; idx: Integer]: TObject read GetFieldProperties write SetFieldProperties;
-    property SubstitutionProperties[name: string; idx: Integer]: TObject read GetSubstitutionProperties write SetSubstitutionProperties;
-    property SequenceProperties[name: string; idx: Integer]: TObject read GetSequenceProperties write SetSequenceProperties;
+    property MainProperties[const name: string]: TValue read GetMainProperties write SetMainProperties;
+    property FieldProperties[const name: string; idx: Integer]: TValue read GetFieldProperties write SetFieldProperties;
+    property SubstitutionProperties[const name: string; idx: Integer]: TValue read GetSubstitutionProperties write SetSubstitutionProperties;
+    property SequenceProperties[const name: string; idx: Integer]: TValue read GetSequenceProperties write SetSequenceProperties;
   public
     constructor Create;
 
     property DataTypeAbbr[&type: TFieldedTextFieldDataType]: string read GetDataTypeAbbr;
 
     function UpdateDisplayCulture: Boolean;
-    property DisplayCulture: CultureInfo read FDisplayCulture;
+    property DisplayCulture: TFieldedTextLocaleSettings read FDisplayCulture;
 
-    property Culture: CultureInfo read GetCulture;
+    property Culture: TFieldedTextLocaleSettings read GetCulture;
     property Fields[idx: Integer]: TFieldedTextField read GetFields;
     property FieldCount: Integer read GetFieldCount;
     property HeadingLineCount: Integer read GetHeadingLineCount;
@@ -255,26 +286,26 @@ type
     function AddSubstitution: Integer;
     procedure DeleteSubstitution(idx: Integer);
 
-    property Properties[name: string; idx: Integer; cat: TPropertyCategory]: TObject read GetProperties;
-    procedure SetPropertyValue(name: string; idx: Integer; cat: TPropertyCategory; const Value: TObject; out modified: Boolean);
+    property Properties[name: string; idx: Integer; cat: TPropertyCategory]: TValue read GetProperties;
+    procedure SetPropertyValue(name: string; idx: Integer; cat: TPropertyCategory; const Value: TValue; out modified: Boolean);
 
-    property SequenceItemProperties[name: string; sequenceItem: TFieldedTextSequenceItem]: TObject read GetSequenceItemProperties write SetSequenceItemProperties;
-    procedure SetSequenceItemPropertyValue(name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TObject; out modified: Boolean);
+    property SequenceItemProperties[const name: string; sequenceItem: TFieldedTextSequenceItem]: TValue read GetSequenceItemProperties write SetSequenceItemProperties;
+    procedure SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TValue; out modified: Boolean);
 
-    property RedirectProperties[name: string; redirect: TFieldedTextSequenceRedirect]: TObject read GetRedirectProperties write SetRedirectProperties;
-    procedure SetRedirectPropertyValue(name: string; redirect: TFieldedTextSequenceRedirect; const Value: TObject; out modified: Boolean);
+    property RedirectProperties[const name: string; redirect: TFieldedTextSequenceRedirect]: TValue read GetRedirectProperties write SetRedirectProperties;
+    procedure SetRedirectPropertyValue(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue; out modified: Boolean);
 
     procedure RefreshControls; overload;
     procedure RefreshControls(cat: TPropertyCategory); overload;
 
     procedure SetText(source: TFrame; textValue: string);
-    procedure Parse(source: TFrame; newText: string);
+    procedure Parse(source: TFrame; const newText: string; KeepCurrentText: Boolean);
     procedure Generate(source: TFrame);
 
-    property MetaReferenceType: TFieldedTextMetaReferenceType read GetMetaReferenceType;
+    property MetaReferenceType: TFieldedText.TMetaReferenceType read GetMetaReferenceType;
     property MetaReference: string read GetMetaReference;
     property MetaLoadErrorDescription: string read GetMetaLoadErrorDescription;
-    property MetaCharEncoding: Encoding read GetMetaCharEncoding;
+    property MetaCharEncoding: TEncoding read GetMetaCharEncoding;
     property MetaCharEncodingName: string read GetMetaCharEncodingName write SetMetaCharEncodingName;
     procedure ResetMeta;
     procedure OpenMeta(filePath: string);
@@ -283,7 +314,7 @@ type
 
     property Text: string read GetText;
     property TextFilePath: string read GetTextFilePath;
-    property TextCharEncoding: Encoding read GetTextCharEncoding;
+    property TextCharEncoding: TEncoding read GetTextCharEncoding;
     property TextCharEncodingName: string read GetTextCharEncodingName write SetTextCharEncodingName;
     procedure NewText;
     function OpenText(filePath: string; out errorDescription: string): Boolean;
@@ -328,28 +359,42 @@ type
 
     function IsCursorActiveCell(cell: TCell): Boolean;
 
-    property RefreshMainControlsEvent: TMetaRefreshControlsEvent add FRefreshMainControlsEvent
-                                                                 remove FRefreshMainControlsEvent;
-    property RefreshFieldsControlsEvent: TMetaRefreshControlsEvent add FRefreshFieldsControlsEvent
-                                                                   remove FRefreshFieldsControlsEvent;
-    property RefreshSequencesControlsEvent: TMetaRefreshControlsEvent add FRefreshSequencesControlsEvent
-                                                                      remove FRefreshSequencesControlsEvent;
-    property FieldRemovedEvent: TFieldRemovedEvent add FFieldRemovedEvent remove FFieldRemovedEvent;
-
-    property ErrorEvent: TErrorEvent add FErrorEvent remove FErrorEvent;
-    property SuccessEvent: TSuccessEvent add FSuccessEvent remove FSuccessEvent;
-    property ParseEvent: TParseEvent add FParseEvent remove FParseEvent;
-    property GenerateEvent: TGenerateEvent add FGenerateEvent remove FGenerateEvent;
-    property TextChangeEvent: TTextChangeEvent add FTextChangeEvent remove FTextChangeEvent;
-    property TextModifiedChangeEvent: TTextModifiedChangeEvent add FTextModifiedChangeEvent remove FTextModifiedChangeEvent;
-    property MetaChangeEvent: TMetaChangeEvent add FMetaChangeEvent remove FMetaChangeEvent;
-    property MetaModifiedChangeEvent: TMetaModifiedChangeEvent add FMetaModifiedChangeEvent remove FMetaModifiedChangeEvent;
-    property SynchronisedChangeEvent: TSynchronisedChangeEvent add FSynchronisedChangeEvent remove FSynchronisedChangeEvent;
-    property SequencesChangeEvent: TSequencesChangeEvent add FSequencesChangeEvent remove FSequencesChangeEvent;
-    property MouseOverChangedEvent: TMouseOverChangedEvent add FMouseOverChangedEvent remove FMouseOverChangedEvent;
-    property CursorActiveChangedEvent: TCursorActiveChangedEvent add FCursorActiveChangedEvent remove FCursorActiveChangedEvent;
-    property FieldedTextFilePathSetEvent: TFieldedTextFilePathSetEvent add FFieldedTextFilePathSetEvent remove FFieldedTextFilePathSetEvent;
-    property NewOpenTextEvent: TNewOpenTextEvent add FNewOpenTextEvent remove FNewOpenTextEvent;
+    procedure SubscribeRefreshMainControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure UnsubscribeRefreshMainControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure SubscribeRefreshFieldsControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure UnsubscribeRefreshFieldsControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure SubscribeRefreshSequencesControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure UnsubscribeRefreshSequencesControlsEvent(const Delegate: TMetaRefreshControlsDelegate);
+    procedure SubscribeFieldRemovedEvent(const Delegate: TFieldRemovedDelegate);
+    procedure UnsubscribeFieldRemovedEvent(const Delegate: TFieldRemovedDelegate);
+    procedure SubscribeErrorEvent(const Delegate: TErrorDelegate);
+    procedure UnsubscribeErrorEvent(const Delegate: TErrorDelegate);
+    procedure SubscribeSuccessEvent(const Delegate: TSuccessDelegate);
+    procedure UnsubscribeSuccessEvent(const Delegate: TSuccessDelegate);
+    procedure SubscribeParseEvent(const Delegate: TParseDelegate);
+    procedure UnsubscribeParseEvent(const Delegate: TParseDelegate);
+    procedure SubscribeGenerateEvent(const Delegate: TGenerateDelegate);
+    procedure UnsubscribeGenerateEvent(const Delegate: TGenerateDelegate);
+    procedure SubscribeTextChangeEvent(const Delegate: TTextChangeDelegate);
+    procedure UnsubscribeTextChangeEvent(const Delegate: TTextChangeDelegate);
+    procedure SubscribeTextModifiedChangeEvent(const Delegate: TTextModifiedChangeDelegate);
+    procedure UnsubscribeTextModifiedChangeEvent(const Delegate: TTextModifiedChangeDelegate);
+    procedure SubscribeMetaChangeEvent(const Delegate: TMetaChangeDelegate);
+    procedure UnsubscribeMetaChangeEvent(const Delegate: TMetaChangeDelegate);
+    procedure SubscribeMetaModifiedChangeEvent(const Delegate: TMetaModifiedChangeDelegate);
+    procedure UnsubscribeMetaModifiedChangeEvent(const Delegate: TMetaModifiedChangeDelegate);
+    procedure SubscribeSynchronisedChangeEvent(const Delegate: TSynchronisedChangeDelegate);
+    procedure UnsubscribeSynchronisedChangeEvent(const Delegate: TSynchronisedChangeDelegate);
+    procedure SubscribeSequencesChangeEvent(const Delegate: TSequencesChangeDelegate);
+    procedure UnsubscribeSequencesChangeEvent(const Delegate: TSequencesChangeDelegate);
+    procedure SubscribeMouseOverChangedEvent(const Delegate: TMouseOverChangedDelegate);
+    procedure UnsubscribeMouseOverChangedEvent(const Delegate: TMouseOverChangedDelegate);
+    procedure SubscribeCursorActiveChangedEvent(const Delegate: TCursorActiveChangedDelegate);
+    procedure UnsubscribeCursorActiveChangedEvent(const Delegate: TCursorActiveChangedDelegate);
+    procedure SubscribeFieldedTextFilePathSetEvent(const Delegate: TFieldedTextFilePathSetDelegate);
+    procedure UnsubscribeFieldedTextFilePathSetEvent(const Delegate: TFieldedTextFilePathSetDelegate);
+    procedure SubscribeNewOpenTextEvent(const Delegate: TNewOpenTextDelegate);
+    procedure UnsubscribeNewOpenTextEvent(const Delegate: TNewOpenTextDelegate);
 
     class function CountToNumber(value: Integer): Integer;
     class function IndexToNumber(value: Integer): Integer; overload;
@@ -359,9 +404,9 @@ type
 implementation
 
 uses
-  System.IO,
-  System.Reflection,
-  System.Net,
+  TypInfo,
+  Classes,
+  Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Configuration;
 
 { TEditEngine }
@@ -389,7 +434,7 @@ end;
 
 function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedTextErrorCode): string;
 begin
-  Result := 'Code: ' + Enum(errorCode).ToString;
+  Result := 'Code: ' + FieldedTextErrorCodeToName(errorCode);
   case errorCode of
     ftecInvalidDeclaration: Result := Result + ': ' + FFieldedText.DeclarationErrorDescription;
     ftecMetaLoad: Result := Result + ': ' + FFieldedText.MetaLoadErrorDescription;
@@ -406,14 +451,14 @@ begin
   inherited;
 
   FFieldedText := TFieldedText.Create;
-  Include(FFieldedText.ParseEvent, HandleParseEvent);
+  FFieldedText.SubscribeParseEvent(HandleParseEvent);
 //  Include(FFieldedText.FieldHeadingEvent, HandleFieldHeadingEvent);
-  Include(FFieldedText.FieldHeadingEvent, HandleFieldHeadingEvent);
-  Include(FFieldedText.RecordFieldsBeginEvent, HandleRecordFieldsBeginEvent);
-  Include(FFieldedText.FieldValueEvent, HandleFieldValueEvent);
+  FFieldedText.SubscribeFieldHeadingEvent(HandleFieldHeadingEvent);
+  FFieldedText.SubscribeFieldsBeginEvent(HandleRecordFieldsBeginEvent);
+  FFieldedText.SubscribeFieldValueEvent(HandleFieldValueEvent);
 //  Include(FFieldedText.RecordFieldsEndEvent, HandleRecordFieldsEndEvent);
-  Include(FFieldedText.ErrorEvent, HandleErrorEvent);
-  Include(Configuration.UpdatedEvent, HandleConfigurationUpdatedEvent);
+  FFieldedText.SubscribeErrorEvent(HandleErrorEvent);
+  Configuration.UpdatedEvent := HandleConfigurationUpdatedEvent;
 
   UpdateDisplayCulture;
   FEditData := TEditData.Create(FDisplayCulture);
@@ -425,22 +470,30 @@ begin
   MetaModified := True;
 end;
 
-function TEditEngine.GetFieldProperties(name: string; idx: Integer): TObject;
+function TEditEngine.GetFieldProperties(const Name: string; idx: Integer): TValue;
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText.Fields[idx]).GetProperty(name);
-  Result := PropInfo.GetValue(FFieldedText.Fields[idx], nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(FFieldedText.Fields[idx].ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    Result := PropInfo.GetValue(FFieldedText.Fields[idx]);
+  finally
+    Context.Free;
+  end;
 end;
 
 procedure TEditEngine.Generate(source: TFrame);
 var
-  Writer: StringWriter;
+  Writer: TStringWriter;
   Success: Boolean;
 begin
   FSynchronising := True;
   try
-    Writer := StringWriter.Create;
+    Writer := TStringWriter.Create;
     try
       Success := FFieldedText.Generate(Writer);
       SetText(nil, Writer.ToString);
@@ -457,7 +510,7 @@ begin
 
   if Success then
   begin
-    FSuccessEvent;
+    NotifySuccess;
   end;
 end;
 
@@ -496,9 +549,9 @@ begin
   Result := FEditData.CharCount;
 end;
 
-function TEditEngine.GetCulture: CultureInfo;
+function TEditEngine.GetCulture: TFieldedTextLocaleSettings;
 begin
-  Result := FFieldedText.Culture;
+  Result := FFieldedText.LocaleSettings;
 end;
 
 function TEditEngine.GetCurrentField: TFieldedTextField;
@@ -561,12 +614,20 @@ begin
   Result := IndexToNumber(FFieldedText.LinePos);
 end;
 
-function TEditEngine.GetMainProperties(name: string): TObject;
+function TEditEngine.GetMainProperties(const name: string): TValue;
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText).GetProperty(name);
-  Result := PropInfo.GetValue(FFieldedText, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(FFieldedText.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    Result := PropInfo.GetValue(FFieldedText);
+  finally
+    Context.Free;
+  end;
 end;
 
 function TEditEngine.GetMaxCellsInRowCount: Integer;
@@ -574,7 +635,7 @@ begin
   Result := FEditData.MaxCellsInRowCount;
 end;
 
-function TEditEngine.GetMetaCharEncoding: Encoding;
+function TEditEngine.GetMetaCharEncoding: TEncoding;
 begin
   Result := FFieldedText.MetaCharEncoding;
 end;
@@ -594,7 +655,7 @@ begin
   Result := FFieldedText.MetaReference;
 end;
 
-function TEditEngine.GetMetaReferenceType: TFieldedTextMetaReferenceType;
+function TEditEngine.GetMetaReferenceType: TFieldedText.TMetaReferenceType;
 begin
   Result := FFieldedText.MetaReferenceType;
 end;
@@ -628,7 +689,7 @@ begin
   Result := IndexToNumber(FFieldedText.Position);
 end;
 
-function TEditEngine.GetProperties(name: string; idx: Integer; cat: TPropertyCategory): TObject;
+function TEditEngine.GetProperties(name: string; idx: Integer; cat: TPropertyCategory): TValue;
 begin
   case cat of
     pcMainText, pcMainMeta: Result := MainProperties[name];
@@ -653,12 +714,20 @@ begin
   Result := CountToNumber(FFieldedText.RecordCount);
 end;
 
-function TEditEngine.GetRedirectProperties(name: string; redirect: TFieldedTextSequenceRedirect): TObject;
+function TEditEngine.GetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect): TValue;
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(redirect).GetProperty(name);
-  Result := PropInfo.GetValue(redirect, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(redirect.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    Result := PropInfo.GetValue(redirect);
+  finally
+    Context.Free;
+  end;
 end;
 
 function TEditEngine.GetRowCount: Integer;
@@ -676,20 +745,39 @@ begin
   Result := FFieldedText.SequenceCount;
 end;
 
-function TEditEngine.GetSequenceItemProperties(name: string; sequenceItem: TFieldedTextSequenceItem): TObject;
+function TEditEngine.GetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem): TValue;
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(sequenceItem).GetProperty(name);
-  Result := PropInfo.GetValue(sequenceItem, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(sequenceItem.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    Result := PropInfo.GetValue(sequenceItem);
+  finally
+    Context.Free;
+  end;
 end;
 
-function TEditEngine.GetSequenceProperties(name: string; idx: Integer): TObject;
+function TEditEngine.GetSequenceProperties(const name: string; idx: Integer): TValue;
 var
-  PropInfo: PropertyInfo;
+  Sequence: TFieldedTextSequence;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText.Sequences[idx]).GetProperty(name);
-  Result := PropInfo.GetValue(FFieldedText.Sequences[idx], nil);
+  Sequence := FFieldedText.Sequences[Idx];
+
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(Sequence.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    Result := PropInfo.GetValue(Sequence);
+  finally
+    Context.Free;
+  end;
 end;
 
 function TEditEngine.GetSequences(idx: Integer): TFieldedTextSequence;
@@ -702,15 +790,22 @@ begin
   Result := FFieldedText.SubstitutionCount;
 end;
 
-function TEditEngine.GetSubstitutionProperties(name: string; idx: Integer): TObject;
+function TEditEngine.GetSubstitutionProperties(const name: string; idx: Integer): TValue;
 var
-  PropInfo: PropertyInfo;
-  Indices: array of TObject;
+  Substitution: TFieldedTextSubstitution;
+  Context: TRttiContext;
+  RecordType: TRttiRecordType;
+  FieldInfo: TRttiField;
 begin
-  PropInfo := TypeOf(FFieldedText).GetProperty(name);
-  SetLength(Indices, 1);
-  Indices[0] := TObject(idx);
-  Result := PropInfo.GetValue(FFieldedText, Indices);
+  Substitution := FFieldedText.Substitutions[Idx];
+  Context := TRttiContext.Create;
+  try
+    RecordType := Context.GetType(TypeInfo(TFieldedTextSubstitution)) as TRttiRecordType;
+    FieldInfo := RecordType.GetField(Name);
+    Result := FieldInfo.GetValue(@Substitution);
+  finally
+    Context.Free;
+  end;
 end;
 
 function TEditEngine.GetSubstitutionValue(idx: Integer): string;
@@ -743,7 +838,7 @@ begin
   Result := FEditData.Text;
 end;
 
-function TEditEngine.GetTextCharEncoding: Encoding;
+function TEditEngine.GetTextCharEncoding: TEncoding;
 begin
   Result := FFieldedText.TextCharEncoding;
 end;
@@ -771,7 +866,7 @@ var
 begin
   ErrorText := CalculateFieldedTextErrorText(errorCode);
   FEditData.SetError(FFieldedText.ActiveItemIndex);
-  FErrorEvent(ErrorText);
+  NotifyError(ErrorText);
 end;
 
 procedure TEditEngine.HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
@@ -781,9 +876,9 @@ begin
     try
       field.Headings[FFieldedText.HeadingLineIndex] := FEditData.Cells[FFieldedText.ActiveItemIndex, FFieldedText.HeadingLineIndex].ValueAsString;
     except
-      on E: FormatException do
+      on E: EConvertError do
       begin
-        FErrorEvent('Field Heading Format Error: ' + E.Message);
+        NotifyError('Field Heading Format Error: ' + E.Message);
         stop := True;
       end;
     end;
@@ -795,18 +890,18 @@ begin
   if FFieldedText.Generating then
   begin
     try
-      field.AsObject := FEditData.Cells[FFieldedText.ActiveItemIndex, FEditData.HeadingCount + FFieldedText.RecordCount - 1].Value;
+      field.AsVariant := FEditData.Cells[FFieldedText.ActiveItemIndex, FEditData.HeadingCount + FFieldedText.RecordCount - 1].Value;
     except
-      on E: FormatException do
+      on E: EConvertError do
       begin
-        FErrorEvent('Field Value Format Error: ' + E.Message);
+        NotifyError('Field Value Format Error: ' + E.Message);
         stop := True;
       end;
     end;
   end;
 end;
 
-procedure TEditEngine.HandleParseEvent(sender: TFieldedText; eventType: TFieldedTextParseEventType; var stop: Boolean);
+procedure TEditEngine.HandleParseEvent(sender: TFieldedText; eventType: TFieldedText.TParseEventType; var stop: Boolean);
 begin
   case eventType of
     ftpeFieldParsed:
@@ -816,7 +911,7 @@ begin
                           FFieldedText.CurrentSequenceItem,
                           FFieldedText.CurrentFieldStartPosition, FFieldedText.CurrentFieldLength)
       else
-        FEditData.AddCell(FFieldedText.ActiveItemIndex, FFieldedText.CurrentField.AsObject,
+        FEditData.AddCell(FFieldedText.ActiveItemIndex, FFieldedText.CurrentField.AsVariant,
                           FFieldedText.CurrentSequenceItem,
                           FFieldedText.CurrentFieldStartPosition, FFieldedText.CurrentFieldLength);
     end;
@@ -864,20 +959,236 @@ end;
 procedure TEditEngine.NewText;
 begin
   FFieldedText.FilePath := '';
-  FFieldedTextFilePathSetEvent;
+  NotifyFieldedTextFilePathSet;
   FEditData.Reset;
-  FNewOpenTextEvent;
+  NotifyNewOpenText;
   SetText(nil, '');
   TextModified := False;
   UpdateDisplayCulture;
   RefreshControls;
 end;
 
+procedure TEditEngine.NotifyCursorActiveChanged(frameChanged, cellChanged: Boolean);
+var
+  I: Integer;
+  Delegates: TCursorActiveChangedDelegates;
+begin
+  Delegates := Copy(FCursorActiveChangedDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I](frameChanged, cellChanged);
+  end;
+end;
+
+procedure TEditEngine.NotifyError(const errorText: string);
+var
+  I: Integer;
+  Delegates: TErrorDelegates;
+begin
+  Delegates := Copy(FErrorDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I](errorText);
+  end;
+end;
+
+procedure TEditEngine.NotifyFieldedTextFilePathSet;
+var
+  I: Integer;
+  Delegates: TFieldedTextFilePathSetDelegates;
+begin
+  Delegates := Copy(FFieldedTextFilePathSetDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyFieldRemoved(field: TFieldedTextField);
+var
+  I: Integer;
+  Delegates: TFieldRemovedDelegates;
+begin
+  Delegates := Copy(FFieldRemovedDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I](field);
+  end;
+end;
+
+procedure TEditEngine.NotifyGenerate;
+var
+  I: Integer;
+  Delegates: TGenerateDelegates;
+begin
+  Delegates := Copy(FGenerateDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyMetaChange;
+var
+  I: Integer;
+  Delegates: TMetaChangeDelegates;
+begin
+  Delegates := Copy(FMetaChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyMetaModifiedChange;
+var
+  I: Integer;
+  Delegates: TMetaModifiedChangeDelegates;
+begin
+  Delegates := Copy(FMetaModifiedChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyMouseOverChanged;
+var
+  I: Integer;
+  Delegates: TMouseOverChangedDelegates;
+begin
+  Delegates := Copy(FMouseOverChangedDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyNewOpenText;
+var
+  I: Integer;
+  Delegates: TNewOpenTextDelegates;
+begin
+  Delegates := Copy(FNewOpenTextDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyParse;
+var
+  I: Integer;
+  Delegates: TParseDelegates;
+begin
+  Delegates := Copy(FParseDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyRefreshFieldsControls;
+var
+  I: Integer;
+  Delegates: TMetaRefreshControlsDelegates;
+begin
+  Delegates := Copy(FRefreshFieldsControlsDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyRefreshMainControls;
+var
+  I: Integer;
+  Delegates: TMetaRefreshControlsDelegates;
+begin
+  Delegates := Copy(FRefreshMainControlsDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyRefreshSequencesControls;
+var
+  I: Integer;
+  Delegates: TMetaRefreshControlsDelegates;
+begin
+  Delegates := Copy(FRefreshSequencesControlsDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifySequencesChange;
+var
+  I: Integer;
+  Delegates: TSequencesChangeDelegates;
+begin
+  Delegates := Copy(FSequencesChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifySuccess;
+var
+  I: Integer;
+  Delegates: TSuccessDelegates;
+begin
+  Delegates := Copy(FSuccessDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifySynchronisedChange;
+var
+  I: Integer;
+  Delegates: TSynchronisedChangeDelegates;
+begin
+  Delegates := Copy(FSynchronisedChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
+procedure TEditEngine.NotifyTextChange(source: TFrame);
+var
+  I: Integer;
+  Delegates: TTextChangeDelegates;
+begin
+  Delegates := Copy(FTextChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I](source);
+  end;
+end;
+
+procedure TEditEngine.NotifyTextModifiedChange;
+var
+  I: Integer;
+  Delegates: TTextModifiedChangeDelegates;
+begin
+  Delegates := Copy(FTextModifiedChangeDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+     Delegates[I];
+  end;
+end;
+
 procedure TEditEngine.OpenMeta(filePath: string);
 begin
   FFieldedText.LoadMeta(filePath);
   MetaModified := False;
-  TriggerSequencesChangeEvent;
+  NotifySequencesChange;
   UpdateDisplayCulture;
   RefreshControls;
 end;
@@ -886,22 +1197,22 @@ procedure TEditEngine.OpenMetaFromUrl(url: string);
 begin
   FFieldedText.LoadMetaFromUrl(url);
   MetaModified := False;
-  TriggerSequencesChangeEvent;
+  NotifySequencesChange;
   RefreshControls;
 end;
 
 function TEditEngine.OpenText(filePath: string; out errorDescription: string): Boolean;
 var
   I: Integer;
-  Reader: StreamReader;
+  Reader: TStreamReader;
   NewText: string;
   Line: string;
-  CharEncoding: Encoding;
+  CharEncoding: TEncoding;
 begin
   Result := False;
   CharEncoding := nil;
 
-  Reader := StreamReader.Create(filePath, True);
+  Reader := TStreamReader.Create(filePath, True);
   try
     try
       if Configuration.MaxOpenTextLines <= 0 then
@@ -912,7 +1223,7 @@ begin
         for I := 1 to Configuration.MaxOpenTextLines do
         begin
           Line := Reader.ReadLine;
-          if not Assigned(Line) then
+          if (Line = '') and Reader.EndOfStream then
             Break
           else
             NewText := NewText + FFieldedText.CrLfString + Line;
@@ -922,9 +1233,9 @@ begin
       CharEncoding := Reader.CurrentEncoding;
       Result := True;
     except
-      on OutOfMemoryException do
+      on EOutOfMemory do
       begin
-        FEditData.Text := nil;
+        FEditData.Text := '';
         errorDescription := 'Out of Memory';
       end;
     end;
@@ -940,12 +1251,9 @@ begin
       FFieldedText.TextCharEncoding := CharEncoding;
     end;
 
-    FFieldedTextFilePathSetEvent;
+    NotifyFieldedTextFilePathSet;
     FEditData.Reset;
-    if Assigned(FNewOpenTextEvent) then
-    begin
-      FNewOpenTextEvent;
-    end;
+    NotifyNewOpenText;
     SetText(nil, NewText);
     TextModified := False;
     UpdateDisplayCulture;
@@ -954,16 +1262,16 @@ begin
 end;
 
 procedure TEditEngine.OpenTextFromUrl(url: string);
-var
+{var
   OpenUri: Uri;
   Request: WebRequest;
   Response: WebResponse;
   ResponseStream: Stream;
   Reader: StreamReader;
   ResponseEncoding: System.Text.Encoding;
-  DataText: string;
+  DataText: string;}
 begin
-  OpenUri := Uri.Create(url);
+{  OpenUri := Uri.Create(url);
   Request := WebRequest.&Create(OpenUri);
   Response := Request.GetResponse;
   try
@@ -982,7 +1290,7 @@ begin
   SetText(nil, DataText);
   TextModified := False;
   UpdateDisplayCulture;
-  RefreshControls;
+  RefreshControls;}
 end;
 
 class function TEditEngine.IndexToNumber(value: Integer): Integer;
@@ -1013,7 +1321,7 @@ end;
 function TEditEngine.InsertSequence(idx: Integer): TFieldedTextSequence;
 begin
   Result := FFieldedText.InsertSequence(idx);
-  TriggerSequencesChangeEvent;
+  NotifySequencesChange;
   MetaModified := True;
 end;
 
@@ -1067,21 +1375,21 @@ begin
   MetaModified := True;
 end;
 
-procedure TEditEngine.Parse(source: TFrame; newText: string);
+procedure TEditEngine.Parse(source: TFrame; const newText: string; KeepCurrentText: Boolean);
 var
-  Reader: StringReader;
+  Reader: TStringReader;
   Success: Boolean;
 begin
   FSynchronising := True;
   try
-    if Assigned(newText) then
+    if not KeepCurrentText then
     begin
       SetText(source, newText);
     end;
 
     FEditData.ResetParsing(FDisplayCulture);
 
-    Reader := StringReader.Create(FEditData.Text);
+    Reader := TStringReader.Create(FEditData.Text);
     try
       Success := FFieldedText.Parse(Reader);
     finally
@@ -1094,21 +1402,21 @@ begin
     FSynchronising := False;
   end;
 
-  FParseEvent;
+  NotifyParse;
 
   if Success then
   begin
-    FSuccessEvent;
+    NotifySuccess;
   end;
 end;
 
 procedure TEditEngine.RefreshControls(cat: TPropertyCategory);
 begin
   case cat of
-    pcMainText, pcMainMeta: TriggerRefreshMainControlsEvent;
-    pcField: TriggerRefreshFieldsControlsEvent;
+    pcMainText, pcMainMeta: NotifyRefreshMainControls;
+    pcField: NotifyRefreshFieldsControls;
     pcSubstitution: ;
-    pcSequence: TriggerRefreshSequencesControlsEvent;
+    pcSequence: NotifyRefreshSequencesControls;
   end;
 end;
 
@@ -1116,33 +1424,33 @@ procedure TEditEngine.RemoveField(field: TFieldedTextField);
 begin
   FFieldedText.RemoveField(field);
   MetaModified := True;
-  TriggerFieldRemovedEvent(field);
+  NotifyFieldRemoved(field);
 end;
 
 procedure TEditEngine.RemoveSequence(idx: Integer);
 begin
   FFieldedText.RemoveSequence(idx);
-  TriggerRefreshSequencesControlsEvent;
-  TriggerSequencesChangeEvent;
+  NotifyRefreshSequencesControls;
+  NotifySequencesChange;
 end;
 
 procedure TEditEngine.RemoveSequenceItem(sequence: TFieldedTextSequence; idx: Integer);
 begin
   sequence.RemoveItem(idx);
-  TriggerRefreshSequencesControlsEvent;
+  NotifyRefreshSequencesControls;
 end;
 
 procedure TEditEngine.RemoveSequenceRedirect(sequenceItem: TFieldedTextSequenceItem; idx: Integer);
 begin
   sequenceItem.RemoveRedirect(idx);
-  TriggerRefreshSequencesControlsEvent;
+  NotifyRefreshSequencesControls;
 end;
 
 procedure TEditEngine.RefreshControls;
 begin
-  TriggerRefreshMainControlsEvent;
-  TriggerRefreshFieldsControlsEvent;
-  TriggerRefreshSequencesControlsEvent;
+  NotifyRefreshMainControls;
+  NotifyRefreshFieldsControls;
+  NotifyRefreshSequencesControls;
 end;
 
 procedure TEditEngine.ResetMeta;
@@ -1150,7 +1458,52 @@ begin
   FFieldedText.ResetMetaProperties;
   MetaModified := True;
   RefreshControls;
-  TriggerSequencesChangeEvent;
+  NotifySequencesChange;
+end;
+
+function TEditEngine.SameValue(const Value1, Value2: TValue): Boolean;
+begin
+  if Value1.IsEmpty then
+    Result := Value2.IsEmpty
+  else
+  begin
+    if Value2.IsEmpty then
+      Result := False
+    else
+    begin
+{      if Value1.Kind <> Value2.Kind then
+      begin
+        Assert(False);
+        Result := False;
+      end
+      else
+      begin}
+        case Value1.Kind of
+          tkInteger: Result := Value1.AsInteger = Value2.AsInteger;
+          tkEnumeration: Result := Value1.AsOrdinal = Value2.AsOrdinal;
+          tkFloat: Result := Value1.AsExtended = Value2.AsExtended;
+          tkString, tkUString, tkChar: Result := Value1.AsString = Value2.AsString;
+          tkInt64:  Result := Value1.AsInt64 = Value2.AsInt64;
+          tkUnknown,
+          tkSet,
+          tkClass,
+          tkMethod,
+          tkWChar,
+          tkLString,
+          tkWString,
+          tkVariant,
+          tkArray,
+          tkRecord,
+          tkInterface,
+          tkDynArray,
+          tkClassRef,
+          tkPointer,
+          tkProcedure: raise Exception.Create('Unsupported Kind for SameValue()');
+          else raise Exception.Create('Unhandled Kind for SameValue()');
+        end;
+//      end;
+    end;
+  end;
 end;
 
 procedure TEditEngine.SaveMetaAs(filePath: string);
@@ -1165,13 +1518,13 @@ end;
 
 procedure TEditEngine.SaveTextAs(filePath: string);
 var
-  Writer: StreamWriter;
+  Writer: TStreamWriter;
 begin
-  Writer := StreamWriter.Create(filePath, False, FFieldedText.TextCharEncoding);
+  Writer := TStreamWriter.Create(filePath, False, FFieldedText.TextCharEncoding);
   try
     Writer.Write(FEditData.Text);
     FFieldedText.FilePath := filePath;
-    FFieldedTextFilePathSetEvent;
+    NotifyFieldedTextFilePathSet;
     TextModified := False;
   finally
     Writer.Close;
@@ -1210,7 +1563,7 @@ begin
       FCursorActiveRichPos := -1;
   end;
 
-  FCursorActiveChangedEvent(FrameChanged, CellChanged);
+  NotifyCursorActiveChanged(FrameChanged, CellChanged);
 end;
 
 procedure TEditEngine.SetCursorRichPos(activeFrame: TFrame; pos: Integer);
@@ -1237,23 +1590,39 @@ begin
     CellChanged := True;
   end;
 
-  FCursorActiveChangedEvent(FrameChanged, CellChanged);
+  NotifyCursorActiveChanged(FrameChanged, CellChanged);
 end;
 
-procedure TEditEngine.SetFieldProperties(name: string; idx: Integer; const Value: TObject);
+procedure TEditEngine.SetFieldProperties(const name: string; idx: Integer; const Value: TValue);
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText.Fields[idx]).GetProperty(name);
-  PropInfo.SetValue(FFieldedText.Fields[idx], value, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(FFieldedText.Fields[idx].ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    PropInfo.SetValue(FFieldedText.Fields[idx], Value);
+  finally
+    Context.Free;
+  end;
 end;
 
-procedure TEditEngine.SetMainProperties(name: string; const Value: TObject);
+procedure TEditEngine.SetMainProperties(const name: string; const Value: TValue);
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText).GetProperty(name);
-  PropInfo.SetValue(FFieldedText, value, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(FFieldedText.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    PropInfo.SetValue(FFieldedText, Value);
+  finally
+    Context.Free;
+  end;
 end;
 
 procedure TEditEngine.SetMetaCharEncodingName(const Value: string);
@@ -1266,13 +1635,13 @@ begin
   if Value <> FMetaModified then
   begin
     FMetaModified := Value;
-    FMetaModifiedChangeEvent;
+    NotifyMetaModifiedChange;
   end;
 
   if FMetaModified then
   begin
     SetSynchronised(False);
-    FMetaChangeEvent;
+    NotifyMetaChange;
   end;
 end;
 
@@ -1306,7 +1675,7 @@ begin
 
   if Changed then
   begin
-    FMouseOverChangedEvent;
+    NotifyMouseOverChanged;
   end;
 end;
 
@@ -1339,14 +1708,14 @@ begin
 
   if Changed then
   begin
-    FMouseOverChangedEvent;
+    NotifyMouseOverChanged;
   end;
 end;
 
-procedure TEditEngine.SetPropertyValue(name: string; idx: Integer; cat: TPropertyCategory; const Value: TObject;
+procedure TEditEngine.SetPropertyValue(name: string; idx: Integer; cat: TPropertyCategory; const Value: TValue;
   out modified: Boolean);
 var
-  ExistingValue: TObject;
+  ExistingValue: TValue;
 begin
   ExistingValue := Properties[name, idx, cat];
 
@@ -1358,7 +1727,7 @@ begin
     else Assert(False);
   end;
 
-  modified := not value.Equals(ExistingValue);
+  modified := not SameValue(value, ExistingValue);
 
   if modified then
   begin
@@ -1366,24 +1735,32 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetRedirectProperties(name: string; redirect: TFieldedTextSequenceRedirect; const Value: TObject);
+procedure TEditEngine.SetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue);
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(redirect).GetProperty(name);
-  PropInfo.SetValue(redirect, value, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(redirect.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    PropInfo.SetValue(redirect, Value);
+  finally
+    Context.Free;
+  end;
 end;
 
-procedure TEditEngine.SetRedirectPropertyValue(name: string; redirect: TFieldedTextSequenceRedirect;
-                                               const Value: TObject; out modified: Boolean);
+procedure TEditEngine.SetRedirectPropertyValue(const name: string; redirect: TFieldedTextSequenceRedirect;
+                                               const Value: TValue; out modified: Boolean);
 var
-  ExistingValue: TObject;
+  ExistingValue: TValue;
 begin
   ExistingValue := RedirectProperties[name, redirect];
 
   RedirectProperties[name, redirect] := Value;
 
-  modified := not value.Equals(ExistingValue);
+  modified := not SameValue(ExistingValue, value);
 
   if modified then
   begin
@@ -1391,25 +1768,33 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetSequenceItemProperties(name: string; sequenceItem: TFieldedTextSequenceItem;
-  const Value: TObject);
+procedure TEditEngine.SetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem;
+  const Value: TValue);
 var
-  PropInfo: PropertyInfo;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(sequenceItem).GetProperty(name);
-  PropInfo.SetValue(sequenceItem, value, nil);
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(sequenceItem.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    PropInfo.SetValue(sequenceItem, Value);
+  finally
+    Context.Free;
+  end;
 end;
 
-procedure TEditEngine.SetSequenceItemPropertyValue(name: string; sequenceItem: TFieldedTextSequenceItem;
-                                                   const Value: TObject; out modified: Boolean);
+procedure TEditEngine.SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedTextSequenceItem;
+                                                   const Value: TValue; out modified: Boolean);
 var
-  ExistingValue: TObject;
+  ExistingValue: TValue;
 begin
   ExistingValue := SequenceItemProperties[name, sequenceItem];
 
   SequenceItemProperties[name, sequenceItem] := Value;
 
-  modified := not value.Equals(ExistingValue);
+  modified := not SameValue(Value, ExistingValue);
 
   if modified then
   begin
@@ -1417,23 +1802,41 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetSequenceProperties(name: string; idx: Integer; const Value: TObject);
+procedure TEditEngine.SetSequenceProperties(const name: string; idx: Integer; const Value: TValue);
 var
-  PropInfo: PropertyInfo;
+  Sequence: TFieldedTextSequence;
+  Context: TRttiContext;
+  InstanceType: TRttiInstanceType;
+  PropInfo: TRttiProperty;
 begin
-  PropInfo := TypeOf(FFieldedText.Sequences[idx]).GetProperty(name);
-  PropInfo.SetValue(FFieldedText.Sequences[idx], value, nil);
+  Sequence := FFieldedText.Sequences[Idx];
+
+  Context := TRttiContext.Create;
+  try
+    InstanceType := Context.GetType(Sequence.ClassType) as TRttiInstanceType;
+    PropInfo := InstanceType.GetProperty(Name);
+    PropInfo.SetValue(Sequence, Value);
+  finally
+    Context.Free;
+  end;
 end;
 
-procedure TEditEngine.SetSubstitutionProperties(name: string; idx: Integer; const Value: TObject);
+procedure TEditEngine.SetSubstitutionProperties(const name: string; idx: Integer; const Value: TValue);
 var
-  PropInfo: PropertyInfo;
-  Indices: array of TObject;
+  Substitution: TFieldedTextSubstitution;
+  Context: TRttiContext;
+  RecordType: TRttiRecordType;
+  FieldInfo: TRttiField;
 begin
-  PropInfo := TypeOf(FFieldedText).GetProperty(name);
-  SetLength(Indices, 1);
-  Indices[0] := TObject(idx);
-  PropInfo.SetValue(FFieldedText, value, Indices);
+  Substitution := FFieldedText.Substitutions[Idx];
+  Context := TRttiContext.Create;
+  try
+    RecordType := Context.GetType(TypeInfo(TFieldedTextSubstitution)) as TRttiRecordType;
+    FieldInfo := RecordType.GetField(Name);
+    FieldInfo.SetValue(@Substitution, Value);
+  finally
+    Context.Free;
+  end;
 end;
 
 procedure TEditEngine.SetSynchronised(const Value: Boolean);
@@ -1441,7 +1844,7 @@ begin
   if Value <> FSynchronised then
   begin
     FSynchronised := Value;
-    FSynchronisedChangeEvent;
+    NotifySynchronisedChange;
   end;
 end;
 
@@ -1455,10 +1858,7 @@ begin
     begin
       SetSynchronised(False);
     end;
-    if Assigned(FTextChangeEvent) then
-    begin
-      FTextChangeEvent(source);
-    end;
+    NotifyTextChange(source);
   end;
 end;
 
@@ -1472,67 +1872,667 @@ begin
   if Value <> FTextModified then
   begin
     FTextModified := Value;
-    FTextModifiedChangeEvent;
+    NotifyTextModifiedChange;
   end;
 end;
 
-procedure TEditEngine.TriggerFieldRemovedEvent(field: TFieldedTextField);
+procedure TEditEngine.SubscribeCursorActiveChangedEvent(
+  const Delegate: TCursorActiveChangedDelegate);
+var
+  Idx: Integer;
 begin
-  if Assigned(FFieldRemovedEvent) then
+  Idx := Length(FCursorActiveChangedDelegates);
+  SetLength(FCursorActiveChangedDelegates, Idx + 1);
+  FCursorActiveChangedDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeErrorEvent(const Delegate: TErrorDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FErrorDelegates);
+  SetLength(FErrorDelegates, Idx + 1);
+  FErrorDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeFieldedTextFilePathSetEvent(
+  const Delegate: TFieldedTextFilePathSetDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FFieldedTextFilePathSetDelegates);
+  SetLength(FFieldedTextFilePathSetDelegates, Idx + 1);
+  FFieldedTextFilePathSetDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeFieldRemovedEvent(
+  const Delegate: TFieldRemovedDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FFieldRemovedDelegates);
+  SetLength(FFieldRemovedDelegates, Idx + 1);
+  FFieldRemovedDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeGenerateEvent(const Delegate: TGenerateDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FGenerateDelegates);
+  SetLength(FGenerateDelegates, Idx + 1);
+  FGenerateDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeMetaChangeEvent(
+  const Delegate: TMetaChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FMetaChangeDelegates);
+  SetLength(FMetaChangeDelegates, Idx + 1);
+  FMetaChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeMetaModifiedChangeEvent(
+  const Delegate: TMetaModifiedChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FMetaModifiedChangeDelegates);
+  SetLength(FMetaModifiedChangeDelegates, Idx + 1);
+  FMetaModifiedChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeMouseOverChangedEvent(
+  const Delegate: TMouseOverChangedDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FMouseOverChangedDelegates);
+  SetLength(FMouseOverChangedDelegates, Idx + 1);
+  FMouseOverChangedDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeNewOpenTextEvent(
+  const Delegate: TNewOpenTextDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FNewOpenTextDelegates);
+  SetLength(FNewOpenTextDelegates, Idx + 1);
+  FNewOpenTextDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeParseEvent(const Delegate: TParseDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FParseDelegates);
+  SetLength(FParseDelegates, Idx + 1);
+  FParseDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeRefreshFieldsControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FRefreshFieldsControlsDelegates);
+  SetLength(FRefreshFieldsControlsDelegates, Idx + 1);
+  FRefreshFieldsControlsDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeRefreshMainControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FRefreshMainControlsDelegates);
+  SetLength(FRefreshMainControlsDelegates, Idx + 1);
+  FRefreshMainControlsDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeRefreshSequencesControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FRefreshSequencesControlsDelegates);
+  SetLength(FRefreshSequencesControlsDelegates, Idx + 1);
+  FRefreshSequencesControlsDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeSequencesChangeEvent(
+  const Delegate: TSequencesChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FSequencesChangeDelegates);
+  SetLength(FSequencesChangeDelegates, Idx + 1);
+  FSequencesChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeSuccessEvent(const Delegate: TSuccessDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FSuccessDelegates);
+  SetLength(FSuccessDelegates, Idx + 1);
+  FSuccessDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeSynchronisedChangeEvent(
+  const Delegate: TSynchronisedChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FSynchronisedChangeDelegates);
+  SetLength(FSynchronisedChangeDelegates, Idx + 1);
+  FSynchronisedChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeTextChangeEvent(
+  const Delegate: TTextChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FTextChangeDelegates);
+  SetLength(FTextChangeDelegates, Idx + 1);
+  FTextChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.SubscribeTextModifiedChangeEvent(
+  const Delegate: TTextModifiedChangeDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FTextModifiedChangeDelegates);
+  SetLength(FTextModifiedChangeDelegates, Idx + 1);
+  FTextModifiedChangeDelegates[Idx] := Delegate;
+end;
+
+procedure TEditEngine.UnsubscribeCursorActiveChangedEvent(
+  const Delegate: TCursorActiveChangedDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TCursorActiveChangedDelegate;
+begin
+  Idx := -1;
+  for I := Low(FCursorActiveChangedDelegates) to High(FCursorActiveChangedDelegates) do
   begin
-    FFieldRemovedEvent(field);
+    ExistingDelegate := FCursorActiveChangedDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FCursorActiveChangedDelegates[Idx] := FCursorActiveChangedDelegates[High(FCursorActiveChangedDelegates)];
+    SetLength(FCursorActiveChangedDelegates, Length(FCursorActiveChangedDelegates)-1);
   end;
 end;
 
-procedure TEditEngine.TriggerRefreshFieldsControlsEvent;
+procedure TEditEngine.UnsubscribeErrorEvent(const Delegate: TErrorDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TErrorDelegate;
 begin
-  if Assigned(FRefreshFieldsControlsEvent) then
+  Idx := -1;
+  for I := Low(FErrorDelegates) to High(FErrorDelegates) do
   begin
-    FRefreshFieldsControlsEvent;
+    ExistingDelegate := FErrorDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FErrorDelegates[Idx] := FErrorDelegates[High(FErrorDelegates)];
+    SetLength(FErrorDelegates, Length(FErrorDelegates)-1);
   end;
 end;
 
-procedure TEditEngine.TriggerRefreshMainControlsEvent;
+procedure TEditEngine.UnsubscribeFieldedTextFilePathSetEvent(
+  const Delegate: TFieldedTextFilePathSetDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TFieldedTextFilePathSetDelegate;
 begin
-  if Assigned(FRefreshMainControlsEvent) then
+  Idx := -1;
+  for I := Low(FFieldedTextFilePathSetDelegates) to High(FFieldedTextFilePathSetDelegates) do
   begin
-    FRefreshMainControlsEvent;
+    ExistingDelegate := FFieldedTextFilePathSetDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FFieldedTextFilePathSetDelegates[Idx] := FFieldedTextFilePathSetDelegates[High(FFieldedTextFilePathSetDelegates)];
+    SetLength(FFieldedTextFilePathSetDelegates, Length(FFieldedTextFilePathSetDelegates)-1);
   end;
 end;
 
-procedure TEditEngine.TriggerRefreshSequencesControlsEvent;
+procedure TEditEngine.UnsubscribeFieldRemovedEvent(
+  const Delegate: TFieldRemovedDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TFieldRemovedDelegate;
 begin
-  if Assigned(FRefreshSequencesControlsEvent) then
+  Idx := -1;
+  for I := Low(FFieldRemovedDelegates) to High(FFieldRemovedDelegates) do
   begin
-    FRefreshSequencesControlsEvent;
+    ExistingDelegate := FFieldRemovedDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FFieldRemovedDelegates[Idx] := FFieldRemovedDelegates[High(FFieldRemovedDelegates)];
+    SetLength(FFieldRemovedDelegates, Length(FFieldRemovedDelegates)-1);
   end;
 end;
 
-procedure TEditEngine.TriggerSequencesChangeEvent;
+procedure TEditEngine.UnsubscribeGenerateEvent(const Delegate: TGenerateDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TGenerateDelegate;
 begin
-  if Assigned(FSequencesChangeEvent) then
+  Idx := -1;
+  for I := Low(FGenerateDelegates) to High(FGenerateDelegates) do
   begin
-    FSequencesChangeEvent;
+    ExistingDelegate := FGenerateDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FGenerateDelegates[Idx] := FGenerateDelegates[High(FGenerateDelegates)];
+    SetLength(FGenerateDelegates, Length(FGenerateDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeMetaChangeEvent(
+  const Delegate: TMetaChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMetaChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FMetaChangeDelegates) to High(FMetaChangeDelegates) do
+  begin
+    ExistingDelegate := FMetaChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FMetaChangeDelegates[Idx] := FMetaChangeDelegates[High(FMetaChangeDelegates)];
+    SetLength(FMetaChangeDelegates, Length(FMetaChangeDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeMetaModifiedChangeEvent(
+  const Delegate: TMetaModifiedChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMetaModifiedChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FMetaModifiedChangeDelegates) to High(FMetaModifiedChangeDelegates) do
+  begin
+    ExistingDelegate := FMetaModifiedChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FMetaModifiedChangeDelegates[Idx] := FMetaModifiedChangeDelegates[High(FMetaModifiedChangeDelegates)];
+    SetLength(FMetaModifiedChangeDelegates, Length(FMetaModifiedChangeDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeMouseOverChangedEvent(
+  const Delegate: TMouseOverChangedDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMouseOverChangedDelegate;
+begin
+  Idx := -1;
+  for I := Low(FMouseOverChangedDelegates) to High(FMouseOverChangedDelegates) do
+  begin
+    ExistingDelegate := FMouseOverChangedDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FMouseOverChangedDelegates[Idx] := FMouseOverChangedDelegates[High(FMouseOverChangedDelegates)];
+    SetLength(FMouseOverChangedDelegates, Length(FMouseOverChangedDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeNewOpenTextEvent(
+  const Delegate: TNewOpenTextDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TNewOpenTextDelegate;
+begin
+  Idx := -1;
+  for I := Low(FNewOpenTextDelegates) to High(FNewOpenTextDelegates) do
+  begin
+    ExistingDelegate := FNewOpenTextDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FNewOpenTextDelegates[Idx] := FNewOpenTextDelegates[High(FNewOpenTextDelegates)];
+    SetLength(FNewOpenTextDelegates, Length(FNewOpenTextDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeParseEvent(const Delegate: TParseDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TParseDelegate;
+begin
+  Idx := -1;
+  for I := Low(FParseDelegates) to High(FParseDelegates) do
+  begin
+    ExistingDelegate := FParseDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FParseDelegates[Idx] := FParseDelegates[High(FParseDelegates)];
+    SetLength(FParseDelegates, Length(FParseDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeRefreshFieldsControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMetaRefreshControlsDelegate;
+begin
+  Idx := -1;
+  for I := Low(FRefreshFieldsControlsDelegates) to High(FRefreshFieldsControlsDelegates) do
+  begin
+    ExistingDelegate := FRefreshFieldsControlsDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FRefreshFieldsControlsDelegates[Idx] := FRefreshFieldsControlsDelegates[High(FRefreshFieldsControlsDelegates)];
+    SetLength(FRefreshFieldsControlsDelegates, Length(FRefreshFieldsControlsDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeRefreshMainControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMetaRefreshControlsDelegate;
+begin
+  Idx := -1;
+  for I := Low(FRefreshMainControlsDelegates) to High(FRefreshMainControlsDelegates) do
+  begin
+    ExistingDelegate := FRefreshMainControlsDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FRefreshMainControlsDelegates[Idx] := FRefreshMainControlsDelegates[High(FRefreshMainControlsDelegates)];
+    SetLength(FRefreshMainControlsDelegates, Length(FRefreshMainControlsDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeRefreshSequencesControlsEvent(
+  const Delegate: TMetaRefreshControlsDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TMetaRefreshControlsDelegate;
+begin
+  Idx := -1;
+  for I := Low(FRefreshSequencesControlsDelegates) to High(FRefreshSequencesControlsDelegates) do
+  begin
+    ExistingDelegate := FRefreshSequencesControlsDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FRefreshSequencesControlsDelegates[Idx] := FRefreshSequencesControlsDelegates[High(FRefreshSequencesControlsDelegates)];
+    SetLength(FRefreshSequencesControlsDelegates, Length(FRefreshSequencesControlsDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeSequencesChangeEvent(
+  const Delegate: TSequencesChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TSequencesChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FSequencesChangeDelegates) to High(FSequencesChangeDelegates) do
+  begin
+    ExistingDelegate := FSequencesChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FSequencesChangeDelegates[Idx] := FSequencesChangeDelegates[High(FSequencesChangeDelegates)];
+    SetLength(FSequencesChangeDelegates, Length(FSequencesChangeDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeSuccessEvent(const Delegate: TSuccessDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TSuccessDelegate;
+begin
+  Idx := -1;
+  for I := Low(FSuccessDelegates) to High(FSuccessDelegates) do
+  begin
+    ExistingDelegate := FSuccessDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FSuccessDelegates[Idx] := FSuccessDelegates[High(FSuccessDelegates)];
+    SetLength(FSuccessDelegates, Length(FSuccessDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeSynchronisedChangeEvent(
+  const Delegate: TSynchronisedChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TSynchronisedChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FSynchronisedChangeDelegates) to High(FSynchronisedChangeDelegates) do
+  begin
+    ExistingDelegate := FSynchronisedChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FSynchronisedChangeDelegates[Idx] := FSynchronisedChangeDelegates[High(FSynchronisedChangeDelegates)];
+    SetLength(FSynchronisedChangeDelegates, Length(FSynchronisedChangeDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeTextChangeEvent(
+  const Delegate: TTextChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TTextChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FTextChangeDelegates) to High(FTextChangeDelegates) do
+  begin
+    ExistingDelegate := FTextChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FTextChangeDelegates[Idx] := FTextChangeDelegates[High(FTextChangeDelegates)];
+    SetLength(FTextChangeDelegates, Length(FTextChangeDelegates)-1);
+  end;
+end;
+
+procedure TEditEngine.UnsubscribeTextModifiedChangeEvent(
+  const Delegate: TTextModifiedChangeDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TTextModifiedChangeDelegate;
+begin
+  Idx := -1;
+  for I := Low(FTextModifiedChangeDelegates) to High(FTextModifiedChangeDelegates) do
+  begin
+    ExistingDelegate := FTextModifiedChangeDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FTextModifiedChangeDelegates[Idx] := FTextModifiedChangeDelegates[High(FTextModifiedChangeDelegates)];
+    SetLength(FTextModifiedChangeDelegates, Length(FTextModifiedChangeDelegates)-1);
   end;
 end;
 
 function TEditEngine.UpdateDisplayCulture: Boolean;
 var
-  NewCulture: CultureInfo;
+  NewCulture: TFieldedTextLocaleSettings;
 begin
   case Configuration.DisplayCultureType of
-    dcInvariant: NewCulture := CultureInfo.InvariantCulture;
-    dcLocal: NewCulture := CultureInfo.CurrentCulture;
+    dcInvariant: NewCulture := TFieldedTextLocaleSettings.Invariant;
+    dcLocal: NewCulture := TFieldedTextLocaleSettings.Current;
     dcNamed: NewCulture := Configuration.NamedDisplayCulture;
-    dcFile: NewCulture := Culture;
+    dcFile: NewCulture := FDisplayCulture;
     else
     begin
       Assert(False);
-      NewCulture := CultureInfo.InvariantCulture;
+      NewCulture := TFieldedTextLocaleSettings.Invariant;
     end;
   end;
 
-  Result := FDisplayCulture <> NewCulture;
+  Result := FDisplayCulture.Id <> NewCulture.Id;
 
   if Result then
   begin

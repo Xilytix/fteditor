@@ -3,26 +3,25 @@ inherited TextViewFrame: TTextViewFrame
   Height = 168
   DragKind = dkDock
   DragMode = dmAutomatic
-  OnEnter = FrameEnter
   ExplicitWidth = 727
   ExplicitHeight = 168
   object TopSplitter: TSplitter [0]
-    Align = alTop
-    AutoSnap = False
-    Cursor = crVSplit
-    MinSize = 15
-    Width = 727
     Left = 0
     Top = 17
+    Width = 727
     Height = 3
+    Cursor = crVSplit
+    Align = alTop
+    AutoSnap = False
     Beveled = True
+    MinSize = 15
     ExplicitTop = 16
     ExplicitWidth = 469
   end
   inherited TopFlowPanel: TFlowPanel
+    Width = 727
     FullRepaint = False
     TabOrder = 1
-    Width = 727
     OnClick = FrameComponentClick
     ExplicitWidth = 727
     inherited SourcePanel: TPanel
@@ -34,12 +33,12 @@ inherited TextViewFrame: TTextViewFrame
         ExplicitLeft = 42
       end
       object ParseButton: TButton
-        Caption = 'Parse'
-        TabOrder = 1
         Left = 0
         Top = 0
         Width = 39
         Height = 15
+        Caption = 'Parse'
+        TabOrder = 1
         OnClick = ParseButtonClick
       end
     end
@@ -123,6 +122,14 @@ inherited TextViewFrame: TTextViewFrame
     end
   end
   object TextEdit: TRichEdit
+    Left = 0
+    Top = 20
+    Width = 727
+    Height = 148
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
     Align = alClient
     BevelOuter = bvNone
     BorderStyle = bsNone
@@ -134,14 +141,6 @@ inherited TextViewFrame: TTextViewFrame
     ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 0
-    Left = 0
-    Top = 20
-    Width = 727
-    Height = 148
-    Margins.Left = 0
-    Margins.Top = 0
-    Margins.Right = 0
-    Margins.Bottom = 0
     OnChange = TextEditChange
     OnEnter = TextEditEnter
     OnExit = TextEditExit

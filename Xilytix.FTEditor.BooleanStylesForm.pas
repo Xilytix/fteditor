@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.BooleanStylesForm;
 
@@ -29,7 +26,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure CheckBoxClick(Sender: TObject);
   private
-    FValue: TBooleanStyles;
+    FValue: TCompositeBooleanStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
     { Private declarations }
@@ -63,9 +60,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      FValue := FValue or TBooleanStyles(StyleValue)
+      Include(FValue.Styles, TBooleanStyle(StyleValue))
     else
-      FValue := FValue and TBooleanStyles(not StyleValue);
+      Exclude(FValue.Styles, TBooleanStyle(StyleValue));
 
     LoadControls;
   end;
@@ -81,15 +78,15 @@ end;
 
 procedure TBooleanStylesForm.FormCreate(Sender: TObject);
 begin
-  IgnoreCaseCheckBox.Tag := Integer(TBooleanStyles.IgnoreCase);
-  MatchFirstCharOnlyCheckBox.Tag := Integer(TBooleanStyles.MatchFirstCharOnly);
-  IgnoreTrailingCharsCheckBox.Tag := Integer(TBooleanStyles.IgnoreTrailingChars);
-  FalseIfNotMatchTrueCheckBox.Tag := Integer(TBooleanStyles.FalseIfNotMatchTrue);
+  IgnoreCaseCheckBox.Tag := Integer(bostIgnoreCase);
+  MatchFirstCharOnlyCheckBox.Tag := Integer(bostMatchFirstCharOnly);
+  IgnoreTrailingCharsCheckBox.Tag := Integer(bostIgnoreTrailingChars);
+  FalseIfNotMatchTrueCheckBox.Tag := Integer(bostFalseIfNotMatchTrue);
 end;
 
 function TBooleanStylesForm.GetAsString: string;
 begin
-  Result := Enum(FValue).ToString;
+  Result := FValue.AsString;
 end;
 
 procedure TBooleanStylesForm.LoadControls;
@@ -112,17 +109,14 @@ end;
 
 procedure TBooleanStylesForm.SetAsString(asStringValue: string; fallBack, default: TBooleanStyles);
 begin
-  if asStringValue.Trim = '' then
-    FValue := default
+  asStringValue := Trim(asStringValue);
+  if asStringValue= '' then
+    FValue.Styles := default
   else
   begin
-    try
-      FValue := Enum.Parse(TypeOf(TBooleanStyles), asStringValue, True) as TBooleanStyles;
-    except
-      on ArgumentException do
-      begin
-        FValue := fallBack;
-      end;
+    if not TCompositeBooleanStyles.TryStrToStyles(asStringValue, FValue.Styles) then
+    begin
+      FValue.Styles := fallBack;
     end;
   end;
 
@@ -131,7 +125,7 @@ end;
 
 procedure TBooleanStylesForm.SetCheckBox(checkBox: TCheckBox);
 begin
-  checkBox.Checked := (Integer(FValue) and checkBox.Tag) = checkBox.Tag;
+  checkBox.Checked := (FValue.AsInteger and checkBox.Tag) = checkBox.Tag;
 end;
 
 end.

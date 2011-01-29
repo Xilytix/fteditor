@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame;
 
@@ -21,9 +18,9 @@ uses
 type
   TSequenceRedirect_BasePropertiesFrame = class(TSequenceBasePropertiesFrame)
     Label1: TLabel;
-    SequenceComboBox: TComboBoxEx;
+    SequenceComboBox: TComboBox;
     Label3: TLabel;
-    InvokationDelayComboBox: TComboBoxEx;
+    InvokationDelayComboBox: TComboBox;
     InvokationDelayLabel: TLabel;
     procedure SequenceComboBoxDropDown(Sender: TObject);
     procedure SequenceComboBoxChange(Sender: TObject);
@@ -57,7 +54,7 @@ uses
 
 procedure TSequenceRedirect_BasePropertiesFrame.ComboBoxChange(Sender: TObject);
 begin
-  FBinder.HandleRedirectComboBoxChange(Sender as TComboBoxEx, Redirect);
+  FBinder.HandleRedirectComboBoxChange(Sender as TComboBox, Redirect);
 end;
 
 constructor TSequenceRedirect_BasePropertiesFrame.Create(AOwner: TComponent);
@@ -76,29 +73,21 @@ end;
 procedure TSequenceRedirect_BasePropertiesFrame.PopulateSequenceComboBox;
 var
   I: Integer;
-  Item: TComboExItem;
 begin
   for I := 0 to FEditEngine.SequenceCount - 1 do
   begin
-    if I < SequenceComboBox.ItemsEx.Count then
-      Item := SequenceComboBox.ItemsEx.ComboItems[I]
+    if I >= SequenceComboBox.Items.Count then
+      SequenceComboBox.Items.AddObject(FEditEngine.Sequences[I].Name, FEditEngine.Sequences[I])
     else
-      Item := SequenceComboBox.ItemsEx.Add;
-
-    if Item.Caption <> FEditEngine.Sequences[I].Name then
     begin
-      Item.Caption := FEditEngine.Sequences[I].Name
-    end;
-
-    if Item.Data <> FEditEngine.Sequences[I] then
-    begin
-      Item.Data := FEditEngine.Sequences[I];
+      SequenceComboBox.Items[I] := FEditEngine.Sequences[I].Name;
+      SequenceComboBox.Items.Objects[I] := FEditEngine.Sequences[I];
     end;
   end;
 
-  for I := SequenceComboBox.ItemsEx.Count-1 downto FEditEngine.SequenceCount do
+  for I := SequenceComboBox.Items.Count-1 downto FEditEngine.SequenceCount do
   begin
-    SequenceComboBox.ItemsEx.Delete(I);
+    SequenceComboBox.Items.Delete(I);
   end;
 end;
 
@@ -127,7 +116,7 @@ begin
   ItemIndex := SequenceComboBox.ItemIndex;
   if ItemIndex >= 0 then
   begin
-    FBinder.SetRedirectSequence(Redirect, SequenceComboBox.ItemsEx[ItemIndex].Data);
+    FBinder.SetRedirectSequence(Redirect, SequenceComboBox.Items.Objects[ItemIndex]);
   end;
 end;
 

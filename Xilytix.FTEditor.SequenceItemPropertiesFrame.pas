@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequenceItemPropertiesFrame;
 
@@ -55,7 +52,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Borland.Vcl.ListActns,
+  ListActns,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Binder;
 
@@ -96,7 +93,7 @@ var
   Field: TFieldedTextField;
   FoundItemIndex: Boolean;
 begin
-  FieldComboBox.ItemsEx.SortType := stNone;
+  FieldComboBox.ItemsEx.SortType := ListActns.stNone;
   FieldComboBox.ItemsEx.Clear;
 
   for I := 0 to FEditEngine.FieldCount - 1 do
@@ -141,7 +138,7 @@ begin
   try
     PopulateFieldComboBox;
 
-    RedirectsCountLabel.Caption := FSequenceItem.RedirectCount.ToString;
+    RedirectsCountLabel.Caption := IntToStr(FSequenceItem.RedirectCount);
 
   finally
     Dec(FLoadingControlsCount);

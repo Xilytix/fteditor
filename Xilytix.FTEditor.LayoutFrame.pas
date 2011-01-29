@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence (this file): Public Domain
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.LayoutFrame;
 
@@ -28,25 +25,23 @@ uses
 
 type
   TLayoutFrame = class;
-  TLayoutableFrameAddEvent = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; config: IXMLNode) of object;
-  TLayoutableFrameRemoveEvent = procedure(sender: TLayoutFrame; frame: TLayoutableFrame) of object;
 
   TLayoutFrame = class(TFrame)
   public
     type
-      TAddFrameDelegate = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; config: IXMLNode) of object;
+      TAddFrameDelegate = procedure(sender: TLayoutFrame; frame: TLayoutableFrame; Slot: TLayoutConfiguration.TFrameSlotId) of object;
       TRemoveFrameDelegate = procedure(sender: TLayoutFrame; frame: TLayoutableFrame) of object;
   strict private
     type
       TArrangement = TLayoutConfiguration.TArrangement;
-      TFrameSlot = TLayoutConfiguration.TFrameSlot;
+      TFrameSlot = TLayoutConfiguration.TFrameSlotId;
       THalf = TLayoutConfiguration.THalf;
       THalfId = TLayoutConfiguration.THalfId;
       THalfAndFillRecs = TLayoutConfiguration.THalfAndFillRecs;
       TFrameTypeAndFillRecs = TLayoutConfiguration.TFrameTypeAndFillRecs;
 //      TExplicitSizeDirectionRec = TLayoutConfiguration.TExplicitSizeDirectionRec;
       TExplicitSizesRec = TLayoutConfiguration.TExplicitSizesRec;
-      TFrameSlotConfigs = TLayoutConfiguration.TFrameSlotConfigs;
+//      TFrameSlotConfigs = TLayoutConfiguration.TFrameSlotConfigs;
 
       TFrameTypeIds = array of TLayoutableFrame.TTypeId;
 
@@ -64,14 +59,20 @@ type
       end;
       TFrameSlotInfos = array[TFrameSlot] of TFrameSlotInfo;
 
+      TAddFrameDelegates = array of TAddFrameDelegate;
+      TRemoveFrameDelegates = array of TRemoveFrameDelegate;
+
     var
       FLayoutableFrames: TLayoutableFrameArray;
       FMainExplicitSizeControl: TExplicitSizeControlRec;
       FHalfExplicitSizeControls: THalfExplicitSizeControls;
       FFrameSlotInfos: TFrameSlotInfos;
 
-      FAddFrameEvent: TLayoutableFrameAddEvent;
-      FRemoveFrameEvent: TLayoutableFrameRemoveEvent;
+      FAddFrameDelegates: TAddFrameDelegates;
+      FRemoveFrameDelegates: TRemoveFrameDelegates;
+
+    procedure NotifyAddFrame(frame: TLayoutableFrame; Slot: TLayoutConfiguration.TFrameSlotId);
+    procedure NotifyRemoveFrame(frame: TLayoutableFrame);
 
     procedure Clear;
 
@@ -111,7 +112,7 @@ type
     { Public declarations }
 
     procedure ConfigureLayout(layoutConfiguration: TLayoutConfiguration);
-    procedure SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
+//    procedure SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
 
     property LayoutableFrameCount: Integer read GetLayoutableFrameCount;
     property LayoutableFrames[idx: Integer]: TLayoutableFrame read GetLayoutableFrames;
@@ -129,6 +130,7 @@ implementation
 {$R *.dfm}
 
 uses
+  Xilytix.FieldedText.Utils,
   Xilytix.FTEditor.MainPropertiesFrame,
   Xilytix.FTEditor.TextViewFrame,
   Xilytix.FTEditor.GridViewFrame,
@@ -148,7 +150,7 @@ var
 begin
   for I := High(FLayoutableFrames) downto Low(FLayoutableFrames) do
   begin
-    FRemoveFrameEvent(Self, FLayoutableFrames[I]);
+    NotifyRemoveFrame(FLayoutableFrames[I]);
   end;
   FLayoutableFrames := nil;
 
@@ -306,7 +308,7 @@ begin
   begin
     if I <> Low(typeAndFills) then
     begin
-      Splitters[I-1] := CreateSplitter(parentControl.Name + '_Splitter' + Integer(I-1).ToString);
+      Splitters[I-1] := CreateSplitter(parentControl.Name + '_Splitter' + IntToStr(I-1));
       Splitters[I-1].Parent := parentControl;
       Splitters[I-1].Top := Frames[I-1].Top + Frames[I-1].Height;
       Splitters[I-1].Align := alTop;
@@ -372,7 +374,7 @@ begin
     else
       FFrameSlotInfos[typeAndFills[I].Slot].ExplicitSizeOrientation := esdVertical;
 
-    FAddFrameEvent(Self, Frames[I], typeAndFills[I].Config);
+    NotifyAddFrame(Frames[I], typeAndFills[I].Slot);
   end;
 end;
 
@@ -419,20 +421,115 @@ begin
   Result := FLayoutableFrames[idx];
 end;
 
-procedure TLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
+procedure TLayoutFrame.NotifyAddFrame(frame: TLayoutableFrame;
+  Slot: TLayoutConfiguration.TFrameSlotId);
+var
+  I: Integer;
+  Delegates: TAddFrameDelegates;
+begin
+  Delegates := Copy(FAddFrameDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I](Self, Frame, Slot);
+  end;
+end;
+
+procedure TLayoutFrame.NotifyRemoveFrame(frame: TLayoutableFrame);
+var
+  I: Integer;
+  Delegates: TRemoveFrameDelegates;
+begin
+  Delegates := Copy(FRemoveFrameDelegates);
+  for I := Low(Delegates) to High(Delegates) do
+  begin
+    Delegates[I](Self, Frame);
+  end;
+end;
+
+procedure TLayoutFrame.SubscribeAddFrameEvent(Delegate: TAddFrameDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FAddFrameDelegates);
+  SetLength(FAddFrameDelegates, Idx + 1);
+  FAddFrameDelegates[Idx] := Delegate;
+end;
+
+procedure TLayoutFrame.SubscribeRemoveFrameEvent(
+  Delegate: TRemoveFrameDelegate);
+var
+  Idx: Integer;
+begin
+  Idx := Length(FRemoveFrameDelegates);
+  SetLength(FRemoveFrameDelegates, Idx + 1);
+  FRemoveFrameDelegates[Idx] := Delegate;
+end;
+
+procedure TLayoutFrame.UnsubscribeAddFrameEvent(Delegate: TAddFrameDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TAddFrameDelegate;
+begin
+  Idx := -1;
+  for I := Low(FAddFrameDelegates) to High(FAddFrameDelegates) do
+  begin
+    ExistingDelegate := FAddFrameDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FAddFrameDelegates[Idx] := FAddFrameDelegates[High(FAddFrameDelegates)];
+    SetLength(FAddFrameDelegates, Length(FAddFrameDelegates)-1);
+  end;
+end;
+
+procedure TLayoutFrame.UnsubscribeRemoveFrameEvent(
+  Delegate: TRemoveFrameDelegate);
+var
+  I, Idx: Integer;
+  ExistingDelegate: TRemoveFrameDelegate;
+begin
+  Idx := -1;
+  for I := Low(FRemoveFrameDelegates) to High(FRemoveFrameDelegates) do
+  begin
+    ExistingDelegate := FRemoveFrameDelegates[I];
+    if SameMethods(TMethod(ExistingDelegate), TMethod(Delegate)) then
+    begin
+      Idx := I;
+      Break;
+    end;
+  end;
+
+  if Idx < 0 then
+    Assert(False)
+  else
+  begin
+    FRemoveFrameDelegates[Idx] := FRemoveFrameDelegates[High(FRemoveFrameDelegates)];
+    SetLength(FRemoveFrameDelegates, Length(FRemoveFrameDelegates)-1);
+  end;
+end;
+
+(*procedure TLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
 var
   I: TFrameSlot;
 begin
   for I := Low(FrameSlotConfigs) to High(FrameSlotConfigs) do
   begin
-    if Assigned(FrameSlotConfigs[I]) and Assigned(FFrameSlotInfos[I].Frame) then
+    if {Assigned(FrameSlotConfigs[I]) and} Assigned(FFrameSlotInfos[I].Frame) then
     begin
       FFrameSlotInfos[I].Frame.SaveToXml(FrameSlotConfigs[I]);
     end;
   end;
 
   ExplicitSizes := GetExplicitSizesRec;
-end;
+end; *)
 
 procedure TLayoutFrame.CreateSplitHalf(half: THalf; parentControl: TWinControl;
   out implicitWidth, implicitHeight: Integer);
@@ -447,7 +544,8 @@ var
   FrameHeight: Integer;
   PanelWidth: Integer;
   PanelHeight: Integer;
-  Config: XmlElement;
+//  Config: XmlElement;
+  Slot: TFrameSlot;
 begin
   case half.Arrangement of
     la2Vertical, la3Vertical:
@@ -480,7 +578,8 @@ begin
       Splitter.Parent := parentControl;
 
       Frame := CreateLayoutableFrame(half.CalculatedIdFills[2].FrameTypeId, parentControl.Name + '_Right');
-      Config := half.CalculatedIdFills[2].Config;
+//      Config := half.CalculatedIdFills[2].Config;
+      Slot := half.CalculatedIdFills[2].Slot;
       Frame.Parent := parentControl;
       Frame.Left := Splitter.Left + Splitter.Width;
       Frame.Align := alClient;
@@ -511,7 +610,7 @@ begin
         Panel.Align := alClient;
       end;
 
-      FAddFrameEvent(Self, Frame, Config);
+      NotifyAddFrame(Frame, {Config}Slot);
 
       implicitWidth := PanelWidth + FrameWidth;
       if PanelImplicitHeight > Frame.ImplicitHeight then
@@ -542,7 +641,8 @@ begin
       Frame.Parent := parentControl;
       Frame.Top := Splitter.Top + Splitter.Height;
       Frame.Align := alClient;
-      Config := half.CalculatedIdFills[2].Config;
+//      Config := half.CalculatedIdFills[2].Config;
+      Slot := half.CalculatedIdFills[2].Slot;
 
       if half.CalculatedIdFills[2].Fill then
       begin
@@ -570,7 +670,7 @@ begin
         Panel.Align := alClient;
       end;
 
-      FAddFrameEvent(Self, Frame, Config);
+      NotifyAddFrame(Frame, {Config}Slot);
 
       implicitHeight := PanelHeight + FrameHeight;
       if PanelImplicitWidth > Frame.ImplicitWidth then
@@ -599,7 +699,7 @@ begin
       Frame.Align := alClient;
       Frame.Parent := parentControl;
 
-      FAddFrameEvent(Self, Frame, half.CalculatedIdFills[0].Config);
+      NotifyAddFrame(Frame, half.CalculatedIdFills[0].Slot {Config});
 
       implicitWidth := Frame.ImplicitWidth;
       implicitHeight := Frame.ImplicitHeight;
@@ -656,7 +756,7 @@ begin
     Frame.Parent := TabSheet;
     Frame.Align := alClient;
 
-    FAddFrameEvent(Self, Frame, idFills[I].Config);
+    NotifyAddFrame(Frame, idFills[I].Slot {Config});
 
     if Frame.ImplicitWidth > implicitWidth then
     begin
@@ -837,7 +937,7 @@ begin
   begin
     if I <> Low(typeAndFills) then
     begin
-      Splitters[I-1] := CreateSplitter(parentControl.Name + '_Splitter' + Integer(I-1).ToString);
+      Splitters[I-1] := CreateSplitter(parentControl.Name + '_Splitter' + IntToStr(I-1));
       Splitters[I-1].Parent := parentControl;
       Splitters[I-1].Left := Frames[I-1].Left + Frames[I-1].Width;
       Splitters[I-1].Align := alLeft;
@@ -902,7 +1002,7 @@ begin
     else
       FFrameSlotInfos[typeAndFills[I].Slot].ExplicitSizeOrientation := esdHorizontal;
 
-    FAddFrameEvent(Self, Frames[I], typeAndFills[I].Config);
+    NotifyAddFrame(Frames[I], typeAndFills[I].Slot {Config});
   end;
 end;
 

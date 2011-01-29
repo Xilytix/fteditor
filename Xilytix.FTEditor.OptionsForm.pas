@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.OptionsForm;
 
@@ -168,10 +165,9 @@ type
 
     procedure ClearErrors;
 
-    procedure ClearControlError(control: TWinControl);
-    procedure SetControlError(control: TWinControl);
+    procedure ClearControlError(control: TEdit);
+    procedure SetControlError(control: TEdit);
 
-    function TryStrToInteger(str: string; out value: Integer): Boolean;
     function CheckIntegerEdit(edit: TEdit; out value: Integer): Boolean; overload;
     procedure CheckIntegerEdit(edit: TEdit); overload;
 
@@ -185,7 +181,8 @@ type
     procedure LoadColor(id: TColorItemId); overload;
     procedure SaveColor;
 
-    procedure SelectFont(var targetFont: TFont; exampleControl: TcustomEdit);
+    procedure SelectFont(var targetFont: TFont; exampleControl: TEdit); overload;
+    procedure SelectFont(var targetFont: TFont; exampleControl: TMemo); overload;
 
     procedure LoadSourceOnNewOpenText;
 
@@ -203,9 +200,6 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Xml,
-  System.Globalization,
-  System.Text,
   Xilytix.FTEditor.GridViewFrame,
   Xilytix.FTEditor.ColorSchemaForm;
 
@@ -244,15 +238,15 @@ end;
 
 procedure TOptionsForm.CheckCultureEdit(edit: TEdit);
 var
-  DummyValue: CultureInfo;
+//  DummyValue: CultureInfo;
   Error: Boolean;
 begin
-  try
-    DummyValue := CultureInfo.Create(edit.Text);
+//  try
+//    DummyValue := CultureInfo.Create(edit.Text);
     Error := False;
-  except
-    on ArgumentException do Error := True;
-  end;
+//  except
+//    on ArgumentException do Error := True;
+//  end;
 
   if Error then
     SetControlError(edit)
@@ -262,15 +256,15 @@ end;
 
 procedure TOptionsForm.CheckEncodingEdit(edit: TEdit);
 var
-  DummyValue: Encoding;
+//  DummyValue: Encoding;
   Error: Boolean;
 begin
-  try
-    DummyValue := System.Text.Encoding.GetEncoding(edit.Text);
+//  try
+//    DummyValue := System.Text.Encoding.GetEncoding(edit.Text);
     Error := False;
-  except
-    on ArgumentException do Error := True;
-  end;
+//  except
+//    on ArgumentException do Error := True;
+//  end;
 
   if Error then
     SetControlError(edit)
@@ -287,14 +281,14 @@ end;
 
 function TOptionsForm.CheckIntegerEdit(edit: TEdit; out value: Integer): Boolean;
 begin
-  Result := TryStrToInteger(edit.Text, value);
+  Result := TryStrToInt(edit.Text, value);
   if Result then
     ClearControlError(edit)
   else
     SetControlError(edit);
 end;
 
-procedure TOptionsForm.ClearControlError(control: TWinControl);
+procedure TOptionsForm.ClearControlError(control: TEdit);
 begin
   if control.Color = Configuration.Colors[rcControlError].Background then
   begin
@@ -355,7 +349,7 @@ begin
     begin
       if Auto then
       begin
-        GridRowHeightEdit.Text := ActualRowHeight.ToString;
+        GridRowHeightEdit.Text := IntToStr(ActualRowHeight);
       end;
     end;
   end;
@@ -457,21 +451,21 @@ begin
   AddItem(DisplayEncodingComboBox, 'File', TObject(deFile));
   AddItem(DisplayEncodingComboBox, 'Named', TObject(deNamed));
 
-  AddItem(TextFileDefaultCharEncodingComboBox, Encoding.ASCII.WebName, nil);
-  AddItem(TextFileDefaultCharEncodingComboBox, Encoding.UTF8.WebName, nil);
-  AddItem(TextFileDefaultCharEncodingComboBox, Encoding.UTF32.WebName, nil);
-  AddItem(TextFileDefaultCharEncodingComboBox, Encoding.UTF7.WebName, nil);
+  AddItem(TextFileDefaultCharEncodingComboBox, TEncoding.ASCII.EncodingName, nil);
+  AddItem(TextFileDefaultCharEncodingComboBox, TEncoding.UTF8.EncodingName, nil);
+  AddItem(TextFileDefaultCharEncodingComboBox, TEncoding.Unicode.EncodingName, nil);
+  AddItem(TextFileDefaultCharEncodingComboBox, TEncoding.UTF7.EncodingName, nil);
 
-  AddItem(MetaFileDefaultCharEncodingComboBox, Encoding.ASCII.WebName, nil);
-  AddItem(MetaFileDefaultCharEncodingComboBox, Encoding.UTF8.WebName, nil);
-  AddItem(MetaFileDefaultCharEncodingComboBox, Encoding.UTF32.WebName, nil);
-  AddItem(MetaFileDefaultCharEncodingComboBox, Encoding.UTF7.WebName, nil);
+  AddItem(MetaFileDefaultCharEncodingComboBox, TEncoding.ASCII.EncodingName, nil);
+  AddItem(MetaFileDefaultCharEncodingComboBox, TEncoding.UTF8.EncodingName, nil);
+  AddItem(MetaFileDefaultCharEncodingComboBox, TEncoding.Unicode.EncodingName, nil);
+  AddItem(MetaFileDefaultCharEncodingComboBox, TEncoding.UTF7.EncodingName, nil);
 
   for ColorItemId := Low(TColorItemId) to High(TColorItemId) do
   begin
     Item := ColoursButtonGroup.Items.Add;
     Item.Caption := TColorItems.Names[ColorItemId];
-    Item.Data := ColorItemId;
+    Item.Data := Pointer(ColorItemId);
   end;
 
   PageControl.ActivePage := ControlsTabSheet;
@@ -493,14 +487,14 @@ end;
 
 procedure TOptionsForm.Load;
 
-  function IndexOfData(comboBox: TComboBoxEx; data: TObject): Integer;
+  function IndexOfData(comboBox: TComboBoxEx; data: Integer): Integer;
   var
     I: Integer;
   begin
     Result := -1;
     for I := 0 to comboBox.ItemsEx.Count - 1 do
     begin
-      if comboBox.ItemsEx[I].Data.Equals(data) then
+      if Integer(comboBox.ItemsEx[I].Data) = data then
       begin
         Result := I;
         Break;
@@ -514,10 +508,10 @@ begin
   Inc(FLoadingControlsCount);
   try
     DefaultNonViewableCharacterFormatComboBox.ItemIndex := IndexOfData(DefaultNonViewableCharacterFormatComboBox,
-                                                                       TObject(Configuration.DefaultNonViewableCharFormat));
-    DisplayCultureComboBox.ItemIndex := IndexOfData(DisplayCultureComboBox, TObject(Configuration.DisplayCultureType));
+                                                                       Integer(Configuration.DefaultNonViewableCharFormat));
+    DisplayCultureComboBox.ItemIndex := IndexOfData(DisplayCultureComboBox, Integer(Configuration.DisplayCultureType));
     NamedDisplayCultureEdit.Text := Configuration.NamedDisplayCultureName;
-    DisplayEncodingComboBox.ItemIndex := IndexOfData(DisplayEncodingComboBox, TObject(Configuration.DisplayCharEncodingType));
+    DisplayEncodingComboBox.ItemIndex := IndexOfData(DisplayEncodingComboBox, Integer(Configuration.DisplayCharEncodingType));
     NamedDisplayEncodingEdit.Text := Configuration.NamedDisplayCharEncodingName;
 
     FTextFont.Assign(Configuration.TextFont);
@@ -537,7 +531,7 @@ begin
     GridTrackCursorCheckBox.Checked := Configuration.GridTrackCursor;
     GridRowHeightAutoRadioButton.Checked := Configuration.GridRowHeightAuto;
     GridRowHeightManualRadioButton.Checked := not Configuration.GridRowHeightAuto;
-    GridRowHeightEdit.Text := Configuration.GridManualRowHeight.ToString;
+    GridRowHeightEdit.Text := IntToStr(Configuration.GridManualRowHeight);
     GridNullTextEdit.Text := Configuration.GridNullText;
 
     FColorItems := Configuration.ColorItems;
@@ -547,10 +541,10 @@ begin
 
     ResetMetaForNewOpenTextCheckBox.Checked := Configuration.ResetMetaForNewOpenText;
     IgnoreDeclaredMetaCheckBox.Checked := Configuration.IgnoreDeclaredMeta;
-    IndentMetaXmlCheckBox.Checked := Configuration.MetaTextFormatting = Formatting.Indented;
-    MetaIndentationEdit.Text := Configuration.MetaTextIndentation.ToString;
-    MetaIndentCharComboBox.ItemIndex := IndexOfData(MetaIndentCharComboBox, TObject(Configuration.MetaTextIndentChar));
-    EmbeddedMetaMarginEdit.Text := Configuration.EmbeddedMetaMargin.ToString;
+    IndentMetaXmlCheckBox.Checked := Configuration.MetaTextFormatting;
+    MetaIndentationEdit.Text := IntToStr(Configuration.MetaTextIndentation);
+    MetaIndentCharComboBox.ItemIndex := IndexOfData(MetaIndentCharComboBox, Integer(Configuration.MetaTextIndentChar));
+    EmbeddedMetaMarginEdit.Text := IntToStr(Configuration.EmbeddedMetaMargin);
     SaveDesignOnlyMetaCheckBox.Checked := Configuration.SaveDesignOnlyMeta;
     SaveMetaWithExplicitIndicesCheckBox.Checked := Configuration.SaveMetaWithExplicitIndices;
 
@@ -747,7 +741,7 @@ begin
     begin
       if Form.SelectedDefault then
       begin
-        FColorItems.Reset;
+        FColorItems.LoadFromDefault;
         FResolvedColors := FColorItems.Resolve; // need to get example
         LoadColor;
       end
@@ -801,25 +795,26 @@ end;
 
 procedure TOptionsForm.Save;
 
-  function GetSelectedData(comboBox: TComboBoxEx): TObject;
+  function GetSelectedData(comboBox: TComboBoxEx): Integer;
   var
     ItemIndex: Integer;
   begin
     ItemIndex := comboBox.ItemIndex;
     if ItemIndex < 0 then
-      Result := nil
+      Result := 0
     else
-      Result := comboBox.ItemsEx[ItemIndex].Data;
+      Result := Integer(comboBox.ItemsEx[ItemIndex].Data);
   end;
 
 var
   DummyAutoGridRowHeight: Boolean;
   ManualGridRowHeight, DummyActualGridRowHeight: Integer;
+  IntValue: Integer;
 begin
-  Configuration.DefaultNonViewableCharFormat := GetSelectedData(DefaultNonViewableCharacterFormatComboBox) as TNonViewableCharFormat;
-  Configuration.DisplayCultureType := GetSelectedData(DisplayCultureComboBox) as TDisplayCultureType;
+  Configuration.DefaultNonViewableCharFormat := TNonViewableCharFormat(GetSelectedData(DefaultNonViewableCharacterFormatComboBox));
+  Configuration.DisplayCultureType := TDisplayCultureType(GetSelectedData(DisplayCultureComboBox));
   Configuration.NamedDisplayCultureName := NamedDisplayCultureEdit.Text;
-  Configuration.DisplayCharEncodingType := GetSelectedData(DisplayEncodingComboBox) as TDisplayCharEncodingType;
+  Configuration.DisplayCharEncodingType := TDisplayCharEncodingType(GetSelectedData(DisplayEncodingComboBox));
   Configuration.NamedDisplayCharEncodingName := NamedDisplayEncodingEdit.Text;
 
   Configuration.TextFont := FTextFont;
@@ -842,20 +837,23 @@ begin
   end;
   Configuration.GridNullText := GridNullTextEdit.Text;
 
-  GridRowHeightEdit.Text := Configuration.GridManualRowHeight.ToString;
+  GridRowHeightEdit.Text := IntToStr(Configuration.GridManualRowHeight);
 
   SaveColor;
   Configuration.SetColorItems(FColorItems);
 
   Configuration.ResetMetaForNewOpenText := ResetMetaForNewOpenTextCheckBox.Checked;
   Configuration.IgnoreDeclaredMeta := IgnoreDeclaredMetaCheckBox.Checked;
-  if IndentMetaXmlCheckBox.Checked then
-    Configuration.MetaTextFormatting := Formatting.Indented
-  else
-    Configuration.MetaTextFormatting := Formatting.None;
-  Configuration.MetaTextIndentation := System.Int32.Parse(MetaIndentationEdit.Text);
-  Configuration.MetaTextIndentChar := GetSelectedData(MetaIndentCharComboBox) as Char;
-  Configuration.EmbeddedMetaMargin := System.Int32.Parse(EmbeddedMetaMarginEdit.Text);
+  Configuration.MetaTextFormatting := IndentMetaXmlCheckBox.Checked;
+  if TryStrToInt(MetaIndentationEdit.Text, IntValue) then
+  begin
+    Configuration.MetaTextIndentation := IntValue;
+  end;
+  Configuration.MetaTextIndentChar := Char(GetSelectedData(MetaIndentCharComboBox));
+  if TryStrToInt(EmbeddedMetaMarginEdit.Text, IntValue) then
+  begin
+    Configuration.EmbeddedMetaMargin := IntValue;
+  end;
   Configuration.SaveDesignOnlyMeta := SaveDesignOnlyMetaCheckBox.Checked;
   Configuration.SaveMetaWithExplicitIndices := SaveMetaWithExplicitIndicesCheckBox.Checked;
 
@@ -907,7 +905,7 @@ begin
   FResolvedColors := FColorItems.Resolve;
 end;
 
-procedure TOptionsForm.SelectFont(var targetFont: TFont; exampleControl: TCustomEdit);
+procedure TOptionsForm.SelectFont(var targetFont: TFont; exampleControl: TEdit);
 begin
   FontDialog.Font := targetFont;
   if FontDialog.Execute then
@@ -917,7 +915,17 @@ begin
   end;
 end;
 
-procedure TOptionsForm.SetControlError(control: TWinControl);
+procedure TOptionsForm.SelectFont(var targetFont: TFont; exampleControl: TMemo);
+begin
+  FontDialog.Font := targetFont;
+  if FontDialog.Execute then
+  begin
+    targetFont.Assign(FontDialog.Font);
+    exampleControl.Font := targetFont;
+  end;
+end;
+
+procedure TOptionsForm.SetControlError(control: TEdit);
 begin
   if control.Color <> Configuration.Colors[rcControlError].Background then
   begin
@@ -963,17 +971,6 @@ begin
       else FSourceOnNewOpenText := soText;
     end;
     LoadSourceOnNewOpenText;
-  end;
-end;
-
-function TOptionsForm.TryStrToInteger(str: string; out value: Integer): Boolean;
-begin
-  try
-    value := System.Int32.Parse(str);
-    Result := True;
-  except
-    on FormatException do Result := False;
-    on OverflowException do Result := False;
   end;
 end;
 

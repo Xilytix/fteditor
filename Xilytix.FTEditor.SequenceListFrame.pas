@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequenceListFrame;
 
@@ -45,7 +42,7 @@ type
     PropertiesPanel: TPanel;
     Buttons: TCategoryButtons;
     ButtonsPanel: TPanel;
-    AddItemComboBox: TComboBoxEx;
+    AddItemComboBox: TComboBox;
     AddRemovePanel: TPanel;
     RemoveButton: TButton;
     PropertyButtonsSplitter: TSplitter;
@@ -82,12 +79,12 @@ type
       TItemInfoArray = array[TItemTypeId] of TItemInfoRec;
 
       TRedirectTypeInfoRec = record
-        RedirectType: TFieldedTextSequenceRedirectType;
+        RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
         Id: TItemTypeId;
         FrameClass: TSequenceRedirect_BasePropertiesFrameClass;
       end;
 
-      TRedirectTypeInfoArray = array[TFieldedTextSequenceRedirectType] of TRedirectTypeInfoRec;
+      TRedirectTypeInfoArray = array[TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType] of TRedirectTypeInfoRec;
 
     const
       SequencesCategoryIndex = 0;
@@ -105,7 +102,7 @@ type
         (Id: itRedirect_ExactFloat; AddCaption: 'Redirect: Float'),
         (Id: itRedirect_ExactDateTime; AddCaption: 'Redirect: DateTime'),
         (Id: itRedirect_Date; AddCaption: 'Redirect: Date'),
-        (Id: itRedirect_ExactDecimal; AddCaption: 'Redirect: Decimal')
+        (Id: itRedirect_ExactDecimal; AddCaption: 'Redirect: Currency')
       );
 
       RedirectTypeInfoArray: TRedirectTypeInfoArray =
@@ -119,7 +116,7 @@ type
         (RedirectType: ftrtExactDateTime; Id: itRedirect_ExactDateTime;
                                    FrameClass: TSequenceRedirect_ExactDateTimePropertiesFrame),
         (RedirectType: ftrtDate; Id: itRedirect_Date; FrameClass: TSequenceRedirect_DatePropertiesFrame),
-        (RedirectType: ftrtExactDecimal; Id: itRedirect_ExactDecimal; FrameClass: TSequenceRedirect_DecimalPropertiesFrame)
+        (RedirectType: ftrtExactCurrency; Id: itRedirect_ExactDecimal; FrameClass: TSequenceRedirect_DecimalPropertiesFrame)
       );
 
     var
@@ -152,7 +149,7 @@ type
     procedure PopulateAddItemComboBox(addOnly: Boolean);
 
     function GetFocusedCategory: TButtonCategory;
-    function GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirectType;
+    function GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
 
     procedure AddSequence;
     function AddSequenceItem(field: TFieldedTextField): Integer;
@@ -207,8 +204,7 @@ type
 implementation
 
 uses
-  System.Collections,
-  Borland.Vcl.Types,
+  Types,
   Xilytix.FTEditor.SequencePropertiesFrame,
   Xilytix.FTEditor.SequenceItemPropertiesFrame;
 
@@ -221,7 +217,7 @@ var
   Data: TObject;
   Id: TItemTypeId;
 begin
-  Data := AddItemComboBox.ItemsEx[AddItemComboBox.ItemIndex].Data;
+  Data := AddItemComboBox.Items.Objects[AddItemComboBox.ItemIndex];
   if Assigned(Data) then
   begin
     Id := TItemTypeId(Data);
@@ -262,7 +258,7 @@ begin
     ButtonGroupIdx := ButtonGroup.ItemIndex;
     if ButtonGroupIdx >= 0 then
     begin
-      Field := ButtonGroup.Items[ButtonGroupIdx].Data as TFieldedTextField;
+      Field := TObject(ButtonGroup.Items[ButtonGroupIdx].Data) as TFieldedTextField;
 
       if Assigned(ModifySequenceItem) then
       begin
@@ -292,8 +288,8 @@ begin
       Buttons.RemoveInsertionPoints;
       if TargetCategory = FSequencesCategory then
       begin
-        SourceSequence := SourceButton.Data as TFieldedTextSequence;
-        TargetSequence := TargetButton.Data as TFieldedTextSequence;
+        SourceSequence := TObject(SourceButton.Data) as TFieldedTextSequence;
+        TargetSequence := TObject(TargetButton.Data) as TFieldedTextSequence;
         FEditEngine.MoveSequence(SourceSequence.Index, TargetSequence.Index);
         FSelectedSequenceCaption := CalculateSequenceCaption(FSelectedSequence);
       end
@@ -301,8 +297,8 @@ begin
       begin
         if TargetCategory = FSequenceItemsCategory then
         begin
-          SourceSequenceItem := SourceButton.Data as TFieldedTextSequenceItem;
-          TargetSequenceItem := TargetButton.Data as TFieldedTextSequenceItem;
+          SourceSequenceItem := TObject(SourceButton.Data) as TFieldedTextSequenceItem;
+          TargetSequenceItem := TObject(TargetButton.Data) as TFieldedTextSequenceItem;
           FEditEngine.MoveSequenceItem(FSelectedSequence, SourceSequenceItem.Index, TargetSequenceItem.Index);
           FSelectedSequenceItem := SourceSequenceItem;
           FSelectedSequenceItemCaption := CalculateSequenceItemCaption(FSelectedSequenceItem);
@@ -311,8 +307,8 @@ begin
         begin
           if TargetCategory = FRedirectsCategory then
           begin
-            SourceRedirect := SourceButton.Data as TFieldedTextSequenceRedirect;
-            TargetRedirect := TargetButton.Data as TFieldedTextSequenceRedirect;
+            SourceRedirect := TObject(SourceButton.Data) as TFieldedTextSequenceRedirect;
+            TargetRedirect := TObject(TargetButton.Data) as TFieldedTextSequenceRedirect;
             FEditEngine.MoveSequenceRedirect(FSelectedSequenceItem, SourceRedirect.Index, TargetRedirect.Index);
             FSelectedRedirect := SourceRedirect;
             FSelectedRedirectCaption := CalculateRedirectCaption(FSelectedRedirect);
@@ -445,32 +441,32 @@ begin
     ftrtBoolean:
     begin
       Abbr := 'Boo';
-      Value := (redirect as TFieldedTextSequenceRedirect_Boolean).Value.ToString;
+      Value := BoolToStr((redirect as TFieldedTextSequenceRedirect_Boolean).Value);
     end;
     ftrtExactInteger:
     begin
       Abbr := 'ExInt';
-      Value := (redirect as TFieldedTextSequenceRedirect_ExactInteger).Value.ToString;
+      Value := IntToStr((redirect as TFieldedTextSequenceRedirect_ExactInteger).Value);
     end;
     ftrtExactFloat:
     begin
       Abbr := 'ExFlt';
-      Value := (redirect as TFieldedTextSequenceRedirect_ExactFloat).Value.ToString;
+      Value := FloatToStr((redirect as TFieldedTextSequenceRedirect_ExactFloat).Value);
     end;
     ftrtExactDateTime:
     begin
       Abbr := 'ExDtm';
-      Value := (redirect as TFieldedTextSequenceRedirect_ExactDateTime).Value.ToString;
+      Value := DateTimeToStr((redirect as TFieldedTextSequenceRedirect_ExactDateTime).Value);
     end;
     ftrtDate:
     begin
       Abbr := 'Date';
-      Value := (redirect as TFieldedTextSequenceRedirect_Date).Value.ToString;
+      Value := DateToStr((redirect as TFieldedTextSequenceRedirect_Date).Value);
     end;
-    ftrtExactDecimal:
+    ftrtExactCurrency:
     begin
       Abbr := 'ExDec';
-      Value := (redirect as TFieldedTextSequenceRedirect_ExactDecimal).Value.ToString;
+      Value := CurrToStr((redirect as TFieldedTextSequenceRedirect_ExactDecimal).Value);
     end
     else
     begin
@@ -480,7 +476,7 @@ begin
     end;
   end;
 
-  Result := redirect.Index.ToString + '.' + Abbr + ': ' + Value;
+  Result := IntToStr(redirect.Index) + '.' + Abbr + ': ' + Value;
 end;
 
 function TSequenceListFrame.CalculateSequenceCaption(sequence: TFieldedTextSequence): string;
@@ -492,7 +488,7 @@ function TSequenceListFrame.CalculateSequenceItemCaption(item: TFieldedTextSeque
 var
   Field: TFieldedTextField;
 begin
-  Result := item.Index.ToString;
+  Result := IntToStr(item.Index);
   Field := item.Field;
   if Assigned(Field) then
   begin
@@ -515,7 +511,7 @@ end;
 class constructor TSequenceListFrame.Create;
 var
   Id: TItemTypeId;
-  &Type: TFieldedTextSequenceRedirectType;
+  RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
 begin
   for Id := Low(TItemTypeId) to High(TItemTypeId) do
   begin
@@ -525,9 +521,9 @@ begin
     end;
   end;
 
-  for &Type := Low(TFieldedTextSequenceRedirectType) to High(TFieldedTextSequenceRedirectType) do
+  for RedirectType := Low(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType) to High(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType) do
   begin
-    if &Type <> RedirectTypeInfoArray[&Type].RedirectType then
+    if RedirectType <> RedirectTypeInfoArray[RedirectType].RedirectType then
     begin
       raise Exception.Create('RedirectTypeInfoArray out of order');
     end;
@@ -573,9 +569,9 @@ begin
   end;
 end;
 
-function TSequenceListFrame.GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirectType;
+function TSequenceListFrame.GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
 var
-  I: TFieldedTextSequenceRedirectType;
+  I: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
   Found: Boolean;
 begin
   Result := ftrtExactString; // avoid warning
@@ -685,7 +681,7 @@ begin
         begin
           if Assigned(Button) then
           begin
-            addToSequence := Button.Data as TFieldedTextSequence;
+            addToSequence := TObject(Button.Data) as TFieldedTextSequence;
             Result := True;
           end;
         end
@@ -701,7 +697,7 @@ begin
             end
             else
             begin
-              modifySequenceItem := Button.Data as TFieldedTextSequenceItem;
+              modifySequenceItem := TObject(Button.Data) as TFieldedTextSequenceItem;
               Result := True;
             end;
           end;
@@ -747,7 +743,7 @@ begin
   for I := ButtonCount-1 downto 0 do
   begin
     ButtonItem := FSequenceItemsCategory.Items[I];
-    SequenceItem := ButtonItem.Data as TFieldedTextSequenceItem;
+    SequenceItem := TObject(ButtonItem.Data) as TFieldedTextSequenceItem;
     if Assigned(SequenceItem) and (SequenceItem.Field = field) then
     begin
       FSequenceItemsCategory.Items.Delete(I);
@@ -759,16 +755,16 @@ procedure TSequenceListFrame.PopulateAddItemComboBox(addOnly: Boolean);
 var
   Id: TItemTypeId;
 begin
-  AddItemComboBox.ItemsEx.Clear;
-  AddItemComboBox.ItemsEx.AddItem('<Add>', -1, -1, -1, 0, nil);
+  AddItemComboBox.Items.Clear;
+  AddItemComboBox.Items.Add('<Add>');
   AddItemComboBox.ItemIndex := 0;
   if not addOnly then
   begin
-    AddItemComboBox.ItemsEx.AddItem(ItemInfoArray[itSequence].AddCaption, -1, -1, -1, 0, ItemInfoArray[itSequence].Id);
+    AddItemComboBox.Items.AddObject(ItemInfoArray[itSequence].AddCaption, TObject(ItemInfoArray[itSequence].Id));
 
     if Assigned(FSelectedSequence) and (FEditEngine.FieldCount > 0) then
     begin
-      AddItemComboBox.ItemsEx.AddItem(ItemInfoArray[itSequenceItem].AddCaption, -1, -1, -1, 0, ItemInfoArray[itSequenceItem].Id)
+      AddItemComboBox.Items.AddObject(ItemInfoArray[itSequenceItem].AddCaption, TObject(ItemInfoArray[itSequenceItem].Id))
     end;
 
     if Assigned(FSelectedSequenceItem) then
@@ -777,7 +773,7 @@ begin
       begin
         case Id of
           itSequence, itSequenceItem: ;
-          else AddItemComboBox.ItemsEx.AddItem(ItemInfoArray[Id].AddCaption, -1, -1, -1, 0, ItemInfoArray[Id].Id);
+          else AddItemComboBox.Items.AddObject(ItemInfoArray[Id].AddCaption, TObject(ItemInfoArray[Id].Id));
         end;
       end;
     end;
@@ -789,10 +785,10 @@ begin
   FEditEngine := myEditEngine;
   FBinder := myBinder;
 
-  Include(FEditEngine.RefreshSequencesControlsEvent, HandleRefreshSequencesControlsEvent);
-  Include(FEditEngine.NewOpenTextEvent, HandleNewOpenTextEvent);
-  Include(FBinder.FieldCaptionChangeEvent, HandleFieldCaptionChangeEvent);
-  Include(FBinder.SsirCaptionChangeEvent, HandleSsirCaptionChangeEvent);
+  FEditEngine.SubscribeRefreshSequencesControlsEvent(HandleRefreshSequencesControlsEvent);
+  FEditEngine.SubscribeNewOpenTextEvent(HandleNewOpenTextEvent);
+  FBinder.SubscribeFieldCaptionChangeEvent(HandleFieldCaptionChangeEvent);
+  FBinder.SubscribeSsirCaptionChangeEvent(HandleSsirCaptionChangeEvent);
 end;
 
 procedure TSequenceListFrame.ProcessFocusRedirect(idx: Integer);
@@ -804,7 +800,7 @@ begin
   SelectRedirect(idx);
 
   RedirectPropertiesFrame := nil; // avoid warning
-  Redirect := FRedirectsCategory.Items[idx].Data as TFieldedTextSequenceRedirect;
+  Redirect := TObject(FRedirectsCategory.Items[idx].Data) as TFieldedTextSequenceRedirect;
 
   KeepPropertiesFrame := Assigned(FPropertiesFrame) and (FPropertiesFrame is TSequenceRedirect_BasePropertiesFrame);
   if KeepPropertiesFrame then
@@ -893,7 +889,7 @@ end;
 procedure TSequenceListFrame.AddRedirect(Id: TItemTypeId);
 var
   Idx: Integer;
-  RedirectType: TFieldedTextSequenceRedirectType;
+  RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
   Redirect: TFieldedTextSequenceRedirect;
   ButtonItem: TButtonItem;
 begin
@@ -1189,7 +1185,7 @@ end;
 
 procedure TSequenceListFrame.SelectRedirect(idx: Integer);
 begin
-  FSelectedRedirect := FRedirectsCategory.Items[idx].Data as TFieldedTextSequenceRedirect;
+  FSelectedRedirect := TObject(FRedirectsCategory.Items[idx].Data) as TFieldedTextSequenceRedirect;
   FSelectedRedirectCaption := CalculateRedirectCaption(FSelectedRedirect);
 end;
 
@@ -1197,7 +1193,7 @@ procedure TSequenceListFrame.SelectSequence(idx: Integer; forceRefreshItems: Boo
 var
   NewSelectedSequence: TFieldedTextSequence;
 begin
-  NewSelectedSequence := FSequencesCategory.Items[idx].Data as TFieldedTextSequence;
+  NewSelectedSequence := TObject(FSequencesCategory.Items[idx].Data) as TFieldedTextSequence;
 
   if NewSelectedSequence <> FSelectedSequence then
   begin
@@ -1221,7 +1217,7 @@ procedure TSequenceListFrame.SelectSequenceItem(idx: Integer; forceRefreshRedire
 var
   NewSelectedSequenceItem: TFieldedTextSequenceItem;
 begin
-  NewSelectedSequenceItem := FSequenceItemsCategory.Items[idx].Data as TFieldedTextSequenceItem;
+  NewSelectedSequenceItem := TObject(FSequenceItemsCategory.Items[idx].Data) as TFieldedTextSequenceItem;
 
   if NewSelectedSequenceItem <> FSelectedSequenceItem then
   begin
@@ -1251,10 +1247,10 @@ end;
 
 procedure TSequenceListFrame.Unprepare;
 begin
-  Exclude(FEditEngine.RefreshSequencesControlsEvent, HandleRefreshSequencesControlsEvent);
-  Exclude(FEditEngine.NewOpenTextEvent, HandleNewOpenTextEvent);
-  Exclude(FBinder.SsirCaptionChangeEvent, HandleSsirCaptionChangeEvent);
-  Exclude(FBinder.FieldCaptionChangeEvent, HandleFieldCaptionChangeEvent);
+  FEditEngine.UnsubscribeRefreshSequencesControlsEvent(HandleRefreshSequencesControlsEvent);
+  FEditEngine.UnsubscribeNewOpenTextEvent(HandleNewOpenTextEvent);
+  FBinder.UnsubscribeSsirCaptionChangeEvent(HandleSsirCaptionChangeEvent);
+  FBinder.UnsubscribeFieldCaptionChangeEvent(HandleFieldCaptionChangeEvent);
 
   FEditEngine := nil;
   FBinder := nil;

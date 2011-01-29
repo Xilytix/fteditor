@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.EditData;
 
@@ -14,6 +11,7 @@ uses
   Contnrs,
   Generics.Defaults,
   Generics.Collections,
+  Rtti,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Common,
@@ -25,26 +23,28 @@ type
   TCell = class(TObject)
   strict private
     FActiveIndex: Integer;
-    FValue: TObject;
+    FValue: Variant;
     FValueAsString: string;
+    FValueAsStringEmpty: Boolean;
     FSequenceItem: TFieldedTextSequenceItem;
     FFilePos: Int64;
-    FRichPos: Integer;
     FLineNumber: Integer;
     FLinePos: Integer;
     FTextLength: Integer;
     FRichLength: Integer;
     FRow: TRow;
-    FDisplayCulture: TLocaleSettings;
+    FDisplayCulture: TFieldedTextLocaleSettings;
     FError: Boolean;
 
     FGridResolvedColorId: TResolvedColorId;
     FTextResolvedColorId: TResolvedColorId;
 
     function GetValueAsString: string;
+  strict protected
+    FRichPos: Integer;
   public
     constructor Create(myActiveIndex: Integer;
-                       myValue: TObject;
+                       const myValue: Variant;
                        mySequenceItem: TFieldedTextSequenceItem;
                        myFilePos: Int64;
                        myRichPos: Integer;
@@ -53,7 +53,7 @@ type
                        myTextLength: Integer;
                        myRichLength: Integer;
                        myRow: TRow;
-                       myDisplayCulture: TLocaleSettings);
+                       myDisplayCulture: TFieldedTextLocaleSettings);
     property ActiveIndex: Integer read FActiveIndex;
     property SequenceItem: TFieldedTextSequenceItem read FSequenceItem;
     property FilePos: Int64 read FFilePos;
@@ -62,7 +62,7 @@ type
     property LinePos: Integer read FLinePos;
     property TextLength: Integer read FTextLength;
     property RichLength: Integer read FRichLength;
-    property Value: TObject read FValue;
+    property Value: Variant read FValue;
     property ValueAsString: string read GetValueAsString;
     property Error: Boolean read FError write FError;
 
@@ -74,13 +74,11 @@ type
     property TextResolvedColorId: TResolvedColorId read FTextResolvedColorId write FTextResolvedColorId;
   end;
 
-  TCellCollection = class(TObjectList)
-  strict private
-    function GetCells(idx: Integer): TCell;
-    function GetLast: TCell;
+  TCellCollection = TObjectList<TCell>;
+
+  TSearchCell = class(TCell)
   public
-    property Cells[idx: Integer]: TCell read GetCells; default;
-    property Last: TCell read GetLast;
+    procedure SetRichPos(Value: Integer);
   end;
 
   TRow = class
@@ -121,18 +119,29 @@ type
   TEditData = class
   strict private
     type
-      TAllCellsEntry = class(TNonRefCountedInterfacedObject, IComparable)
+      TAllCellsEntry = record
         Col: Integer;
         Row: Integer;
         Cell: TCell;
         function GetRichPos: Integer;
         property RichPos: Integer read GetRichPos;
+      end;
 
-        function CompareTo(obj: TObject): Integer;
+      IAllCellsEntryComparer = IComparer<TAllCellsEntry>;
+      TAllCellsEntryComparer = class(TComparer<TAllCellsEntry>)
+      public
+        function Compare(const Left, Right: TAllCellsEntry): Integer; override;
       end;
 
       TAllCells = class(TList<TAllCellsEntry>)
       strict private
+        class var
+          FEntryComparer: IAllCellsEntryComparer;
+          FSearchEntry: TAllCellsEntry;
+
+        class constructor Create;
+        class destructor Destroy;
+
         function GetCells(idx: Integer): TCell;
         function GetCols(idx: Integer): Integer;
         function GetRows(idx: Integer): Integer;
@@ -145,7 +154,7 @@ type
         function Find(richPos: Integer; out idx: Integer): Boolean;
       end;
 
-      TRows = class(TObjectList)
+      TRows = class(TObjectList<TRow>)
       strict private
         function GetRows(idx: Integer): TRow;
         function GetLastRow: TRow;
@@ -160,7 +169,7 @@ type
         RichPos: Integer;
         Length: Integer;
 
-        function CompareTo(obj: TObject): Integer;
+//        function CompareTo(obj: TObject): Integer;
       end;
       TLines = array of TLineRec;
 
@@ -178,7 +187,7 @@ type
 
       FMainHeadingRow: TRow;
 
-      FDisplayCulture: TLocaleSettings;
+      FDisplayCulture: TFieldedTextLocaleSettings;
 
     procedure GrowLines;
 
@@ -198,7 +207,7 @@ type
     property LastRow: TRow read GetLastRow;
     property LastRowIdx: Integer read GetLastRowIdx;
   public
-    constructor Create(myDisplayCulture: TLocaleSettings);
+    constructor Create(myDisplayCulture: TFieldedTextLocaleSettings);
     property RowCount: Integer read GetRowCount;
     property HeadingCount: Integer read FHeadingCount;
     property Heading[aCol: Integer]: string read GetHeading;
@@ -215,7 +224,7 @@ type
     property RecordCount: Integer read FRecordCount;
 
     procedure Reset;
-    procedure ResetParsing(myDisplayCulture: TLocaleSettings);
+    procedure ResetParsing(myDisplayCulture: TFieldedTextLocaleSettings);
     procedure Resolve;
 
     procedure StartLine(const filePos: Int64);
@@ -224,7 +233,7 @@ type
     function AddHeading(main: Boolean): Integer;
     function AddRecord(recNr, tableNr: Integer): Integer;
     procedure SetLastRecordAsNewTable;
-    procedure AddCell(activeIndex: Integer; value: TObject; sequenceItem: TFieldedTextSequenceItem;
+    procedure AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedTextSequenceItem;
                       filePos: Int64; textLength: Integer);
     procedure SetError(activeIndex: Integer);
 
@@ -232,18 +241,20 @@ type
 
     procedure FindCellAtRichPos(pos: Integer; out aCell: TCell; out aCol, aRow: Integer);
 
-    property DisplayCulture: TLocaleSettings read FDisplayCulture write FDisplayCulture;
+    property DisplayCulture: TFieldedTextLocaleSettings read FDisplayCulture write FDisplayCulture;
   end;
 
 implementation
 
 uses
+  Math,
+  Variants,
   Xilytix.FTEditor.Configuration;
 
 { TCell }
 
 constructor TCell.Create(myActiveIndex: Integer;
-  myValue: TObject;
+  const myValue: Variant;
   mySequenceItem: TFieldedTextSequenceItem;
   myFilePos: Int64;
   myRichPos: Integer;
@@ -252,7 +263,7 @@ constructor TCell.Create(myActiveIndex: Integer;
   myTextLength: Integer;
   myRichLength: Integer;
   myRow: TRow;
-  myDisplayCulture: TLocaleSettings);
+  myDisplayCulture: TFieldedTextLocaleSettings);
 begin
   inherited Create;
   FActiveIndex := myActiveIndex;
@@ -267,20 +278,24 @@ begin
   FRow := myRow;
   FDisplayCulture := myDisplayCulture;
 
-  FValueAsString := nil;
+  FValueAsString := '';
+  FValueAsStringEmpty := True;
 end;
 
 function TCell.GetValueAsString: string;
 begin
-  if not Assigned(FValueAsString) then
+  if FValueAsStringEmpty then
   begin
-    if not Assigned(FValue) then
+    if VarIsEmpty(FValue) or VarIsNull(FValue) then
       FValueAsString := Configuration.GridNullText
     else
-      FValueAsString := FValue.ToString
+    begin
+      FValueAsString := FValue;
+      FValueAsStringEmpty := False;
+    end;
   end;
 
-  Result := FValueAsString
+  Result := FValueAsString;
 end;
 
 procedure TCell.Resolve;
@@ -351,12 +366,23 @@ procedure TEditData.TAllCells.Add(aCell: TCell; aCol, aRow: Integer);
 var
   Entry: TAllCellsEntry;
 begin
-  Entry := TAllCellsEntry.Create;
   Entry.Cell := aCell;
   Entry.Col := aCol;
   Entry.Row := aRow;
 
   inherited Add(Entry);
+end;
+
+class constructor TEditData.TAllCells.Create;
+begin
+  FEntryComparer := TAllCellsEntryComparer.Create;
+  FSearchEntry.Cell := TSearchCell.Create(-1, Unassigned, nil, -1, -1, -1, -1, -1, -1, nil,
+                                          TFieldedTextLocaleSettings.Invariant);
+end;
+
+class destructor TEditData.TAllCells.Destroy;
+begin
+  FSearchEntry.Cell.Free;
 end;
 
 function TEditData.TAllCells.Find(richPos: Integer; out idx: Integer): Boolean;
@@ -367,8 +393,8 @@ begin
     Result := False
   else
   begin
-    idx := BinarySearch(TObject(richPos));
-    if idx >= 0 then
+    TSearchCell(FSearchEntry.Cell).SetRichPos(richPos);
+    if BinarySearch(FSearchEntry, idx, FEntryComparer) then
       Result := True
     else
     begin
@@ -387,22 +413,22 @@ end;
 
 function TEditData.TAllCells.GetCells(idx: Integer): TCell;
 begin
-  Result := (Item[idx] as TAllCellsEntry).Cell;
+  Result := Items[idx].Cell;
 end;
 
 function TEditData.TAllCells.GetCols(idx: Integer): Integer;
 begin
-  Result := (Item[idx] as TAllCellsEntry).Col;
+  Result := Items[idx].Col;
 end;
 
 function TEditData.TAllCells.GetRows(idx: Integer): Integer;
 begin
-  Result := (Item[idx] as TAllCellsEntry).Row;
+  Result := Items[idx].Row;
 end;
 
 { TEditData }
 
-procedure TEditData.AddCell(activeIndex: Integer; value: TObject; sequenceItem: TFieldedTextSequenceItem; filePos: Int64;
+procedure TEditData.AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedTextSequenceItem; filePos: Int64;
   textLength: Integer);
 var
   Cell: TCell;
@@ -466,7 +492,7 @@ var
   Row: TRow;
 begin
   Row := TRow.Create(heading, number, FLineCount-1, tableNr);
-  Result := FRows.AddRow(Row);
+  Result := FRows.Add(Row);
 end;
 
 function TEditData.CanSelectCell(ACol, ARow: Integer): Boolean;
@@ -479,7 +505,7 @@ begin
   Result := FRows.CheckGetRow(aRow);
 end;
 
-constructor TEditData.Create(myDisplayCulture: TLocaleSettings);
+constructor TEditData.Create(myDisplayCulture: TFieldedTextLocaleSettings);
 begin
   inherited Create;
 
@@ -540,11 +566,11 @@ end;
 function TEditData.GetHeading(aCol: Integer): string;
 begin
   if not Assigned(FMainHeadingRow) then
-    Result := nil
+    Result := ''
   else
   begin
     if aCol >= FMainHeadingRow.Cells.Count then
-      Result := nil
+      Result := ''
     else
       Result := FMainHeadingRow.Cells[aCol].ValueAsString;
   end;
@@ -594,10 +620,10 @@ end;
 procedure TEditData.Reset;
 begin
   FText := '';
-  ResetParsing(CultureInfo.InvariantCulture);
+  ResetParsing(TFieldedTextLocaleSettings.Invariant);
 end;
 
-procedure TEditData.ResetParsing(myDisplayCulture: CultureInfo);
+procedure TEditData.ResetParsing(myDisplayCulture: TFieldedTextLocaleSettings);
 begin
   FRows.Clear;
   FAllCells.Clear;
@@ -687,7 +713,7 @@ end;
 
 { TCellCollection }
 
-function TCellCollection.GetCells(idx: Integer): TCell;
+{function TCellCollection.GetCells(idx: Integer): TCell;
 begin
   Result := TCell(Items[idx]);
 end;
@@ -698,7 +724,7 @@ begin
     Result := nil
   else
     Result := Cells[Count-1];
-end;
+end;}
 
 { TRow }
 
@@ -770,21 +796,31 @@ end;
 
 { TEditData.TLineRec }
 
-function TEditData.TLineRec.CompareTo(obj: TObject): Integer;
+{function TEditData.TLineRec.CompareTo(obj: TObject): Integer;
 begin
   Result := RichPos.CompareTo(obj)
-end;
+end;}
 
 { TEditData.TAllCellsRec }
-
-function TEditData.TAllCellsEntry.CompareTo(obj: TObject): Integer;
-begin
-  Result := Cell.RichPos.CompareTo(obj);
-end;
 
 function TEditData.TAllCellsEntry.GetRichPos: Integer;
 begin
   Result := Cell.RichPos;
+end;
+
+{ TSearchCell }
+
+procedure TSearchCell.SetRichPos(Value: Integer);
+begin
+  FRichPos := Value;
+end;
+
+{ TEditData.TAllCellsEntryComparer }
+
+function TEditData.TAllCellsEntryComparer.Compare(const Left,
+  Right: TAllCellsEntry): Integer;
+begin
+  Result := CompareValue(Left.Cell.RichPos, Right.Cell.RichPos);
 end;
 
 end.

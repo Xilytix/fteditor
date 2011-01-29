@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.CommandLineParser;
 
@@ -32,6 +29,8 @@ type
 implementation
 
 uses
+  SysUtils,
+  IOUtils,
   Dialogs,
   Xilytix.FTEditor.Common;
 
@@ -48,7 +47,7 @@ var
 begin
   if ParamCount > 0 then
   begin
-    ParamLine := CmdLine.SubString(ParamStr(0).Length + 3);
+    ParamLine := Copy(CmdLine, Length(ParamStr(0)) + 3, MaxInt);
     if Length(ParamLine) > 0 then
     begin
       if (Length(ParamLine) > 1) and (ParamLine[1] = '"') and (ParamLine[Length(ParamLine)] = '"') then
@@ -58,7 +57,7 @@ begin
     end;
 
     try
-      Extension := Path.GetExtension(ParamLine);
+      Extension := TPath.GetExtension(ParamLine);
       if Length(Extension) > 0 then
       begin
         if Extension[1] = '.' then
@@ -69,13 +68,13 @@ begin
             Extension := Copy(Extension, 2, MaxInt);
         end;
 
-        if Extension.ToUpper = TCommon.MetaFileNameExtension.ToUpper then
+        if SameText(Extension, TCommon.MetaFileNameExtension) then
           SetMetaFilePath(ParamLine)
         else
           SetTextFilePath(ParamLine);
       end;
     except
-      on ArgumentException do ;
+      on Exception do ;
     end;
 
 {    State := psNotInParam;

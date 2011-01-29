@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.DateTimeFieldPropertiesFrame;
 
@@ -52,7 +49,8 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Globalization,
+  Rtti,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.StandardFields,
   Xilytix.FTEditor.Binder;
 
@@ -101,21 +99,26 @@ begin
     FBinder.LoadDateTimePickers(ConstantDatePicker, ConstantTimePicker, FFieldIndex)
   else
   begin
-    ConstantDatePicker.Date := DateTime.Create(2000, 1, 1);
+    ConstantDatePicker.Date := EncodeDate(2000, 1, 1);
     ConstantTimePicker.Time := 0.0;
   end;
 end;
 
 procedure TDateTimeFieldPropertiesFrame.StylesButtonClick(Sender: TObject);
 var
+  Value: TValue;
+  Styles: TDotNetDateTimeStyles;
   NewValue: string;
-  DefaultStyles: DateTimeStyles;
+  DefaultStyles: TDotNetDateTimeStyles;
 begin
   DefaultStyles := TFieldedTextField_DateTime.DefaultStyles;
 
+  Value := FBinder.GetPropertyValue(StylesEdit, FFieldIndex);
+  Styles := Value.AsType<TDotNetDateTimeStyles>;
+
   if FBinder.EditDateTimeStyles(Self,
                                 StylesEdit.Text,
-                                FBinder.GetPropertyValue(StylesEdit, FFieldIndex) as DateTimeStyles,
+                                Styles,
                                 DefaultStyles,
                                 NewValue) then
   begin

@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.SequencesFrame;
 
@@ -22,6 +19,7 @@ uses
   Dialogs,
   ComCtrls,
   Xilytix.FieldedText.Main,
+  Xilytix.FTEditor.TypedXml,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.EditEngine,
@@ -59,8 +57,8 @@ type
     class function GetTypeName: string; override;
     class function GetTypeCaption: string; override;
 
-    procedure LoadFromXml(config: XmlElement); override;
-    procedure SaveToXml(config: XmlElement); override;
+    procedure LoadFromXml(config: ITypedXmlElement); override;
+    procedure SaveToXml(config: ITypedXmlElement); override;
 
     procedure Prepare(const myEditEngine: TEditEngine; myBinder: TBinder); override;
     procedure Unprepare; override;
@@ -122,7 +120,7 @@ begin
   Refresh;
 end;
 
-procedure TSequencesFrame.LoadFromXml(config: XmlElement);
+procedure TSequencesFrame.LoadFromXml(config: ITypedXmlElement);
 var
   SelectorSorted: Boolean;
 begin
@@ -141,8 +139,8 @@ begin
 
   FListFrame.Prepare(myEditEngine, myBinder);
 
-  Include(FEditEngine.RefreshSequencesControlsEvent, HandleRefreshSequencesControlsEvent);
-  Include(FEditEngine.FieldRemovedEvent, HandleFieldRemovedEvent);
+  FEditEngine.SubscribeRefreshSequencesControlsEvent(HandleRefreshSequencesControlsEvent);
+  FEditEngine.SubscribeFieldRemovedEvent(HandleFieldRemovedEvent);
 end;
 
 procedure TSequencesFrame.Refresh;
@@ -150,7 +148,7 @@ begin
   FListFrame.Refresh;
 end;
 
-procedure TSequencesFrame.SaveToXml(config: XmlElement);
+procedure TSequencesFrame.SaveToXml(config: ITypedXmlElement);
 begin
   inherited;
   config.SetAttribute(MetaTag_SequenceItemFieldSelectorSorted, TLayoutConfiguration.BooleanToXmlValue(FListFrame.SequenceItemFieldSelectorSorted));
@@ -158,8 +156,8 @@ end;
 
 procedure TSequencesFrame.Unprepare;
 begin
-  Exclude(FEditEngine.RefreshSequencesControlsEvent, HandleRefreshSequencesControlsEvent);
-  Exclude(FEditEngine.FieldRemovedEvent, HandleFieldRemovedEvent);
+  FEditEngine.UnsubscribeRefreshSequencesControlsEvent(HandleRefreshSequencesControlsEvent);
+  FEditEngine.UnsubscribeFieldRemovedEvent(HandleFieldRemovedEvent);
 
   FListFrame.Unprepare;
 

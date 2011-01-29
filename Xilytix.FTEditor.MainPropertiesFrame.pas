@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.MainPropertiesFrame;
 
@@ -40,19 +37,19 @@ type
     AllowInQuotesCheckBox: TCheckBox;
     IgnoreExtraFieldsCheckBox: TCheckBox;
     Label6: TLabel;
-    EndOfLineTypeComboBox: TComboBoxEx;
+    EndOfLineTypeComboBox: TComboBox;
     Label7: TLabel;
     EndOfLineCharEdit: TEdit;
     Label8: TLabel;
-    EndOfLineAutoWriteComboBox: TComboBoxEx;
+    EndOfLineAutoWriteComboBox: TComboBox;
     Bevel1: TBevel;
     Label9: TLabel;
-    HeadingConstraintComboBox: TComboBoxEx;
-    HeadingQuotedTypeComboBox: TComboBoxEx;
-    HeadingPadAlignmentComboBox: TComboBoxEx;
-    HeadingPadCharTypeComboBox: TComboBoxEx;
+    HeadingConstraintComboBox: TComboBox;
+    HeadingQuotedTypeComboBox: TComboBox;
+    HeadingPadAlignmentComboBox: TComboBox;
+    HeadingPadCharTypeComboBox: TComboBox;
     HeadingPadEoFCharEdit: TEdit;
-    HeadingTruncateTypeComboBox: TComboBoxEx;
+    HeadingTruncateTypeComboBox: TComboBox;
     HeadingLineCountEdit: TEdit;
     HeadingMainLineIndexEdit: TEdit;
     Label10: TLabel;
@@ -68,7 +65,7 @@ type
     Panel1: TPanel;
     DeclaredCheckBox: TCheckBox;
     Label17: TLabel;
-    MetaReferenceTypeComboBox: TComboBoxEx;
+    MetaReferenceTypeComboBox: TComboBox;
     MetaReferenceEdit: TEdit;
     Label18: TLabel;
     Label19: TLabel;
@@ -232,6 +229,8 @@ implementation
 {$R *.dfm}
 
 uses
+  Rtti,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.StandardFields,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Configuration;
@@ -281,7 +280,7 @@ end;
 
 procedure TMainPropertiesFrame.ComboBoxChange(Sender: TObject);
 begin
-  FBinder.HandleComboBoxChange(Sender as TComboBoxEx, 0);
+  FBinder.HandleComboBoxChange(Sender as TComboBox, 0);
 end;
 
 constructor TMainPropertiesFrame.Create(AOwner: TComponent);
@@ -359,15 +358,17 @@ end;
 procedure TMainPropertiesFrame.DesignNewFieldsStyleBooleanButtonClick(Sender: TObject);
 var
   Edit: TEdit;
+  BooleanStylesValue: TValue;
   NewValue: string;
   DefaultStyles: TBooleanStyles;
 begin
   Edit := DesignNewFieldStylesBooleanEdit;
   DefaultStyles := TFieldedTextField_Boolean.DefaultStyles;
+  BooleanStylesValue := FBinder.GetPropertyValue(Edit, 0);
 
   if FBinder.EditBooleanStyles(Self,
                                Edit.Text,
-                               FBinder.GetPropertyValue(Edit, 0) as TBooleanStyles,
+                               BooleanStylesValue.AsType<TBooleanStyles>,
                                DefaultStyles,
                                NewValue) then
   begin
@@ -390,14 +391,16 @@ procedure TMainPropertiesFrame.DesignNewFieldStylesDateTimeButtonClick(Sender: T
 var
   Edit: TEdit;
   NewValue: string;
-  DefaultStyles: DateTimeStyles;
+  StylesValue: TValue;
+  DefaultStyles: TDotNetDateTimeStyles;
 begin
   Edit := DesignNewFieldStylesDateTimeEdit;
   DefaultStyles := TFieldedTextField_DateTime.DefaultStyles;
+  StylesValue := FBinder.GetPropertyValue(Edit, 0);
 
   if FBinder.EditDateTimeStyles(Self,
                                 Edit.Text,
-                                FBinder.GetPropertyValue(Edit, 0) as DateTimeStyles,
+                                StylesValue.AsType<TDotNetDateTimeStyles>,
                                 DefaultStyles,
                                 NewValue) then
   begin
@@ -420,14 +423,16 @@ procedure TMainPropertiesFrame.DesignNewFieldStylesDecimalButtonClick(Sender: TO
 var
   Edit: TEdit;
   NewValue: string;
-  DefaultStyles: NumberStyles;
+  StylesValue: TValue;
+  DefaultStyles: TDotNetNumberStyles;
 begin
   Edit := DesignNewFieldStylesDecimalEdit;
   DefaultStyles := TFieldedTextField_Decimal.DefaultStyles;
+  StylesValue := FBinder.GetPropertyValue(Edit, 0);
 
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,
-                              FBinder.GetPropertyValue(Edit, 0) as NumberStyles,
+                              StylesValue.AsType<TDotNetNumberStyles>,
                               DefaultStyles,
                               NewValue) then
   begin
@@ -449,15 +454,20 @@ end;
 procedure TMainPropertiesFrame.DesignNewFieldStylesFloatButtonClick(Sender: TObject);
 var
   Edit: TEdit;
+  Value: TValue;
+  Styles: TDotNetNumberStyles;
   NewValue: string;
-  DefaultStyles: NumberStyles;
+  DefaultStyles: TDotNetNumberStyles;
 begin
   Edit := DesignNewFieldStylesFloatEdit;
   DefaultStyles := TFieldedTextField_Float.DefaultStyles;
 
+  Value := FBinder.GetPropertyValue(Edit, 0);
+  Styles := Value.AsType<TDotNetNumberStyles>;
+
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,
-                              FBinder.GetPropertyValue(Edit, 0) as NumberStyles,
+                              Styles,
                               DefaultStyles,
                               NewValue) then
   begin
@@ -479,15 +489,20 @@ end;
 procedure TMainPropertiesFrame.DesignNewFieldStylesIntegerButtonClick(Sender: TObject);
 var
   Edit: TEdit;
+  Value: TValue;
+  Styles: TDotNetNumberStyles;
   NewValue: string;
-  DefaultStyles: NumberStyles;
+  DefaultStyles: TDotNetNumberStyles;
 begin
   Edit := DesignNewFieldStylesIntegerEdit;
   DefaultStyles := TFieldedTextField_Integer.DefaultStyles;
 
+  Value := FBinder.GetPropertyValue(Edit, 0);
+  Styles := Value.AsType<TDotNetNumberStyles>;
+
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,
-                              FBinder.GetPropertyValue(Edit, 0) as NumberStyles,
+                              Styles,
                               DefaultStyles,
                               NewValue) then
   begin
@@ -559,8 +574,8 @@ end;
 procedure TMainPropertiesFrame.Prepare;
 begin
   inherited;
-  Include(FEditEngine.RefreshMainControlsEvent, HandleRefreshMainEvent);
-  Include(FEditEngine.ParseEvent, HandleParseEvent);
+  FEditEngine.SubscribeRefreshMainControlsEvent(HandleRefreshMainEvent);
+  FEditEngine.SubscribeParseEvent(HandleParseEvent);
 end;
 
 procedure TMainPropertiesFrame.Refresh;
@@ -889,10 +904,12 @@ end;
 procedure TMainPropertiesFrame.SubstitutionTypeAutoEndOfLineRadioButtonClick(Sender: TObject);
 var
   Modified: Boolean;
+  Value: TValue;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbAutoEndOfLine, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbAutoEndOfLine);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -905,11 +922,12 @@ var
   StrValue: string;
   StrModified: Boolean;
   TypeModified: Boolean;
+  Value: TValue;
 begin
   if not LoadingControls then
   begin
     StrValue := FEditEngine.SubstitutionValue[FActiveSubstitutionIdx];
-    if StrValue.Length = 1 then
+    if Length(StrValue) = 1 then
       StrModified := False
     else
     begin
@@ -923,7 +941,9 @@ begin
       FBinder.SetPropertyValue(piSubstitutionValue, FActiveSubstitutionIdx, StrValue, StrModified);
     end;
 
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbString, TypeModified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbString);
+
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, TypeModified);
     if StrModified or TypeModified then
     begin
       RefreshActiveSubstitution;
@@ -935,11 +955,14 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeStringRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbString, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbString);
+
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution(True);
@@ -950,11 +973,13 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeXmlCharAmpersandRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbXmlCharAmpersand, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharAmpersand);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -964,11 +989,13 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeXmlCharApostropheRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbXmlCharApostrophe, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharApostrophe);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -978,11 +1005,13 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeXmlCharGreaterThanRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbXmlCharGreaterThan, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharGreaterThan);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -992,11 +1021,13 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeXmlCharLessThanRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbXmlCharLessThan, Modified);
+    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharLessThan);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -1006,11 +1037,13 @@ end;
 
 procedure TMainPropertiesFrame.SubstitutionTypeXmlCharQuotationMarkRadioButtonClick(Sender: TObject);
 var
+  Value: TValue;
   Modified: Boolean;
 begin
   if not LoadingControls then
   begin
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, ftsbXmlCharQuotationMark, Modified);
+//    Value := TValue.From<TFieldedTextSubstitution.TFieldedTextSubstitutionType>(ftsbXmlCharQuotationMark);
+    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
     if Modified then
     begin
       RefreshActiveSubstitution;
@@ -1020,8 +1053,8 @@ end;
 
 procedure TMainPropertiesFrame.Unprepare;
 begin
-  Exclude(FEditEngine.RefreshMainControlsEvent, HandleRefreshMainEvent);
-  Exclude(FEditEngine.ParseEvent, HandleParseEvent);
+  FEditEngine.UnsubscribeRefreshMainControlsEvent(HandleRefreshMainEvent);
+  FEditEngine.UnsubscribeParseEvent(HandleParseEvent);
   inherited;
 end;
 

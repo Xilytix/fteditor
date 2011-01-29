@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.ErrorsFrame;
 
@@ -126,16 +123,16 @@ var
   Field: TFieldedTextField;
 //  Sequence: TFieldedTextSequence;
 begin
-  errorText := DateTime.Now.ToString + '> ' + errorText;
+  errorText := DateTimeToStr(Now) + '> ' + errorText;
   if FOnlyShowLastError then
     ErrorsMemo.Text := errorText
   else
     ErrorsMemo.Lines.Add(errorText);
 
-  LineEdit.Text := FEditEngine.LineNumber.ToString;
-  LinePosEdit.Text := FEditEngine.LinePos.ToString;
-  RecordEdit.Text := FEditEngine.RecordNumber.ToString;
-  ActiveIndexEdit.Text := FEditEngine.ActiveItemNumber.ToString;
+  LineEdit.Text := IntToStr(FEditEngine.LineNumber);
+  LinePosEdit.Text := IntToStr(FEditEngine.LinePos);
+  RecordEdit.Text := IntToStr(FEditEngine.RecordNumber);
+  ActiveIndexEdit.Text := IntToStr(FEditEngine.ActiveItemNumber);
   Field := FEditEngine.CurrentField;
   if Assigned(Field) then
     FieldEdit.Text := Field.Name
@@ -153,7 +150,7 @@ begin
   if FOnlyShowLastError then
     ErrorsMemo.Text := ''
   else
-    ErrorsMemo.Lines.Add(DateTime.Now.ToString + '>  Success');
+    ErrorsMemo.Lines.Add(DateTimeToStr(Now) + '>  Success');
 
   LineEdit.Text := '';
   LinePosEdit.Text := '';
@@ -169,14 +166,14 @@ end;
 procedure TErrorsFrame.Prepare(const myEditEngine: TEditEngine; myBinder: TBinder);
 begin
   inherited;
-  Include(FEditEngine.ErrorEvent, HandleErrorEvent);
-  Include(FEditEngine.SuccessEvent, HandleSuccessEvent);
+  FEditEngine.SubscribeErrorEvent(HandleErrorEvent);
+  FEditEngine.SubscribeSuccessEvent(HandleSuccessEvent);
 end;
 
 procedure TErrorsFrame.Unprepare;
 begin
-  Exclude(FEditEngine.ErrorEvent, HandleErrorEvent);
-  Exclude(FEditEngine.SuccessEvent, HandleSuccessEvent);
+  FEditEngine.UnsubscribeErrorEvent(HandleErrorEvent);
+  FEditEngine.UnsubscribeSuccessEvent(HandleSuccessEvent);
   inherited;
 end;
 

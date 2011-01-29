@@ -11,7 +11,7 @@ inherited SequenceRedirect_DateTimePropertiesFrame: TSequenceRedirect_DateTimePr
     Height = 13
     Caption = 'Value'
   end
-  inherited InvokationDelayComboBox: TComboBoxEx
+  inherited InvokationDelayComboBox: TComboBox
     TabOrder = 3
   end
   object DatePicker: TDateTimePicker

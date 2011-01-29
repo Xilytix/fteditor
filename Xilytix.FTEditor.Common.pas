@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.Common;
 
@@ -23,21 +20,18 @@ type
       FApplicationDataFolder: string;
       FVersionString: string;
       FColorSchemaFolder: string;
+      FLayoutConfigurationsFolder: string;
 
     class constructor Create;
 
     class function IsHexDigit(value: Char): Boolean;
-    class function HexToByte(const value: string; idx: Integer): Byte;
     class function ByteToHex(const Value: Byte): string;
-    class function TryHexToInt(const HexStr: string; out HexInt: Integer): Boolean;
-    class function TryHexCharToInt(const HexChar: Char; out IntValue: Integer): Boolean; overload;
-    class function TryHexCharToInt(const HexChar: AnsiChar; out IntValue: Integer): Boolean; overload;
     class function IntToHexChar(const Value: Integer): Char;
     class function IsInvalidFileNameChar(value: Char): Boolean;
     class function ExtractEscapedFileNameChar(const fileName: string;
                                               fileNameLength: Integer;
                                               var idx: Integer;
-                                              out escapedChar: Char): Integer;
+                                              out escapedChar: Char): Boolean;
   public
     const
       PublisherName = 'Xilytix';
@@ -45,7 +39,7 @@ type
       FieldedTextFileNameExtension = 'ftx';
       MetaFileNameExtension = 'ftm';
       ColorSchemaSubFolder = 'ColorSchema';
-      SafeFileNamePrefix = '#';
+      LayoutConfigurationsSubFolder = 'LayoutConfigurations';
       SafeFileNameEscapeChar = '$';
       InvalidFileNameChars: array[0..7] of Char = ('/', '\', ':', '*', '?', '<', '>', '|');
       ExplicitInvalidFileNameChars: array[0..8] of Char = ('/', '\', ':', '*', '?', '<', '>', '|', SafeFileNameEscapeChar);
@@ -56,11 +50,14 @@ type
     class property ApplicationDataFolder: string read FApplicationDataFolder;
     class property VersionString: string read FVersionString;
     class property ColorSchemaFolder: string read FColorSchemaFolder;
+    class property LayoutConfigurationsFolder: string read FLayoutConfigurationsFolder;
 
     class procedure EnsureColorSchemaFolderExists;
+    class procedure EnsureLayoutConfigurationsFolderExists;
 
     class function SafeFileNameEncode(const value: string): string;
-    class function TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Integer;
+    class function TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Boolean;
+
   end;
 
   TNonRefCountedInterfacedObject = class(TObject, IInterface)
@@ -76,9 +73,11 @@ uses
   Windows,
   SysUtils,
   IOUtils,
+  Character,
   Forms,
   SHFolder,
-  PJVersionInfo;
+  PJVersionInfo,
+  Xilytix.FieldedText.Utils;
 
 { TCommon }
 
@@ -97,7 +96,7 @@ begin
   FProgramFileName := ExtractFileName(FProgramFilePath);
   FProgramFileFolder := ExtractFilePath(FProgramFilePath);
 
-  if not Succeeded(SHGetFolderPath(0, CSIDL_COMMON_APPDATA, 0, SHGFP_TYPE_CURRENT, Path)) then
+  if not Succeeded(SHGetFolderPath(0, CSIDL_APPDATA, 0, SHGFP_TYPE_CURRENT, Path)) then
     raise Exception.Create('Could not obtain Application Data Folder')
   else
   begin
@@ -114,6 +113,7 @@ begin
   end;
 
   FColorSchemaFolder := TPath.Combine(FApplicationDataFolder, ColorSchemaSubFolder);
+  FLayoutConfigurationsFolder := TPath.Combine(FApplicationDataFolder, LayoutConfigurationsSubFolder);
 end;
 
 class procedure TCommon.EnsureColorSchemaFolderExists;
@@ -124,14 +124,20 @@ begin
   end;
 end;
 
+class procedure TCommon.EnsureLayoutConfigurationsFolderExists;
+begin
+  if not DirectoryExists(FLayoutConfigurationsFolder) then
+  begin
+    ForceDirectories(FLayoutConfigurationsFolder);
+  end;
+end;
+
 class function TCommon.ExtractEscapedFileNameChar(const fileName: string; fileNameLength: Integer; var idx: Integer;
-  out escapedChar: Char): Integer;
-const
-  MaxEncodedByteCount = 4;
+  out escapedChar: Char): Boolean;
 var
   I: Integer;
-  HexDigitCount: Integer;
   EncodedByteCount: Integer;
+  HexDigitCount: Integer;
   EncodedBytes: TBytes;
   DecodedChars: TCharArray;
   HexIdx: Integer;
@@ -139,128 +145,44 @@ begin
   // Char is encoded as UTF-8 BinHex
   // That means it can take up to 8 Characters in the filename (making up 4 bytes)
 
-  HexDigitCount := MaxEncodedByteCount * 2;
+  Result := False;
 
-  // Make sure we do not go beyond end of filename
-  if (Idx + HexDigitCount - 1) > fileNameLength then
+  if TFieldedTextLocaleSettings.TryHexCharToInt(FileName[Idx], EncodedByteCount) then
   begin
-    HexDigitCount := fileNameLength - Idx + 1;
-    if (HexDigitCount mod 2) = 1 then
+    Inc(Idx);
+    if Idx < FileNameLength then
     begin
-      Dec(HexDigitCount);
-    end;
-  end;
+      HexDigitCount := EncodedByteCount * 2;
 
-  EncodedByteCount := HexDigitCount div 2;
-
-  if EncodedByteCount = 0 then
-    Result := idx
-  else
-  begin
-    // Convert to Byte Array while Hex Digits
-    SetLength(EncodedBytes, MaxEncodedByteCount);
-    for I := 0 to EncodedByteCount - 1 do
-    begin
-      HexIdx := Idx + I * 2;
-      if (IsHexDigit(fileName[HexIdx]) and IsHexDigit(fileName[HexIdx+1])) then
-        EncodedBytes[I] := HexToByte(fileName, HexIdx)
-      else
+      if (Idx + HexDigitCount - 1) <= fileNameLength then
       begin
-        EncodedByteCount := I + 1;
-        Break;
-      end;
-    end;
+        EncodedByteCount := HexDigitCount div 2;
 
-    if EncodedByteCount = 0 then
-      Result := idx
-    else
-    begin
-      // Decode Bytes and work out how many were actually used
-      DecodedChars := TEncoding.UTF8.GetChars(EncodedBytes, 0, EncodedByteCount);
-      if Length(DecodedChars) = 0 then
-        Result := idx
-      else
-      begin
-        EscapedChar := DecodedChars[0];
-
-        if EncodedByteCount > 1 then
+        if EncodedByteCount > 0 then
         begin
-          EncodedByteCount := TEncoding.UTF8.GetByteCount(DecodedChars, 0, 1);
+          // Convert to Byte Array while Hex Digits
+          SetLength(EncodedBytes, EncodedByteCount);
+          for I := 0 to EncodedByteCount - 1 do
+          begin
+            HexIdx := Idx + I * 2;
+            if (IsHexDigit(fileName[HexIdx]) and IsHexDigit(fileName[HexIdx+1])) then
+              EncodedBytes[I] := TFieldedTextLocaleSettings.HexToByte(fileName, HexIdx)
+            else
+            begin
+              EncodedByteCount := I + 1;
+              Break;
+            end;
+          end;
+
+          // Decode Bytes and work out how many were actually used
+          DecodedChars := TEncoding.UTF8.GetChars(EncodedBytes, 0, EncodedByteCount);
+          if Length(DecodedChars) > 0 then
+          begin
+            EscapedChar := DecodedChars[0];
+            Idx := Idx + HexDigitCount - 1; // Move Idx to last Char
+            Result := True;
+          end;
         end;
-        Idx := Idx + (EncodedByteCount * 2) - 1; // Move Idx to last Char
-        Result := 0;
-      end;
-    end;
-  end;
-end;
-
-class function TCommon.HexToByte(const value: string; idx: Integer): Byte;
-var
-  ResultAsInt: Integer;
-begin
-  if not TryHexToInt(Copy(Value, idx, 2), ResultAsInt) then
-    raise EConvertError.Create('Invalid Byte Hex in string: "' + Value + '" at position: ' + IntToStr(Idx))
-  else
-    Result := Byte(ResultAsInt);
-end;
-
-class function TCommon.TryHexCharToInt(const HexChar: Char; out IntValue: Integer): Boolean;
-begin
-  Result := TryHexCharToInt(AnsiChar(HexChar), IntValue);
-end;
-
-class function TCommon.TryHexCharToInt(const HexChar: AnsiChar; out IntValue: Integer): Boolean;
-begin
-  case HexChar of
-    'A'..'F':
-    begin
-      IntValue := Ord(HexChar) - Ord('A') + 10;
-      Result := True;
-    end;
-    'a'..'f':
-    begin
-      IntValue := Ord(HexChar) - Ord('a') + 10;
-      Result := True;
-    end;
-    '0'..'9':
-    begin
-      IntValue := Ord(HexChar) - Ord('0');
-      Result := True;
-    end;
-    else Result := False;
-  end;
-end;
-
-class function TCommon.TryHexToInt(const HexStr: string; out HexInt: Integer): Boolean;
-var
-  I: Integer;
-  LengthStr: Integer;
-  Multiplier: Integer;
-  HexDigit: Integer;
-  AnsiHexStr: AnsiString;
-begin
-  HexInt := 0;
-
-  AnsiHexStr := AnsiString(HexStr);
-  LengthStr := Length(AnsiHexStr);
-  if LengthStr > 7 then
-    Result := False
-  else
-  begin
-    Result := True;
-    Multiplier := 1;
-    HexDigit := 0; // avoid compiler warning
-    for I := LengthStr downto 1 do
-    begin
-      if not TryHexCharToInt(AnsiHexStr[I], HexDigit) then
-      begin
-        Result := False;
-        Break;
-      end
-      else
-      begin
-        HexInt := HexInt + HexDigit * Multiplier;
-        Multiplier := Multiplier * 16;
       end;
     end;
   end;
@@ -299,7 +221,7 @@ begin
   end;
 end;
 
-class function TCommon.TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Integer;
+class function TCommon.TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Boolean;
 var
   I: Integer;
   Bldr: TStringBuilder;
@@ -308,34 +230,35 @@ var
 begin
   // Result will be 0 if ok.  Will be > 0 if not ok (and index first bad char)
   FileNameLength := Length(fileName);
-  if (fileName = '') or (fileName[1] <> SafeFileNamePrefix) then
-    Result := 1
-  else
-  begin
-    Result := 0;
-    Bldr := TStringBuilder.Create;
+  Result := True;
+  Bldr := TStringBuilder.Create;
 
-    I := 2;
-    while I <= FileNameLength do
+  I := 1;
+  while I <= FileNameLength do
+  begin
+    if fileName[I] <> SafeFileNameEscapeChar then
+      Bldr.Append(fileName[I])
+    else
     begin
-      if fileName[I] <> SafeFileNameEscapeChar then
-        Bldr.Append(fileName[I])
+      Inc(I);
+      if I >= FileNameLength then
+        Break
       else
       begin
         Result := ExtractEscapedFileNameChar(fileName, FileNameLength, I, EscapedChar);
-        if Result = 0 then
-          Bldr.Append(EscapedChar)
+        if not Result then
+          Break
         else
-          Break;
+          Bldr.Append(EscapedChar);
       end;
-
-      Inc(I);
     end;
 
-    if Result = 0 then
-    begin
-      decodedValue := Bldr.ToString;
-    end;
+    Inc(I);
+  end;
+
+  if Result then
+  begin
+    decodedValue := Bldr.ToString;
   end;
 end;
 
@@ -345,22 +268,25 @@ var
   Bldr: TStringBuilder;
   SingleCharArray: TCharArray;
   CharBytes: TBytes;
+  CharBytesLengthStr: string;
   CharHex: string;
 begin
   SetLength(SingleCharArray, 1);
   Bldr := TStringBuilder.Create(512);
 
-  Bldr.Append(SafeFileNamePrefix);
   for I := 1 to Length(value) do
   begin
-    if not IsInvalidFileNameChar(Value[I]) then
+    if not IsInvalidFileNameChar(Value[I]) and (Value[I] <> SafeFileNameEscapeChar) then
       Bldr.Append(value[I])
     else
     begin
       SingleCharArray[0] := value[I];
       CharBytes := TEncoding.UTF8.GetBytes(SingleCharArray);
+      CharBytesLengthStr := IntToHex(Length(CharBytes), 1);
+      Assert(Length(CharBytesLengthStr) = 1);
 
       Bldr.Append(SafeFileNameEscapeChar);
+      Bldr.Append(CharBytesLengthStr[1]);
       for J := Low(CharBytes) to High(CharBytes) do
       begin
         CharHex := ByteToHex(CharBytes[J]);

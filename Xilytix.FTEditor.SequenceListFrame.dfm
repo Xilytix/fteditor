@@ -93,19 +93,17 @@ object SequenceListFrame: TSequenceListFrame
     DesignSize = (
       179
       21)
-    object AddItemComboBox: TComboBoxEx
+    object AddItemComboBox: TComboBox
       Left = 0
       Top = 0
       Width = 125
       Height = 21
       Align = alLeft
-      ItemsEx = <>
-      Style = csExDropDownList
+      Style = csDropDownList
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       OnChange = AddItemComboBoxChange
       OnDropDown = AddItemComboBoxDropDown
-      ExplicitHeight = 22
     end
     object RemoveButton: TButton
       Left = 140

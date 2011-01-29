@@ -33,25 +33,23 @@ inherited SequenceRedirect_BasePropertiesFrame: TSequenceRedirect_BaseProperties
     Height = 13
     Caption = 'Invokation Delay'
   end
-  object SequenceComboBox: TComboBoxEx
+  object SequenceComboBox: TComboBox
     Left = 2
     Top = 56
     Width = 100
-    Height = 22
-    ItemsEx = <>
-    Style = csExDropDownList
+    Height = 21
+    Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     OnChange = SequenceComboBoxChange
     OnDropDown = SequenceComboBoxDropDown
   end
-  object InvokationDelayComboBox: TComboBoxEx
+  object InvokationDelayComboBox: TComboBox
     Left = 2
     Top = 99
     Width = 100
-    Height = 22
-    ItemsEx = <>
-    Style = csExDropDownList
+    Height = 21
+    Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     OnChange = ComboBoxChange

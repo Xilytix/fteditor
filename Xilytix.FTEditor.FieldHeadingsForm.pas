@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.FieldHeadingsForm;
 
@@ -44,6 +41,7 @@ implementation
 {$R *.dfm}
 
 uses
+  Types,
   Xilytix.FieldedText.CommaText;
 
 procedure TFieldHeadingsForm.ClearButtonClick(Sender: TObject);
@@ -78,7 +76,7 @@ end;
 
 function TFieldHeadingsForm.GetCommaText: string;
 var
-  Strings: TCommaText.TStringArray;
+  Strings: TStringDynArray;
   I: Integer;
 begin
   SetLength(Strings, Grid.RowCount-1);
@@ -101,7 +99,7 @@ end;
 
 procedure TFieldHeadingsForm.SetCommaText(const Value: string);
 var
-  Strings: TCommaText.TStringArray;
+  Strings: TStringDynArray;
   I: Integer;
 begin
   Strings := TCommaText.ToStringArray(Value);
@@ -121,7 +119,7 @@ begin
   Grid.RowCount := Value + 1;
   for I := 0 to Value - 1 do
   begin
-    Grid.Cells[0, I+1] := I.ToString;
+    Grid.Cells[0, I+1] := IntToStr(I);
   end;
 end;
 

@@ -4,9 +4,8 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
   inherited DelimitedPanel: TPanel
     Top = 218
     Height = 179
-    ExplicitTop = 246
-    ExplicitWidth = 158
-    ExplicitHeight = 173
+    ExplicitTop = 218
+    ExplicitHeight = 179
     inherited Bevel5: TBevel
       Width = 197
       ExplicitWidth = 202
@@ -19,42 +18,29 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
   inherited FixedWidthPanel: TPanel
     Top = 218
     Height = 179
-    ExplicitTop = 246
-    ExplicitWidth = 169
-    ExplicitHeight = 138
+    ExplicitTop = 218
+    ExplicitHeight = 179
     inherited FixedWidthPageControl: TPageControl
       Height = 152
-      ExplicitWidth = 169
-      ExplicitHeight = 111
+      ExplicitHeight = 152
       inherited ValueTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 143
-        ExplicitHeight = 67
-        inherited ValuePadAlignmentComboBox: TComboBoxEx
+        ExplicitHeight = 124
+        inherited ValuePadAlignmentComboBox: TComboBox
           TabOrder = 0
-          ExplicitWidth = 88
         end
-        inherited ValuePadCharTypeComboBox: TComboBoxEx
+        inherited ValuePadCharTypeComboBox: TComboBox
           TabOrder = 2
-          ExplicitWidth = 88
-        end
-        inherited ValueTruncateTypeComboBox: TComboBoxEx
-          ExplicitWidth = 113
         end
         inherited ValuePadCharEdit: TEdit
           TabOrder = 1
         end
       end
       inherited HeadingTabSheet: TTabSheet
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 161
-        ExplicitHeight = 13
-        inherited HeadingPadAlignmentComboBox: TComboBoxEx
+        ExplicitHeight = 124
+        inherited HeadingPadAlignmentComboBox: TComboBox
           TabOrder = 2
         end
-        inherited HeadingPadCharTypeComboBox: TComboBoxEx
+        inherited HeadingPadCharTypeComboBox: TComboBox
           TabOrder = 1
         end
         inherited HeadingPadCharEdit: TEdit
@@ -62,13 +48,9 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
         end
       end
     end
-    inherited FxiedWidthTopPanel: TPanel
-      ExplicitWidth = 132
-    end
   end
   inherited TopPanel: TPanel
     Height = 218
-    ExplicitWidth = 167
     ExplicitHeight = 218
     inherited DataTypeLabel: TLabel
       Width = 55
@@ -109,11 +91,9 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
     end
     inherited NameEdit: TEdit
       TabOrder = 12
-      ExplicitWidth = 122
     end
-    inherited HeadingConstraintComboBox: TComboBoxEx
+    inherited HeadingConstraintComboBox: TComboBox
       TabOrder = 11
-      ExplicitWidth = 82
     end
     inherited NullConstantCheckBox: TCheckBox
       Top = 138
@@ -198,11 +178,9 @@ inherited DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame
     end
     inherited HeadingsEdit: TEdit
       TabOrder = 13
-      ExplicitWidth = 104
     end
     inherited HeadingsButton: TButton
       TabOrder = 10
-      ExplicitLeft = 142
     end
   end
 end

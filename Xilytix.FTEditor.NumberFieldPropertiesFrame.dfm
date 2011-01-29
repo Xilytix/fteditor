@@ -21,51 +21,27 @@ inherited NumberFieldPropertiesFrame: TNumberFieldPropertiesFrame
   inherited FixedWidthPanel: TPanel
     Top = 199
     Height = 205
-    ExplicitTop = 222
-    ExplicitWidth = 155
-    ExplicitHeight = 250
+    ExplicitTop = 199
+    ExplicitHeight = 205
     inherited FixedWidthPageControl: TPageControl
       Height = 178
-      ExplicitWidth = 155
-      ExplicitHeight = 223
+      ExplicitHeight = 178
       inherited ValueTabSheet: TTabSheet
         ExplicitHeight = 150
         DesignSize = (
           151
           150)
-        inherited ValuePadAlignmentComboBox: TComboBoxEx
-          ExplicitWidth = 50
-        end
-        inherited ValuePadCharTypeComboBox: TComboBoxEx
-          ExplicitWidth = 50
-        end
-        inherited ValueTruncateTypeComboBox: TComboBoxEx
-          ExplicitWidth = 75
-        end
       end
       inherited HeadingTabSheet: TTabSheet
         ExplicitHeight = 150
         DesignSize = (
           151
           150)
-        inherited HeadingPadAlignmentComboBox: TComboBoxEx
-          ExplicitWidth = 84
-        end
-        inherited HeadingPadCharTypeComboBox: TComboBoxEx
-          ExplicitWidth = 84
-        end
-        inherited HeadingTruncateTypeComboBox: TComboBoxEx
-          ExplicitWidth = 109
-        end
       end
-    end
-    inherited FxiedWidthTopPanel: TPanel
-      ExplicitWidth = 188
     end
   end
   inherited TopPanel: TPanel
     Height = 199
-    ExplicitWidth = 167
     ExplicitHeight = 199
     DesignSize = (
       159
@@ -96,11 +72,9 @@ inherited NumberFieldPropertiesFrame: TNumberFieldPropertiesFrame
     end
     inherited NameEdit: TEdit
       TabOrder = 11
-      ExplicitWidth = 122
     end
-    inherited HeadingConstraintComboBox: TComboBoxEx
+    inherited HeadingConstraintComboBox: TComboBox
       TabOrder = 9
-      ExplicitWidth = 82
     end
     inherited NullConstantCheckBox: TCheckBox
       Top = 139
@@ -170,11 +144,9 @@ inherited NumberFieldPropertiesFrame: TNumberFieldPropertiesFrame
     end
     inherited HeadingsEdit: TEdit
       TabOrder = 10
-      ExplicitWidth = 104
     end
     inherited HeadingsButton: TButton
       TabOrder = 12
-      ExplicitLeft = 142
     end
   end
 end

@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.BaseFieldPropertiesFrame;
 
@@ -24,7 +21,7 @@ type
     NameEdit: TEdit;
     IdEdit: TEdit;
     Label3: TLabel;
-    HeadingConstraintComboBox: TComboBoxEx;
+    HeadingConstraintComboBox: TComboBox;
     Label2: TLabel;
     FixedWidthPanel: TPanel;
     FixedWidthPageControl: TPageControl;
@@ -43,10 +40,10 @@ type
     Label16: TLabel;
     Label23: TLabel;
     Label24: TLabel;
-    ValuePadAlignmentComboBox: TComboBoxEx;
-    ValuePadCharTypeComboBox: TComboBoxEx;
+    ValuePadAlignmentComboBox: TComboBox;
+    ValuePadCharTypeComboBox: TComboBox;
     ValuePadEoFCharEdit: TEdit;
-    ValueTruncateTypeComboBox: TComboBoxEx;
+    ValueTruncateTypeComboBox: TComboBox;
     ValuePadCharEdit: TEdit;
     ValueTruncateCharEdit: TEdit;
     ValueNullCharEdit: TEdit;
@@ -61,10 +58,10 @@ type
     Label19: TLabel;
     Label25: TLabel;
     Label26: TLabel;
-    HeadingPadAlignmentComboBox: TComboBoxEx;
-    HeadingPadCharTypeComboBox: TComboBoxEx;
+    HeadingPadAlignmentComboBox: TComboBox;
+    HeadingPadCharTypeComboBox: TComboBox;
     HeadingPadEoFCharEdit: TEdit;
-    HeadingTruncateTypeComboBox: TComboBoxEx;
+    HeadingTruncateTypeComboBox: TComboBox;
     HeadingPadCharEdit: TEdit;
     HeadingTruncateCharEdit: TEdit;
     NullConstantCheckBox: TCheckBox;
@@ -72,9 +69,9 @@ type
     DataTypeLabel: TLabel;
     DelimitedPanel: TPanel;
     Label5: TLabel;
-    ValueQuotedComboBox: TComboBoxEx;
+    ValueQuotedComboBox: TComboBox;
     Label4: TLabel;
-    HeadingQuotedComboBox: TComboBoxEx;
+    HeadingQuotedComboBox: TComboBox;
     ValueWritePrefixSpaceCheckBox: TCheckBox;
     ValueAlwaysWriteOptionalQuoteCheckBox: TCheckBox;
     HeadingWritePrefixSpaceCheckBox: TCheckBox;
@@ -165,7 +162,7 @@ end;
 
 procedure TBaseFieldPropertiesFrame.ComboBoxChange(Sender: TObject);
 begin
-  FBinder.HandleComboBoxChange(Sender as TComboBoxEx, FFieldIndex);
+  FBinder.HandleComboBoxChange(Sender as TComboBox, FFieldIndex);
 end;
 
 procedure TBaseFieldPropertiesFrame.CommaTextEditExit(Sender: TObject);

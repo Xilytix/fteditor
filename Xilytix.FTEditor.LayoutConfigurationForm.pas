@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence (this file): Public Domain
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.LayoutConfigurationForm;
 
@@ -317,7 +314,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfALeftComboBox.ItemIndex;
-  Configuration.HalfA.LeftFrameTypeId := HalfALeftComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfA.LeftFrameTypeId := TFrameTypeId(HalfALeftComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -336,7 +333,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfAMiddleComboBox.ItemIndex;
-  Configuration.HalfA.MiddleFrameTypeId := HalfAMiddleComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfA.MiddleFrameTypeId := TFrameTypeId(HalfAMiddleComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -355,7 +352,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfARightComboBox.ItemIndex;
-  Configuration.HalfA.RightFrameTypeId := HalfARightComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfA.RightFrameTypeId := TFrameTypeId(HalfARightComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -401,7 +398,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfBLeftComboBox.ItemIndex;
-  Configuration.HalfB.LeftFrameTypeId := HalfBLeftComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfB.LeftFrameTypeId := TFrameTypeId(HalfBLeftComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -420,7 +417,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfBMiddleComboBox.ItemIndex;
-  Configuration.HalfB.MiddleFrameTypeId := HalfBMiddleComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfB.MiddleFrameTypeId := TFrameTypeId(HalfBMiddleComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -439,7 +436,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalfBRightComboBox.ItemIndex;
-  Configuration.HalfB.RightFrameTypeId := HalfBRightComboBox.ItemsEx[ItemIndex].Data as TFrameTypeId;
+  Configuration.HalfB.RightFrameTypeId := TFrameTypeId(HalfBRightComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -494,7 +491,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalvesLeftTopHalfComboBox.ItemIndex;
-  Configuration.LeftHalfId := HalvesLeftTopHalfComboBox.ItemsEx[ItemIndex].Data as THalfId;
+  Configuration.LeftHalfId := THalfId(HalvesLeftTopHalfComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -504,7 +501,7 @@ var
   ItemIndex: Integer;
 begin
   ItemIndex := HalvesRightBottomHalfComboBox.ItemIndex;
-  Configuration.RightHalfId := HalvesRightBottomHalfComboBox.ItemsEx[ItemIndex].Data as THalfId;
+  Configuration.RightHalfId := THalfId(HalvesRightBottomHalfComboBox.ItemsEx[ItemIndex].Data);
 
   LoadControls;
 end;
@@ -543,12 +540,12 @@ begin
       TypeId := FrameSelections[I].GetTypeId;
     end;
 
-    HalfALeftComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
-    HalfAMiddleComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
-    HalfARightComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
-    HalfBLeftComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
-    HalfBMiddleComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
-    HalfBRightComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, TypeId);
+    HalfALeftComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
+    HalfAMiddleComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
+    HalfARightComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
+    HalfBLeftComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
+    HalfBMiddleComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
+    HalfBRightComboBox.ItemsEx.AddItem(TypeCaption, -1, -1, -1, 0, Pointer(TypeId));
   end;
 end;
 
@@ -560,10 +557,10 @@ begin
   begin
     HalvesLeftTopHalfComboBox.ItemsEx.AddItem(HalfSelections[I].Caption,
                                               -1, -1, -1, 0,
-                                              HalfSelections[I].HalfId);
+                                              Pointer(HalfSelections[I].HalfId));
     HalvesRightBottomHalfComboBox.ItemsEx.AddItem(HalfSelections[I].Caption,
                                                   -1, -1, -1, 0,
-                                                  HalfSelections[I].HalfId);
+                                                  Pointer(HalfSelections[I].HalfId));
   end;
 end;
 

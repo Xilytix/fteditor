@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.ColorSchemaForm;
 
@@ -12,8 +9,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Borland.Vcl.StdCtrls, System.ComponentModel, Borland.Vcl.ExtCtrls, Borland.Vcl.ButtonGroup,
-  Borland.Vcl.ActnList, ActnList, ButtonGroup, StdCtrls, ExtCtrls;
+  Dialogs,
+  ActnList, ButtonGroup, StdCtrls, ExtCtrls;
 
 type
   TLoadSaveMode = (lsLoad, lsSave);
@@ -38,13 +35,19 @@ type
     procedure SaveDeleteActionUpdate(Sender: TObject);
     procedure DeleteActionExecute(Sender: TObject);
     procedure SchemaButtonGroupKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormDestroy(Sender: TObject);
   private
-    { Private declarations }
+    type
+      TStringObject = class
+      public
+        Value: string;
+      end;
     var
       FMode: TLoadSaveMode;
       FOk: Boolean;
 
     procedure LoadSchemeNames;
+    procedure ClearSchemaButtonGroupItems;
 
     procedure SetMode(const Value: TLoadSaveMode);
     function GetSelectedSchemeName: string;
@@ -64,20 +67,32 @@ implementation
 {$R *.dfm}
 
 uses
-  System.IO,
+  Types,
+  IOUtils,
   Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Colors;
 
 { TColorSchemaForm }
+
+procedure TColorSchemaForm.ClearSchemaButtonGroupItems;
+var
+  I: Integer;
+begin
+  for I := 0 to SchemaButtonGroup.Items.Count-1 do
+  begin
+    TStringObject(SchemaButtonGroup.Items[I].Data).Free;
+  end;
+  SchemaButtonGroup.Items.Clear;
+end;
 
 procedure TColorSchemaForm.DeleteActionExecute(Sender: TObject);
 var
   FilePath: string;
 begin
   FilePath := TColorScheme.NameToFilePath(SelectedEdit.Text);
-  if &File.Exists(FilePath) then
+  if TFile.Exists(FilePath) then
   begin
-    &File.Delete(FilePath);
+    TFile.Delete(FilePath);
     LoadSchemeNames;
   end;
   SelectedEdit.Text := '';
@@ -94,6 +109,11 @@ end;
 procedure TColorSchemaForm.FormCreate(Sender: TObject);
 begin
   SelectedEdit.Text := '';
+end;
+
+procedure TColorSchemaForm.FormDestroy(Sender: TObject);
+begin
+  ClearSchemaButtonGroupItems;
 end;
 
 function TColorSchemaForm.GetSelectedDefault: Boolean;
@@ -115,35 +135,33 @@ end;
 procedure TColorSchemaForm.LoadSchemeNames;
 var
   ColorSchemaFolder: string;
-  FileNames: array of string;
+  SchemeNames: TStringDynArray;
   I: Integer;
-  FileSchemeName: string;
   Item: TGrpButtonItem;
+  StringObject: TStringObject;
 begin
-  SchemaButtonGroup.Items.Clear;
+  ClearSchemaButtonGroupItems;
 
   if FMode = lsLoad then
   begin
     Item := SchemaButtonGroup.Items.Add;
     Item.Caption := TColorScheme.DefaultSchemeName;
-    Item.Data := '';
+    Item.Data := nil;
   end;
 
   ColorSchemaFolder := TCommon.ColorSchemaFolder;
-  if Directory.Exists(ColorSchemaFolder) then
+  if TDirectory.Exists(ColorSchemaFolder) then
   begin
-    FileNames := Directory.GetFiles(TCommon.ColorSchemaFolder,
-                                    TColorScheme.FileNameFirstChar + '*.' + TColorScheme.FileExtension);
+    SchemeNames := TColorScheme.GetSchemeNames(TCommon.ColorSchemaFolder);
 
-    SchemaButtonGroup.Items.Capacity := SchemaButtonGroup.Items.Count + Length(FileNames);
-    for I := Low(FileNames) to High(FileNames) do
+    SchemaButtonGroup.Items.Capacity := SchemaButtonGroup.Items.Count + Length(SchemeNames);
+    for I := Low(SchemeNames) to High(SchemeNames) do
     begin
-      if TColorScheme.TryFileNameToName(FileNames[I], FileSchemeName) then
-      begin
-        Item := SchemaButtonGroup.Items.Add;
-        Item.Caption := FileSchemeName;
-        Item.Data := Path.Combine(ColorSchemaFolder, FileNames[I]);
-      end;
+      Item := SchemaButtonGroup.Items.Add;
+      Item.Caption := SchemeNames[I];
+      StringObject := TStringObject.Create;
+      StringObject.Value := TPath.Combine(ColorSchemaFolder, SchemeNames[I]);
+      Item.Data := Pointer(StringObject);
     end;
   end;
 end;
@@ -164,7 +182,7 @@ begin
     else
     begin
       FilePath := TColorScheme.NameToFilePath(SelectedName);
-      LoadEnabled := &File.Exists(FilePath);
+      LoadEnabled := TFile.Exists(FilePath);
     end;
   end;
                         ;
