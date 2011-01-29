@@ -1,10 +1,7 @@
 // Project: FTEditor (Fielded Text Editor)
-// Licence: GPL
+// Licence: Public Domain
 // Web Home Page: http://www.xilytix.com/FieldedTextEditor.html
 // Initial Developer: Paul Klink (http://paul.klink.id.au)
-// ------
-// Date         Author             Comment
-// 11 May 2007  Paul Klink         Initial Check-in
 
 unit Xilytix.FTEditor.DateTimeStylesForm;
 
@@ -26,7 +23,7 @@ type
     procedure OkButtonClick(Sender: TObject);
     procedure AllowInnerWhiteCheckBoxClick(Sender: TObject);
   private
-    FValue: TDotNetDateTimeStyles;
+    FValue: TCompositeDotNetDateTimeStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
 
@@ -39,7 +36,7 @@ type
   public
     { Public declarations }
     property AsString: string read GetAsString;
-    procedure SetAsString(asStringValue: string; fallBack, default: DateTimeStyles);
+    procedure SetAsString(asStringValue: string; fallBack, default: TDotNetDateTimeStyles);
   end;
 
 var
@@ -61,9 +58,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      FValue := FValue or DateTimeStyles(StyleValue)
+      Include(FValue.Styles, TDotNetDateTimeStyle(StyleValue))
     else
-      FValue := FValue and DateTimeStyles(not StyleValue);
+      Exclude(FValue.Styles, TDotNetDateTimeStyle(StyleValue));
 
     LoadControls;
   end;
@@ -79,7 +76,7 @@ end;
 
 procedure TDateTimeStylesForm.FormCreate(Sender: TObject);
 begin
-  AllowInnerWhiteCheckBox.Tag := Integer(DateTimeStyles.AllowInnerWhite);
+  AllowInnerWhiteCheckBox.Tag := Integer(dndsAllowInnerWhite);
 end;
 
 function TDateTimeStylesForm.GetAsString: string;
