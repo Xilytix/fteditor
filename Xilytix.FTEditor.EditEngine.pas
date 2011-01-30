@@ -31,7 +31,7 @@ type
       );
 
       TMetaRefreshControlsDelegate = procedure of object;
-      TFieldRemovedDelegate = procedure(field: TFieldedTextField) of object;
+      TFieldRemovedDelegate = procedure(field: TFieldedText.TField) of object;
       TErrorDelegate = procedure(errorText: string) of object;
       TSuccessDelegate = procedure of object;
       TParseDelegate = procedure of object;
@@ -50,10 +50,10 @@ type
   strict private
     type
       TDataTypeAbbrRec = record
-        &Type: TFieldedTextFieldDataType;
+        &Type: TFieldedText.TDataType;
         Abbr: string;
       end;
-      TDataTypeAbbrArray = array[TFieldedTextFieldDataType] of TDataTypeAbbrRec;
+      TDataTypeAbbrArray = array[TFieldedText.TDataType] of TDataTypeAbbrRec;
 
       TMetaRefreshControlsDelegates = array of TMetaRefreshControlsDelegate;
       TFieldRemovedDelegates = array of TFieldRemovedDelegate;
@@ -127,19 +127,19 @@ type
       FNewOpenTextDelegates: TNewOpenTextDelegates;
 
     procedure HandleParseEvent(sender: TFieldedText; eventType: TFieldedText.TParseEventType; var stop: Boolean);
-    procedure HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
+    procedure HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedText.TField; var stop: Boolean);
     procedure HandleRecordFieldsBeginEvent(sender: TFieldedText; var stop: Boolean);
-    procedure HandleFieldValueEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
+    procedure HandleFieldValueEvent(sender: TFieldedText; field: TFieldedText.TField; var stop: Boolean);
 //    procedure HandleRecordFieldsEndEvent(sender: TFieldedText; var stop: Boolean);
     procedure HandleErrorEvent(sender: TFieldedText;
-                               errorCode: TFieldedTextErrorCode;
-                               field: TFieldedTextField);
+                               errorCode: TFieldedText.TErrorCode;
+                               field: TFieldedText.TField);
     procedure HandleConfigurationUpdatedEvent;
 
     procedure NotifyRefreshMainControls;
     procedure NotifyRefreshFieldsControls;
     procedure NotifyRefreshSequencesControls;
-    procedure NotifyFieldRemoved(field: TFieldedTextField);
+    procedure NotifyFieldRemoved(field: TFieldedText.TField);
     procedure NotifyError(const errorText: string);
     procedure NotifySuccess;
     procedure NotifyParse;
@@ -155,14 +155,14 @@ type
     procedure NotifyFieldedTextFilePathSet;
     procedure NotifyNewOpenText;
 
-    function CalculateFieldedTextErrorText(errorCode: TFieldedTextErrorCode): string;
+    function CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode): string;
 
     function SameValue(const Value1, Value2: TValue): Boolean;
 
-    function GetDataTypeAbbr(&type: TFieldedTextFieldDataType): string;
+    function GetDataTypeAbbr(&type: TFieldedText.TDataType): string;
 
     function GetCulture: TFieldedTextLocaleSettings;
-    function GetFields(idx: Integer): TFieldedTextField;
+    function GetFields(idx: Integer): TFieldedText.TField;
     function GetFieldCount: Integer;
     function GetHeadingLineCount: Integer;
 
@@ -174,13 +174,13 @@ type
     procedure SetSubstitutionProperties(const name: string; idx: Integer; const Value: TValue);
     function GetSequenceProperties(const name: string; idx: Integer): TValue;
     procedure SetSequenceProperties(const name: string; idx: Integer; const Value: TValue);
-    function GetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem): TValue;
-    procedure SetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TValue);
-    function GetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect): TValue;
-    procedure SetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue);
+    function GetSequenceItemProperties(const name: string; sequenceItem: TFieldedText.TSequence.TItem): TValue;
+    procedure SetSequenceItemProperties(const name: string; sequenceItem: TFieldedText.TSequence.TItem; const Value: TValue);
+    function GetRedirectProperties(const name: string; redirect: TFieldedText.TSequenceRedirect): TValue;
+    procedure SetRedirectProperties(const name: string; redirect: TFieldedText.TSequenceRedirect; const Value: TValue);
 
     function GetSequenceCount: Integer;
-    function GetSequences(idx: Integer): TFieldedTextSequence;
+    function GetSequences(idx: Integer): TFieldedText.TSequence;
 
     function GetSubstitutionCount: Integer;
     function GetSubstitutionToken(idx: Integer): Char;
@@ -203,9 +203,9 @@ type
     function GetTableNumber: Integer;
     function GetRecordNumber: Integer;
     function GetActiveItemNumber: Integer;
-    function GetCurrentField: TFieldedTextField;
-    function GetCurrentSequence: TFieldedTextSequence;
-    function GetCurrentSequenceItem: TFieldedTextSequenceItem;
+    function GetCurrentField: TFieldedText.TField;
+    function GetCurrentSequence: TFieldedText.TSequence;
+    function GetCurrentSequenceItem: TFieldedText.TSequence.TItem;
 
     function GetText: string;
     function GetTextFilePath: string;
@@ -235,13 +235,13 @@ type
   public
     constructor Create;
 
-    property DataTypeAbbr[&type: TFieldedTextFieldDataType]: string read GetDataTypeAbbr;
+    property DataTypeAbbr[&type: TFieldedText.TDataType]: string read GetDataTypeAbbr;
 
     function UpdateDisplayCulture: Boolean;
     property DisplayCulture: TFieldedTextLocaleSettings read FDisplayCulture;
 
     property Culture: TFieldedTextLocaleSettings read GetCulture;
-    property Fields[idx: Integer]: TFieldedTextField read GetFields;
+    property Fields[idx: Integer]: TFieldedText.TField read GetFields;
     property FieldCount: Integer read GetFieldCount;
     property HeadingLineCount: Integer read GetHeadingLineCount;
 
@@ -255,29 +255,29 @@ type
     property RecordCount: Integer read GetRecordCount;
     property TableNumber: Integer read GetTableNumber;
     property TableCount: Integer read GetTableCount;
-    property CurrentField: TFieldedTextField read GetCurrentField;
-    property CurrentSequence: TFieldedTextSequence read GetCurrentSequence;
-    property CurrentSequenceItem: TFieldedTextSequenceItem read GetCurrentSequenceItem;
+    property CurrentField: TFieldedText.TField read GetCurrentField;
+    property CurrentSequence: TFieldedText.TSequence read GetCurrentSequence;
+    property CurrentSequenceItem: TFieldedText.TSequence.TItem read GetCurrentSequenceItem;
 
-    function AddField(dataType: TFieldedTextFieldDataType): Integer;
-    procedure RemoveField(field: TFieldedTextField);
+    function AddField(dataType: TFieldedText.TDataType): Integer;
+    procedure RemoveField(field: TFieldedText.TField);
     procedure MoveField(oldIndex, newIndex: Integer);
     function IsFieldNameDuplicated(name: string): Boolean;
 
     property SequenceCount: Integer read GetSequenceCount;
-    property Sequences[idx: Integer]: TFieldedTextSequence read GetSequences;
-    function InsertSequence(idx: Integer): TFieldedTextSequence;
-    function InsertSequenceItem(sequence: TFieldedTextSequence; idx: Integer; field: TFieldedTextField): TFieldedTextSequenceItem;
-    function InsertRedirect(sequenceItem: TFieldedTextSequenceItem; idx: Integer;
-                            redirectType: TFieldedTextSequenceRedirectType): TFieldedTextSequenceRedirect;
+    property Sequences[idx: Integer]: TFieldedText.TSequence read GetSequences;
+    function InsertSequence(idx: Integer): TFieldedText.TSequence;
+    function InsertSequenceItem(sequence: TFieldedText.TSequence; idx: Integer; field: TFieldedText.TField): TFieldedText.TSequence.TItem;
+    function InsertRedirect(sequenceItem: TFieldedText.TSequence.TItem; idx: Integer;
+                            redirectType: TFieldedText.TSequenceRedirect.TType): TFieldedText.TSequenceRedirect;
 
     procedure RemoveSequence(idx: Integer);
-    procedure RemoveSequenceItem(sequence: TFieldedTextSequence; idx: Integer);
-    procedure RemoveSequenceRedirect(sequenceItem: TFieldedTextSequenceItem; idx: Integer);
+    procedure RemoveSequenceItem(sequence: TFieldedText.TSequence; idx: Integer);
+    procedure RemoveSequenceRedirect(sequenceItem: TFieldedText.TSequence.TItem; idx: Integer);
 
     procedure MoveSequence(oldIndex, newIndex: Integer);
-    procedure MoveSequenceItem(sequence: TFieldedTextSequence; oldIndex, newIndex: Integer);
-    procedure MoveSequenceRedirect(sequenceItem: TFieldedTextSequenceItem; oldIndex, newIndex: Integer);
+    procedure MoveSequenceItem(sequence: TFieldedText.TSequence; oldIndex, newIndex: Integer);
+    procedure MoveSequenceRedirect(sequenceItem: TFieldedText.TSequence.TItem; oldIndex, newIndex: Integer);
 
     property SubstitutionCount: Integer read GetSubstitutionCount;
     property SubstitutionToken[idx: Integer]: Char read GetSubstitutionToken;
@@ -289,11 +289,11 @@ type
     property Properties[name: string; idx: Integer; cat: TPropertyCategory]: TValue read GetProperties;
     procedure SetPropertyValue(name: string; idx: Integer; cat: TPropertyCategory; const Value: TValue; out modified: Boolean);
 
-    property SequenceItemProperties[const name: string; sequenceItem: TFieldedTextSequenceItem]: TValue read GetSequenceItemProperties write SetSequenceItemProperties;
-    procedure SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedTextSequenceItem; const Value: TValue; out modified: Boolean);
+    property SequenceItemProperties[const name: string; sequenceItem: TFieldedText.TSequence.TItem]: TValue read GetSequenceItemProperties write SetSequenceItemProperties;
+    procedure SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedText.TSequence.TItem; const Value: TValue; out modified: Boolean);
 
-    property RedirectProperties[const name: string; redirect: TFieldedTextSequenceRedirect]: TValue read GetRedirectProperties write SetRedirectProperties;
-    procedure SetRedirectPropertyValue(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue; out modified: Boolean);
+    property RedirectProperties[const name: string; redirect: TFieldedText.TSequenceRedirect]: TValue read GetRedirectProperties write SetRedirectProperties;
+    procedure SetRedirectPropertyValue(const name: string; redirect: TFieldedText.TSequenceRedirect; const Value: TValue; out modified: Boolean);
 
     procedure RefreshControls; overload;
     procedure RefreshControls(cat: TPropertyCategory); overload;
@@ -406,12 +406,12 @@ implementation
 uses
   TypInfo,
   Classes,
-  Xilytix.FieldedText.Sequence,
+//  Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Configuration;
 
 { TEditEngine }
 
-function TEditEngine.AddField(dataType: TFieldedTextFieldDataType): Integer;
+function TEditEngine.AddField(dataType: TFieldedText.TDataType): Integer;
 begin
   Result := FFieldedText.AddField(dataType);
   MetaModified := True;
@@ -432,7 +432,7 @@ begin
   Result := value;
 end;
 
-function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedTextErrorCode): string;
+function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode): string;
 begin
   Result := 'Code: ' + FieldedTextErrorCodeToName(errorCode);
   case errorCode of
@@ -554,22 +554,22 @@ begin
   Result := FFieldedText.LocaleSettings;
 end;
 
-function TEditEngine.GetCurrentField: TFieldedTextField;
+function TEditEngine.GetCurrentField: TFieldedText.TField;
 begin
   Result := FFieldedText.CurrentField;
 end;
 
-function TEditEngine.GetCurrentSequence: TFieldedTextSequence;
+function TEditEngine.GetCurrentSequence: TFieldedText.TSequence;
 begin
   Result := CurrentSequenceItem.Owner;
 end;
 
-function TEditEngine.GetCurrentSequenceItem: TFieldedTextSequenceItem;
+function TEditEngine.GetCurrentSequenceItem: TFieldedText.TSequence.TItem;
 begin
   Result := FFieldedText.CurrentSequenceItem;
 end;
 
-function TEditEngine.GetDataTypeAbbr(&type: TFieldedTextFieldDataType): string;
+function TEditEngine.GetDataTypeAbbr(&type: TFieldedText.TDataType): string;
 begin
   Result := DataTypeAbbrs[&type].Abbr;
 end;
@@ -579,7 +579,7 @@ begin
   Result := FFieldedText.FieldCount;
 end;
 
-function TEditEngine.GetFields(idx: Integer): TFieldedTextField;
+function TEditEngine.GetFields(idx: Integer): TFieldedText.TField;
 begin
   Result := FFieldedText.Fields[idx];
 end;
@@ -714,7 +714,7 @@ begin
   Result := CountToNumber(FFieldedText.RecordCount);
 end;
 
-function TEditEngine.GetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect): TValue;
+function TEditEngine.GetRedirectProperties(const name: string; redirect: TFieldedText.TSequenceRedirect): TValue;
 var
   Context: TRttiContext;
   InstanceType: TRttiInstanceType;
@@ -745,7 +745,7 @@ begin
   Result := FFieldedText.SequenceCount;
 end;
 
-function TEditEngine.GetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem): TValue;
+function TEditEngine.GetSequenceItemProperties(const name: string; sequenceItem: TFieldedText.TSequence.TItem): TValue;
 var
   Context: TRttiContext;
   InstanceType: TRttiInstanceType;
@@ -763,7 +763,7 @@ end;
 
 function TEditEngine.GetSequenceProperties(const name: string; idx: Integer): TValue;
 var
-  Sequence: TFieldedTextSequence;
+  Sequence: TFieldedText.TSequence;
   Context: TRttiContext;
   InstanceType: TRttiInstanceType;
   PropInfo: TRttiProperty;
@@ -780,7 +780,7 @@ begin
   end;
 end;
 
-function TEditEngine.GetSequences(idx: Integer): TFieldedTextSequence;
+function TEditEngine.GetSequences(idx: Integer): TFieldedText.TSequence;
 begin
   Result := FFieldedText.Sequences[idx];
 end;
@@ -792,7 +792,7 @@ end;
 
 function TEditEngine.GetSubstitutionProperties(const name: string; idx: Integer): TValue;
 var
-  Substitution: TFieldedTextSubstitution;
+  Substitution: TFieldedText.TSubstitution;
   Context: TRttiContext;
   RecordType: TRttiRecordType;
   FieldInfo: TRttiField;
@@ -800,7 +800,7 @@ begin
   Substitution := FFieldedText.Substitutions[Idx];
   Context := TRttiContext.Create;
   try
-    RecordType := Context.GetType(TypeInfo(TFieldedTextSubstitution)) as TRttiRecordType;
+    RecordType := Context.GetType(TypeInfo(TFieldedText.TSubstitution)) as TRttiRecordType;
     FieldInfo := RecordType.GetField(Name);
     Result := FieldInfo.GetValue(@Substitution);
   finally
@@ -860,7 +860,7 @@ begin
   FFieldedText.EmbeddedMetaExplicitIndices := Configuration.SaveMetaWithExplicitIndices;
 end;
 
-procedure TEditEngine.HandleErrorEvent(sender: TFieldedText; errorCode: TFieldedTextErrorCode; field: TFieldedTextField);
+procedure TEditEngine.HandleErrorEvent(sender: TFieldedText; errorCode: TFieldedText.TErrorCode; field: TFieldedText.TField);
 var
   ErrorText: string;
 begin
@@ -869,7 +869,7 @@ begin
   NotifyError(ErrorText);
 end;
 
-procedure TEditEngine.HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
+procedure TEditEngine.HandleFieldHeadingEvent(sender: TFieldedText; field: TFieldedText.TField; var stop: Boolean);
 begin
   if FFieldedText.Generating then
   begin
@@ -885,7 +885,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.HandleFieldValueEvent(sender: TFieldedText; field: TFieldedTextField; var stop: Boolean);
+procedure TEditEngine.HandleFieldValueEvent(sender: TFieldedText; field: TFieldedText.TField; var stop: Boolean);
 begin
   if FFieldedText.Generating then
   begin
@@ -1004,7 +1004,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.NotifyFieldRemoved(field: TFieldedTextField);
+procedure TEditEngine.NotifyFieldRemoved(field: TFieldedText.TField);
 var
   I: Integer;
   Delegates: TFieldRemovedDelegates;
@@ -1311,21 +1311,21 @@ begin
   Result := value;
 end;
 
-function TEditEngine.InsertRedirect(sequenceItem: TFieldedTextSequenceItem; idx: Integer;
-                                    redirectType: TFieldedTextSequenceRedirectType): TFieldedTextSequenceRedirect;
+function TEditEngine.InsertRedirect(sequenceItem: TFieldedText.TSequence.TItem; idx: Integer;
+                                    redirectType: TFieldedText.TSequenceRedirect.TType): TFieldedText.TSequenceRedirect;
 begin
   Result := sequenceItem.InsertRedirect(idx, redirectType);
   MetaModified := True;
 end;
 
-function TEditEngine.InsertSequence(idx: Integer): TFieldedTextSequence;
+function TEditEngine.InsertSequence(idx: Integer): TFieldedText.TSequence;
 begin
   Result := FFieldedText.InsertSequence(idx);
   NotifySequencesChange;
   MetaModified := True;
 end;
 
-function TEditEngine.InsertSequenceItem(sequence: TFieldedTextSequence; idx: Integer; field: TFieldedTextField): TFieldedTextSequenceItem;
+function TEditEngine.InsertSequenceItem(sequence: TFieldedText.TSequence; idx: Integer; field: TFieldedText.TField): TFieldedText.TSequence.TItem;
 begin
   Result := sequence.InsertField(idx, field);
   MetaModified := True;
@@ -1363,13 +1363,13 @@ begin
   MetaModified := True;
 end;
 
-procedure TEditEngine.MoveSequenceItem(sequence: TFieldedTextSequence; oldIndex, newIndex: Integer);
+procedure TEditEngine.MoveSequenceItem(sequence: TFieldedText.TSequence; oldIndex, newIndex: Integer);
 begin
   sequence.MoveItem(oldIndex, NewIndex);
   MetaModified := True;
 end;
 
-procedure TEditEngine.MoveSequenceRedirect(sequenceItem: TFieldedTextSequenceItem; oldIndex, newIndex: Integer);
+procedure TEditEngine.MoveSequenceRedirect(sequenceItem: TFieldedText.TSequence.TItem; oldIndex, newIndex: Integer);
 begin
   sequenceItem.MoveRedirect(oldIndex, NewIndex);
   MetaModified := True;
@@ -1420,7 +1420,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.RemoveField(field: TFieldedTextField);
+procedure TEditEngine.RemoveField(field: TFieldedText.TField);
 begin
   FFieldedText.RemoveField(field);
   MetaModified := True;
@@ -1434,13 +1434,13 @@ begin
   NotifySequencesChange;
 end;
 
-procedure TEditEngine.RemoveSequenceItem(sequence: TFieldedTextSequence; idx: Integer);
+procedure TEditEngine.RemoveSequenceItem(sequence: TFieldedText.TSequence; idx: Integer);
 begin
   sequence.RemoveItem(idx);
   NotifyRefreshSequencesControls;
 end;
 
-procedure TEditEngine.RemoveSequenceRedirect(sequenceItem: TFieldedTextSequenceItem; idx: Integer);
+procedure TEditEngine.RemoveSequenceRedirect(sequenceItem: TFieldedText.TSequence.TItem; idx: Integer);
 begin
   sequenceItem.RemoveRedirect(idx);
   NotifyRefreshSequencesControls;
@@ -1735,7 +1735,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetRedirectProperties(const name: string; redirect: TFieldedTextSequenceRedirect; const Value: TValue);
+procedure TEditEngine.SetRedirectProperties(const name: string; redirect: TFieldedText.TSequenceRedirect; const Value: TValue);
 var
   Context: TRttiContext;
   InstanceType: TRttiInstanceType;
@@ -1751,7 +1751,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetRedirectPropertyValue(const name: string; redirect: TFieldedTextSequenceRedirect;
+procedure TEditEngine.SetRedirectPropertyValue(const name: string; redirect: TFieldedText.TSequenceRedirect;
                                                const Value: TValue; out modified: Boolean);
 var
   ExistingValue: TValue;
@@ -1768,7 +1768,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetSequenceItemProperties(const name: string; sequenceItem: TFieldedTextSequenceItem;
+procedure TEditEngine.SetSequenceItemProperties(const name: string; sequenceItem: TFieldedText.TSequence.TItem;
   const Value: TValue);
 var
   Context: TRttiContext;
@@ -1785,7 +1785,7 @@ begin
   end;
 end;
 
-procedure TEditEngine.SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedTextSequenceItem;
+procedure TEditEngine.SetSequenceItemPropertyValue(const name: string; sequenceItem: TFieldedText.TSequence.TItem;
                                                    const Value: TValue; out modified: Boolean);
 var
   ExistingValue: TValue;
@@ -1804,7 +1804,7 @@ end;
 
 procedure TEditEngine.SetSequenceProperties(const name: string; idx: Integer; const Value: TValue);
 var
-  Sequence: TFieldedTextSequence;
+  Sequence: TFieldedText.TSequence;
   Context: TRttiContext;
   InstanceType: TRttiInstanceType;
   PropInfo: TRttiProperty;
@@ -1823,7 +1823,7 @@ end;
 
 procedure TEditEngine.SetSubstitutionProperties(const name: string; idx: Integer; const Value: TValue);
 var
-  Substitution: TFieldedTextSubstitution;
+  Substitution: TFieldedText.TSubstitution;
   Context: TRttiContext;
   RecordType: TRttiRecordType;
   FieldInfo: TRttiField;
@@ -1831,12 +1831,13 @@ begin
   Substitution := FFieldedText.Substitutions[Idx];
   Context := TRttiContext.Create;
   try
-    RecordType := Context.GetType(TypeInfo(TFieldedTextSubstitution)) as TRttiRecordType;
+    RecordType := Context.GetType(TypeInfo(TFieldedText.TSubstitution)) as TRttiRecordType;
     FieldInfo := RecordType.GetField(Name);
     FieldInfo.SetValue(@Substitution, Value);
   finally
     Context.Free;
   end;
+  FFieldedText.Substitutions[Idx] := Substitution;
 end;
 
 procedure TEditEngine.SetSynchronised(const Value: Boolean);

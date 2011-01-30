@@ -25,7 +25,7 @@ type
     procedure Refresh; override;
 
     class function GetAddCaption: string; override;
-    class function GetDataType: TFieldedTextFieldDataType; override;
+    class function GetDataType: TFieldedTextField.TDataType; override;
   end;
 
 var
@@ -61,7 +61,7 @@ begin
   Result := 'Float';
 end;
 
-class function TFloatFieldPropertiesFrame.GetDataType: TFieldedTextFieldDataType;
+class function TFloatFieldPropertiesFrame.GetDataType: TFieldedTextField.TDataType;
 begin
   Result := ftdtFloat;
 end;

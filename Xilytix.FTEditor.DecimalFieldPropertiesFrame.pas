@@ -25,7 +25,7 @@ type
     procedure Refresh; override;
 
     class function GetAddCaption: string; override;
-    class function GetDataType: TFieldedTextFieldDataType; override;
+    class function GetDataType: TFieldedTextField.TDataType; override;
   end;
 
 var
@@ -61,7 +61,7 @@ begin
   Result := 'Decimal';
 end;
 
-class function TDecimalFieldPropertiesFrame.GetDataType: TFieldedTextFieldDataType;
+class function TDecimalFieldPropertiesFrame.GetDataType: TFieldedTextField.TDataType;
 begin
   Result := ftdtDecimal;
 end;

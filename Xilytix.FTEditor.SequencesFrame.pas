@@ -41,7 +41,7 @@ type
       FListFrame: TSequenceListFrame;
 
     procedure HandleRefreshSequencesControlsEvent;
-    procedure HandleFieldRemovedEvent(field: TFieldedTextField);
+    procedure HandleFieldRemovedEvent(field: TFieldedText.TField);
 
   protected
     function GetInitialHeight: Integer; override;
@@ -110,7 +110,7 @@ begin
   Result := 'Sequences';
 end;
 
-procedure TSequencesFrame.HandleFieldRemovedEvent(field: TFieldedTextField);
+procedure TSequencesFrame.HandleFieldRemovedEvent(field: TFieldedText.TField);
 begin
   FListFrame.NotifyFieldRemoved(field);
 end;

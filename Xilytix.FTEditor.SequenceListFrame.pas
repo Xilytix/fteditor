@@ -22,8 +22,8 @@ uses
   CategoryButtons,
   ExtCtrls,
   ButtonGroup,
-  Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Sequence,
+  Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.SequenceBasePropertiesFrame,
@@ -79,12 +79,12 @@ type
       TItemInfoArray = array[TItemTypeId] of TItemInfoRec;
 
       TRedirectTypeInfoRec = record
-        RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+        RedirectType: TFieldedTextSequenceRedirect.TType;
         Id: TItemTypeId;
         FrameClass: TSequenceRedirect_BasePropertiesFrameClass;
       end;
 
-      TRedirectTypeInfoArray = array[TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType] of TRedirectTypeInfoRec;
+      TRedirectTypeInfoArray = array[TFieldedTextSequenceRedirect.TType] of TRedirectTypeInfoRec;
 
     const
       SequencesCategoryIndex = 0;
@@ -149,10 +149,10 @@ type
     procedure PopulateAddItemComboBox(addOnly: Boolean);
 
     function GetFocusedCategory: TButtonCategory;
-    function GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+    function GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TType;
 
     procedure AddSequence;
-    function AddSequenceItem(field: TFieldedTextField): Integer;
+    function AddSequenceItem(field: TFieldedText.TField): Integer;
     procedure AddRedirect(Id: TItemTypeId);
 
     procedure ProcessFocusSequence(idx: Integer);
@@ -198,7 +198,7 @@ type
     procedure Unprepare;
 
     procedure Refresh;
-    procedure NotifyFieldRemoved(field: TFieldedTextField);
+    procedure NotifyFieldRemoved(field: TFieldedText.TField);
   end;
 
 implementation
@@ -242,7 +242,7 @@ var
   ButtonGroupIdx: Integer;
   AddToSequence: TFieldedTextSequence;
   ModifySequenceItem: TFieldedTextSequenceItem;
-  Field: TFieldedTextField;
+  Field: TFieldedText.TField;
   SequenceItemIdx: Integer;
   SourceButton, TargetButton: TButtonItem;
   TargetCategory: TButtonCategory;
@@ -258,7 +258,7 @@ begin
     ButtonGroupIdx := ButtonGroup.ItemIndex;
     if ButtonGroupIdx >= 0 then
     begin
-      Field := TObject(ButtonGroup.Items[ButtonGroupIdx].Data) as TFieldedTextField;
+      Field := TObject(ButtonGroup.Items[ButtonGroupIdx].Data) as TFieldedText.TField;
 
       if Assigned(ModifySequenceItem) then
       begin
@@ -486,7 +486,7 @@ end;
 
 function TSequenceListFrame.CalculateSequenceItemCaption(item: TFieldedTextSequenceItem): string;
 var
-  Field: TFieldedTextField;
+  Field: TFieldedText.TField;
 begin
   Result := IntToStr(item.Index);
   Field := item.Field;
@@ -511,7 +511,7 @@ end;
 class constructor TSequenceListFrame.Create;
 var
   Id: TItemTypeId;
-  RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+  RedirectType: TFieldedTextSequenceRedirect.TType;
 begin
   for Id := Low(TItemTypeId) to High(TItemTypeId) do
   begin
@@ -521,7 +521,7 @@ begin
     end;
   end;
 
-  for RedirectType := Low(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType) to High(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType) do
+  for RedirectType := Low(TFieldedTextSequenceRedirect.TType) to High(TFieldedTextSequenceRedirect.TType) do
   begin
     if RedirectType <> RedirectTypeInfoArray[RedirectType].RedirectType then
     begin
@@ -569,9 +569,9 @@ begin
   end;
 end;
 
-function TSequenceListFrame.GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+function TSequenceListFrame.GetRedirectType(id: TItemTypeId): TFieldedTextSequenceRedirect.TType;
 var
-  I: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+  I: TFieldedTextSequenceRedirect.TType;
   Found: Boolean;
 begin
   Result := ftrtExactString; // avoid warning
@@ -727,7 +727,7 @@ begin
   end;
 end;
 
-procedure TSequenceListFrame.NotifyFieldRemoved(field: TFieldedTextField);
+procedure TSequenceListFrame.NotifyFieldRemoved(field: TFieldedText.TField);
 var
   I: Integer;
   ButtonCount: Integer;
@@ -889,7 +889,7 @@ end;
 procedure TSequenceListFrame.AddRedirect(Id: TItemTypeId);
 var
   Idx: Integer;
-  RedirectType: TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType;
+  RedirectType: TFieldedTextSequenceRedirect.TType;
   Redirect: TFieldedTextSequenceRedirect;
   ButtonItem: TButtonItem;
 begin
@@ -920,7 +920,7 @@ begin
   Buttons.SelectedItem := ButtonItem;
 end;
 
-function TSequenceListFrame.AddSequenceItem(field: TFieldedTextField): Integer;
+function TSequenceListFrame.AddSequenceItem(field: TFieldedText.TField): Integer;
 var
   SequenceItem: TFieldedTextSequenceItem;
   ButtonItem: TButtonItem;

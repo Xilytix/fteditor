@@ -90,7 +90,7 @@ procedure TSequenceItemPropertiesFrame.PopulateFieldComboBox;
 var
   I: Integer;
   Item: TComboExItem;
-  Field: TFieldedTextField;
+  Field: TFieldedText.TField;
   FoundItemIndex: Boolean;
 begin
   FieldComboBox.ItemsEx.SortType := ListActns.stNone;

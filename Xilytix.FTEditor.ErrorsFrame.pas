@@ -120,7 +120,7 @@ end;
 
 procedure TErrorsFrame.HandleErrorEvent(errorText: string);
 var
-  Field: TFieldedTextField;
+  Field: TFieldedText.TField;
 //  Sequence: TFieldedTextSequence;
 begin
   errorText := DateTimeToStr(Now) + '> ' + errorText;

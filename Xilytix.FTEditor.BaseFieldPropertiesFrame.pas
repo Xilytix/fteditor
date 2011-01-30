@@ -128,7 +128,7 @@ type
     procedure RefreshName;
 
     class function GetAddCaption: string; virtual;
-    class function GetDataType: TFieldedTextFieldDataType; virtual;
+    class function GetDataType: TFieldedTextField.TDataType; virtual;
   end;
 
   TBaseFieldPropertiesFrameClass = class of TBaseFieldPropertiesFrame;
@@ -231,7 +231,7 @@ begin
   Result := '';
 end;
 
-class function TBaseFieldPropertiesFrame.GetDataType: TFieldedTextFieldDataType;
+class function TBaseFieldPropertiesFrame.GetDataType: TFieldedTextField.TDataType;
 begin
   Result := ftdtCustom;
   Assert(False);

@@ -13,7 +13,7 @@ uses
   Generics.Collections,
   Rtti,
   Xilytix.FieldedText.Utils,
-  Xilytix.FieldedText.Sequence,
+  Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Colors;
 
@@ -26,7 +26,7 @@ type
     FValue: Variant;
     FValueAsString: string;
     FValueAsStringEmpty: Boolean;
-    FSequenceItem: TFieldedTextSequenceItem;
+    FSequenceItem: TFieldedText.TSequence.TItem;
     FFilePos: Int64;
     FLineNumber: Integer;
     FLinePos: Integer;
@@ -45,7 +45,7 @@ type
   public
     constructor Create(myActiveIndex: Integer;
                        const myValue: Variant;
-                       mySequenceItem: TFieldedTextSequenceItem;
+                       mySequenceItem: TFieldedText.TSequence.TItem;
                        myFilePos: Int64;
                        myRichPos: Integer;
                        myLineNumber: Integer;
@@ -55,7 +55,7 @@ type
                        myRow: TRow;
                        myDisplayCulture: TFieldedTextLocaleSettings);
     property ActiveIndex: Integer read FActiveIndex;
-    property SequenceItem: TFieldedTextSequenceItem read FSequenceItem;
+    property SequenceItem: TFieldedText.TSequence.TItem read FSequenceItem;
     property FilePos: Int64 read FFilePos;
     property RichPos: Integer read FRichPos;
     property LineNumber: Integer read FLineNumber;
@@ -233,7 +233,7 @@ type
     function AddHeading(main: Boolean): Integer;
     function AddRecord(recNr, tableNr: Integer): Integer;
     procedure SetLastRecordAsNewTable;
-    procedure AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedTextSequenceItem;
+    procedure AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedText.TSequence.TItem;
                       filePos: Int64; textLength: Integer);
     procedure SetError(activeIndex: Integer);
 
@@ -255,7 +255,7 @@ uses
 
 constructor TCell.Create(myActiveIndex: Integer;
   const myValue: Variant;
-  mySequenceItem: TFieldedTextSequenceItem;
+  mySequenceItem: TFieldedText.TSequence.TItem;
   myFilePos: Int64;
   myRichPos: Integer;
   myLineNumber: Integer;
@@ -398,7 +398,6 @@ begin
       Result := True
     else
     begin
-      Idx := not Idx;
       Dec(Idx);
       if Idx < 0 then
         Result := False
@@ -428,7 +427,7 @@ end;
 
 { TEditData }
 
-procedure TEditData.AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedTextSequenceItem; filePos: Int64;
+procedure TEditData.AddCell(activeIndex: Integer; const value: Variant; sequenceItem: TFieldedText.TSequence.TItem; filePos: Int64;
   textLength: Integer);
 var
   Cell: TCell;
