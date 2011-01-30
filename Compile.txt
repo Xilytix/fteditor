@@ -1,0 +1,14 @@
+FTEditor compilation notes
+
+- Compiles with Delphi XE (any edition I believe)
+- May compile with Delphi 2010 however generics bugs may need to be worked around
+- Prerequesite components are:
+  * PJVersionInfo
+    Downloadable from http://www.delphidabbler.com/software/verinfo/inst
+    Does NOT need to be installed in IDE (files only need to be present on computer).
+    Add PJVersionInfoLib Delphi environmental variable (Tools | Options | Environmental Variables | User overrides)
+     which points to folder where PJVersionInfo files (source or DCU) are.
+  * TFieldedText
+    Downloadable with SVN from https://tfieldedtext.svn.sourceforge.net/svnroot/tfieldedtext
+    Does NOT need to be installed in IDE (files only need to be present on computer).
+    Add FieldedTextSrc Delphi environmental variable  which points to folder where TFieldedText source files are.
