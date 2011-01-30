@@ -444,13 +444,6 @@ begin
   FBinder := TBinder.Create(FEditEngine);
   FBinder.SubscribeErrorCountChangeEvent(HandleErrorCountChangeEvent);
 
-  Configuration.TriggerUpdatedEvent;
-
-  AutoParseCheckBox.Checked := Configuration.AutoParse;
-  AutoGenerateCheckBox.Checked := Configuration.AutoGenerate;
-  MouseOverPanel.Height := Configuration.MouseOverPanelHeight;
-  MouseOverPanel.Visible := Configuration.MouseOverPanelVisible;
-
   TextFileNameFilter := 'Text Files (*.' + TCommon.FieldedTextFileNameExtension + ', *.txt, *.csv)|' +
                         '*.' + TCommon.FieldedTextFileNameExtension + ';*.txt;*.csv|' +
                         'Fielded Text File (*.' + TCommon.FieldedTextFileNameExtension + ')|' +
@@ -471,8 +464,6 @@ begin
   OpenMetaAction.Dialog.DefaultExt := TCommon.MetaFileNameExtension;
   SaveMetaAsAction.Dialog.Filter := MetaFileNameFilter;
   SaveMetaAsAction.Dialog.DefaultExt := TCommon.MetaFileNameExtension;
-
-  CheckCreateInitialLayoutConfigurations;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -485,9 +476,10 @@ procedure TMainForm.FormShow(Sender: TObject);
 var
   ActiveLayoutConfigurationName: string;
 begin
-  Configuration.Load;
   if not FDoneFirstFormShow then
   begin
+    Configuration.Load;
+
     if Configuration.MainWindowMaximised then
       WindowState := wsMaximized
     else
@@ -498,6 +490,15 @@ begin
       Height := Configuration.MainWindowHeight;
       Width := Configuration.MainWindowWidth;
     end;
+
+    Configuration.TriggerUpdatedEvent;
+
+    AutoParseCheckBox.Checked := Configuration.AutoParse;
+    AutoGenerateCheckBox.Checked := Configuration.AutoGenerate;
+    MouseOverPanel.Height := Configuration.MouseOverPanelHeight;
+    MouseOverPanel.Visible := Configuration.MouseOverPanelVisible;
+
+    CheckCreateInitialLayoutConfigurations;
 
 {    FLayoutConfigurations := TLayoutConfigurations.Create;
     FLayoutConfigurations.LoadFromXml(Configuration.LayoutConfigurations);

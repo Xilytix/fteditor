@@ -34,7 +34,7 @@ type
     procedure Refresh; override;
 
     class function GetAddCaption: string; override;
-    class function GetDataType: TFieldedTextFieldDataType; override;
+    class function GetDataType: TFieldedTextField.TDataType; override;
   end;
 
 implementation
@@ -62,7 +62,7 @@ begin
   Result := 'Boolean';
 end;
 
-class function TBooleanFieldPropertiesFrame.GetDataType: TFieldedTextFieldDataType;
+class function TBooleanFieldPropertiesFrame.GetDataType: TFieldedTextField.TDataType;
 begin
   Result := ftdtBoolean;
 end;

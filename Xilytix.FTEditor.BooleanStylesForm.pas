@@ -10,8 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
-  Xilytix.FieldedText.Utils,
-  Xilytix.FieldedText.BaseField;
+  Xilytix.FieldedText.Utils;
 
 type
   TBooleanStylesForm = class(TForm)

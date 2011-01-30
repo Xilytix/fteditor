@@ -13,6 +13,9 @@ inherited SequencesFrame: TSequencesFrame
     TabOrder = 0
     object ListTabSheet: TTabSheet
       Caption = 'List'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
     end
     object TreeTabSheet: TTabSheet
       Caption = 'Tree'

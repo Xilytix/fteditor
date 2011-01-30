@@ -17,7 +17,7 @@ uses
   TypInfo,
   Rtti,
   Xilytix.FieldedText.Utils,
-  Xilytix.FieldedText.BaseField,
+//  Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditEngine,
   Xilytix.FTEditor.Configuration;
@@ -224,9 +224,9 @@ type
         (Id: piHeadingPadCharType; Cat: pcMainMeta; ForceRefresh: True),
         (Id: piHeadingTruncateType; Cat: pcMainMeta; ForceRefresh: True),
 
-        (Id: piSubstitutionType; Cat: pcSubstitution),
-        (Id: piSubstitutionToken; Cat: pcSubstitution),
-        (Id: piSubstitutionValue; Cat: pcSubstitution),
+        (Id: piSubstitutionType; Cat: pcSubstitution; Name: 'SubType'),
+        (Id: piSubstitutionToken; Cat: pcSubstitution; Name: 'Token'),
+        (Id: piSubstitutionValue; Cat: pcSubstitution; Name: 'Value'),
 
         (Id: piMetaReferenceType; Cat: pcMainText; CatRefresh: True),
         (Id: piMetaReference; Cat: pcMainText),
@@ -344,8 +344,8 @@ type
     function GetCharValue(id: TPropertyId; idx: Integer): Char;
 
     function GetPropertyValue(id: TPropertyId; idx: Integer): TValue; overload;
-    function GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TValue; overload;
-    function GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TValue; overload;
+    function GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedText.TSequence.TItem): TValue; overload;
+    function GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedText.TSequenceRedirect): TValue; overload;
 
     procedure SaveCharEdit(edit: TEdit; idx: Integer); overload;
     procedure SaveStringEdit(edit: TEdit; idx: Integer); overload;
@@ -354,10 +354,10 @@ type
     procedure SaveDoubleEdit(edit: TEdit; idx: Integer); overload;
     procedure SaveCurrencyEdit(edit: TEdit; idx: Integer); overload;
 
-    procedure SaveStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
-    procedure SaveInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
-    procedure SaveDoubleEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
-    procedure SaveDecimalEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect); overload;
+    procedure SaveStringEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect); overload;
+    procedure SaveInt64Edit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect); overload;
+    procedure SaveDoubleEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect); overload;
+    procedure SaveDecimalEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect); overload;
 
   public
     constructor Create(myEditEngine: TEditEngine);
@@ -381,9 +381,9 @@ type
     procedure HandleCommaTextEditKeyPress(edit: TEdit; idx: Integer; var key: Char);
     procedure HandleCommaTextEditExit(edit: TEdit; idx: Integer);
 
-    procedure LoadRedirectStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectStringEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
-    procedure HandleRedirectStringEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectStringEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectStringEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
+    procedure HandleRedirectStringEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadCharEdit(edit: TEdit; idx: Integer; value: Char); overload;
     procedure LoadCharEdit(edit: TEdit; idx: Integer); overload;
@@ -400,25 +400,25 @@ type
     procedure HandleInt64EditKeyPress(edit: TEdit; idx: Integer; var key: Char);
     procedure HandleInt64EditExit(edit: TEdit; idx: Integer);
 
-    procedure LoadRedirectInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectInt64EditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
-    procedure HandleRedirectInt64EditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectInt64Edit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectInt64EditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
+    procedure HandleRedirectInt64EditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadDoubleEdit(edit: TEdit; idx: Integer);
     procedure HandleDoubleEditKeyPress(edit: TEdit; idx: Integer; var key: Char);
     procedure HandleDoubleEditExit(edit: TEdit; idx: Integer);
 
-    procedure LoadRedirectDoubleEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectDoubleEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
-    procedure HandleRedirectDoubleEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectDoubleEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectDoubleEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
+    procedure HandleRedirectDoubleEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadCurrencyEdit(edit: TEdit; idx: Integer);
     procedure HandleDecimalEditKeyPress(edit: TEdit; idx: Integer; var key: Char);
     procedure HandleDecimalEditExit(edit: TEdit; idx: Integer);
 
-    procedure LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectDecimalEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
-    procedure HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectDecimalEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
+    procedure HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadNumberStylesEdit(edit: TEdit; idx: Integer);
     procedure SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyles);
@@ -437,8 +437,8 @@ type
 
     procedure LoadCheckBox(checkBox: TCheckBox; idx: Integer);
     procedure HandleCheckBoxClick(checkBox: TCheckBox; idx: Integer);
-    procedure LoadRedirectCheckBox(checkBox: TCheckBox; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectCheckBoxClick(checkBox: TCheckBox; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectCheckBox(checkBox: TCheckBox; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectCheckBoxClick(checkBox: TCheckBox; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadRadioButton(radioButton: TRadioButton; idx: Integer);
     procedure HandleRadioButtonClick(radioButton: TRadioButton; idx: Integer);
@@ -446,17 +446,17 @@ type
     procedure LoadDateTimePickers(datePicker, timePicker: TDateTimePicker; idx: Integer);
     procedure SaveDateTimePickers(datePicker, timePicker: TDateTimePicker; idx: Integer);
 
-    procedure LoadRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedTextSequenceRedirect);
-    procedure SaveRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedText.TSequenceRedirect);
+    procedure SaveRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadComboBox(comboBox: TComboBox; idx: Integer);
     procedure HandleComboBoxChange(comboBox: TComboBox; idx: Integer);
 
-    procedure LoadRedirectComboBox(comboBox: TComboBox; redirect: TFieldedTextSequenceRedirect);
-    procedure HandleRedirectComboBoxChange(comboBox: TComboBox; redirect: TFieldedTextSequenceRedirect);
+    procedure LoadRedirectComboBox(comboBox: TComboBox; redirect: TFieldedText.TSequenceRedirect);
+    procedure HandleRedirectComboBoxChange(comboBox: TComboBox; redirect: TFieldedText.TSequenceRedirect);
 
-    procedure SetSequenceItemField(sequenceItem: TFieldedTextSequenceItem; value: TObject);
-    procedure SetRedirectSequence(redirect: TFieldedTextSequenceRedirect; value: TObject);
+    procedure SetSequenceItemField(sequenceItem: TFieldedText.TSequence.TItem; value: TObject);
+    procedure SetRedirectSequence(redirect: TFieldedText.TSequenceRedirect; value: TObject);
 
     class procedure PrepareEndOfLineTypeComboBox(comboBox: TComboBox; id: TPropertyId);
     class procedure PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBox; id: TPropertyId);
@@ -475,12 +475,12 @@ type
     function GetPropertyValue(control: TWinControl; idx: Integer): TValue; overload;
     procedure SetPropertyValue(id: TPropertyId; idx: Integer; const value: TValue; out modified: Boolean);
 
-    function GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TValue; overload;
-    procedure SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; const value: TValue;
+    function GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedText.TSequence.TItem): TValue; overload;
+    procedure SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedText.TSequence.TItem; const value: TValue;
                                            out modified: Boolean);
 
-    function GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TValue; overload;
-    procedure SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; const value: TValue;
+    function GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedText.TSequenceRedirect): TValue; overload;
+    procedure SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedText.TSequenceRedirect; const value: TValue;
                                        out modified: Boolean);
 
     procedure SubscribeErrorCountChangeEvent(Delegate: TErrorCountChangeDelegate);
@@ -497,7 +497,6 @@ uses
   Math,
   Character,
   Xilytix.FieldedText.CommaText,
-  Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Common,
   Xilytix.FTEditor.Colors,
   Xilytix.FTEditor.NumberStylesForm,
@@ -667,7 +666,7 @@ begin
   end;
 end;
 
-procedure TBinder.SaveDecimalEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.SaveDecimalEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   CurrencyValue: Currency;
@@ -752,7 +751,7 @@ begin
   end;
 end;
 
-procedure TBinder.SaveInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.SaveInt64Edit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   Value: Int64;
@@ -826,7 +825,7 @@ begin
 end;
 
 procedure TBinder.SaveRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker;
-  redirect: TFieldedTextSequenceRedirect);
+  redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   Value: TDateTime;
@@ -841,7 +840,7 @@ begin
   end;
 end;
 
-procedure TBinder.SaveStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.SaveStringEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   Modified: Boolean;
@@ -1099,11 +1098,11 @@ begin
       piNewDecimalFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
       piEndOfLineType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineType);
       piEndOfLineAutoWriteType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineAutoWriteType);
-      piHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextHeadingConstraint);
-      piHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
-      piHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
-      piHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
-      piHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.THeadingConstraint);
+      piHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TQuotedType);
+      piHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadAlignment);
+      piHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadCharType);
+      piHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TTruncateType);
       piSubstitutionType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSubstitutionType);
       piSubstitutionToken: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piSubstitutionValue: PropertyTypeInfoArray[PropId] := TypeInfo(string);
@@ -1112,29 +1111,29 @@ begin
       piName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piId: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
       piFieldHeadings: PropertyTypeInfoArray[PropId] := TypeInfo(string);
-      piFieldHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextHeadingConstraint);
+      piFieldHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.THeadingConstraint);
       piConstant: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piNull: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piFixedWidth: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
-      piValueQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
+      piValueQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TQuotedType);
       piValueAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piValueWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
-      piFieldHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldQuotedType);
+      piFieldHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TQuotedType);
       piFieldHeadingAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piFieldHeadingWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piWidth: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
-      piValuePadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
-      piValuePadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
+      piValuePadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadCharType);
+      piValuePadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadAlignment);
       piValuePadChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piValueEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
-      piValueTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piValueTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TTruncateType);
       piValueTruncateChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piValueNullChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
-      piFieldHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadCharType);
-      piFieldHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldPadAlignment);
+      piFieldHeadingPadCharType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadCharType);
+      piFieldHeadingPadAlignment: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TPadAlignment);
       piFieldHeadingPadChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piFieldHeadingEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
-      piFieldHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextFieldTruncateType);
+      piFieldHeadingTruncateType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TTruncateType);
       piFieldHeadingTruncateChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piStringValue: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piBooleanValue: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
@@ -1151,10 +1150,10 @@ begin
       piDateTimeStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyles);
       piSequenceName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piIsRoot: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
-      piSequenceItemField: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequenceItem);
-      piRedirectSequence: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequence);
+      piSequenceItemField: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequence.TItem);
+      piRedirectSequence: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequence);
       piRedirectValue: PropertyTypeInfoArray[PropId] := nil;
-      piRedirectInvokationDelay: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedTextSequenceRedirect.TFieldedTextSequenceRedirectType);
+      piRedirectInvokationDelay: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequenceRedirect.TType);
       else raise Exception.Create('Property TypeInfo not set');
     end;
   end;
@@ -1263,7 +1262,7 @@ begin
   Result := GetPropertyValue(Id, idx);
 end;
 
-function TBinder.GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedTextSequenceRedirect): TValue;
+function TBinder.GetRedirectPropertyValue(control: TWinControl; redirect: TFieldedText.TSequenceRedirect): TValue;
 var
   Id: TPropertyId;
 begin
@@ -1271,7 +1270,7 @@ begin
   Result := GetRedirectPropertyValue(Id, redirect);
 end;
 
-function TBinder.GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect): TValue;
+function TBinder.GetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedText.TSequenceRedirect): TValue;
 var
   Name: string;
 begin
@@ -1279,7 +1278,7 @@ begin
   Result := FEditEngine.RedirectProperties[Name, redirect];
 end;
 
-function TBinder.GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem): TValue;
+function TBinder.GetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedText.TSequence.TItem): TValue;
 var
   Name: string;
 begin
@@ -1287,7 +1286,7 @@ begin
   Result := FEditEngine.SequenceItemProperties[Name, sequenceItem];
 end;
 
-function TBinder.GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedTextSequenceItem): TValue;
+function TBinder.GetSequenceItemPropertyValue(control: TWinControl; sequenceItem: TFieldedText.TSequence.TItem): TValue;
 var
   Id: TPropertyId;
 begin
@@ -1465,7 +1464,7 @@ begin
   end;
 end;
 
-procedure TBinder.HandleRedirectCheckBoxClick(checkBox: TCheckBox; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.HandleRedirectCheckBoxClick(checkBox: TCheckBox; redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   Modified: Boolean;
@@ -1479,7 +1478,7 @@ begin
 end;
 
 procedure TBinder.HandleRedirectComboBoxChange(comboBox: TComboBox;
-  redirect: TFieldedTextSequenceRedirect);
+  redirect: TFieldedText.TSequenceRedirect);
 var
   ItemIndex: Integer;
   Id: TPropertyId;
@@ -1502,12 +1501,12 @@ begin
   end;
 end;
 
-procedure TBinder.HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 begin
   SaveDecimalEdit(edit, redirect);
 end;
 
-procedure TBinder.HandleRedirectDecimalEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
+procedure TBinder.HandleRedirectDecimalEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1516,12 +1515,12 @@ begin
   end;
 end;
 
-procedure TBinder.HandleRedirectDoubleEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.HandleRedirectDoubleEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 begin
   SaveDoubleEdit(edit, redirect);
 end;
 
-procedure TBinder.HandleRedirectDoubleEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
+procedure TBinder.HandleRedirectDoubleEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1530,12 +1529,12 @@ begin
   end;
 end;
 
-procedure TBinder.HandleRedirectInt64EditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.HandleRedirectInt64EditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 begin
   SaveInt64Edit(edit, redirect);
 end;
 
-procedure TBinder.HandleRedirectInt64EditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
+procedure TBinder.HandleRedirectInt64EditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1544,12 +1543,12 @@ begin
   end;
 end;
 
-procedure TBinder.HandleRedirectStringEditExit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.HandleRedirectStringEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 begin
   SaveStringEdit(edit, redirect);
 end;
 
-procedure TBinder.HandleRedirectStringEditKeyPress(edit: TEdit; redirect: TFieldedTextSequenceRedirect; var key: Char);
+procedure TBinder.HandleRedirectStringEditKeyPress(edit: TEdit; redirect: TFieldedText.TSequenceRedirect; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1760,7 +1759,7 @@ begin
   radioButton.Checked := Value.AsBoolean;
 end;
 
-procedure TBinder.LoadRedirectCheckBox(checkBox: TCheckBox; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectCheckBox(checkBox: TCheckBox; redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
 begin
@@ -1769,7 +1768,7 @@ begin
 end;
 
 procedure TBinder.LoadRedirectComboBox(comboBox: TComboBox;
-  redirect: TFieldedTextSequenceRedirect);
+  redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
   ValueAsInt: Integer;
@@ -1781,7 +1780,7 @@ begin
 end;
 
 procedure TBinder.LoadRedirectDateTimePickers(datePicker, timePicker: TDateTimePicker;
-  redirect: TFieldedTextSequenceRedirect);
+  redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
 begin
@@ -1789,7 +1788,7 @@ begin
   datePicker.DateTime := Value.AsType<TDateTime>;
 end;
 
-procedure TBinder.LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectCurrencyEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
   CurrencyValue: Currency;
@@ -1803,7 +1802,7 @@ begin
   ClearEditError(edit);
 end;
 
-procedure TBinder.LoadRedirectDoubleEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectDoubleEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
   DoubleValue: Double;
@@ -1816,7 +1815,7 @@ begin
   ClearEditError(edit);
 end;
 
-procedure TBinder.LoadRedirectInt64Edit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectInt64Edit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
   Int64Value: Int64;
@@ -1829,7 +1828,7 @@ begin
   ClearEditError(edit);
 end;
 
-procedure TBinder.LoadRedirectStringEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.LoadRedirectStringEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Value: TValue;
   StringValue: string;
@@ -2022,7 +2021,7 @@ begin
   FEditEngine.SetPropertyValue(Name, idx, Cat, value, modified);
 end;
 
-procedure TBinder.SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedTextSequenceRedirect; const value: TValue;
+procedure TBinder.SetRedirectPropertyValue(id: TPropertyId; redirect: TFieldedText.TSequenceRedirect; const value: TValue;
   out modified: Boolean);
 var
   Name: string;
@@ -2031,7 +2030,7 @@ begin
   FEditEngine.SetRedirectPropertyValue(Name, redirect, value, modified);
 end;
 
-procedure TBinder.SetRedirectSequence(redirect: TFieldedTextSequenceRedirect; value: TObject);
+procedure TBinder.SetRedirectSequence(redirect: TFieldedText.TSequenceRedirect; value: TObject);
 var
   Modified: Boolean;
 begin
@@ -2039,7 +2038,7 @@ begin
   CheckRefresh(piRedirectSequence, Modified);
 end;
 
-procedure TBinder.SetSequenceItemField(sequenceItem: TFieldedTextSequenceItem; value: TObject);
+procedure TBinder.SetSequenceItemField(sequenceItem: TFieldedText.TSequence.TItem; value: TObject);
 var
   Modified: Boolean;
 begin
@@ -2047,7 +2046,7 @@ begin
   CheckRefresh(piSequenceItemField, Modified);
 end;
 
-procedure TBinder.SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedTextSequenceItem; const value: TValue;
+procedure TBinder.SetSequenceItemPropertyValue(id: TPropertyId; sequenceItem: TFieldedText.TSequence.TItem; const value: TValue;
   out modified: Boolean);
 var
   Name: string;
@@ -2361,7 +2360,7 @@ begin
   FPropertyId := myPropertyId;
 end;
 
-procedure TBinder.SaveDoubleEdit(edit: TEdit; redirect: TFieldedTextSequenceRedirect);
+procedure TBinder.SaveDoubleEdit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 var
   Id: TPropertyId;
   Value: Double;

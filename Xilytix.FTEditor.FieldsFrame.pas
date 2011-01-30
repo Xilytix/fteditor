@@ -46,10 +46,10 @@ type
   private
     type
       TDataTypeInfoRec = record
-        DataType: TFieldedTextFieldDataType;
+        DataType: TFieldedTextField.TDataType;
         FrameClass: TBaseFieldPropertiesFrameClass;
       end;
-      TDataTypeInfos = array[TFieldedTextFieldDataType] of TDataTypeInfoRec;
+      TDataTypeInfos = array[TFieldedTextField.TDataType] of TDataTypeInfoRec;
 
     const
       DataTypeInfos: TDataTypeInfos =
@@ -108,7 +108,7 @@ implementation
 procedure TFieldsFrame.AddFieldComboBoxChange(Sender: TObject);
 var
   ItemData: TObject;
-  DataType: TFieldedTextFieldDataType;
+  DataType: TFieldedTextField.TDataType;
   Idx: Integer;
   ButtonItem: TGrpButtonItem;
   Field: TFieldedTextField;
@@ -116,7 +116,7 @@ begin
   ItemData := AddFieldComboBox.ItemsEx[AddFieldComboBox.ItemIndex].Data;
   if Assigned(ItemData) then
   begin
-    DataType := TFieldedTextFieldDataType(ItemData);
+    DataType := TFieldedTextField.TDataType(ItemData);
     Idx := FEditEngine.AddField(DataType);
     Field := FEditEngine.Fields[Idx];
     ButtonItem := FieldsButtonGroup.Items.Add;
@@ -135,7 +135,7 @@ end;
 
 constructor TFieldsFrame.Create(AOwner: TComponent);
 var
-  I: TFieldedTextFieldDataType;
+  I: TFieldedTextField.TDataType;
 begin
   inherited;
 
@@ -154,7 +154,7 @@ end;
 
 class constructor TFieldsFrame.Create;
 var
-  DataType: TFieldedTextFieldDataType;
+  DataType: TFieldedTextField.TDataType;
 begin
   for DataType := Low(DataTypeInfos) to High(DataTypeInfos) do
   begin
@@ -290,7 +290,7 @@ end;
 procedure TFieldsFrame.LoadFieldPropertiesFrame(field: TFieldedTextField; idx: Integer);
 
 var
-  DataType: TFieldedTextFieldDataType;
+  DataType: TFieldedTextField.TDataType;
   FrameClass: TBaseFieldPropertiesFrameClass;
 
   procedure DeleteFrame;

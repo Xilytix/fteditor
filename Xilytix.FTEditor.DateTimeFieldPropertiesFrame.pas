@@ -38,11 +38,8 @@ type
     procedure Refresh; override;
 
     class function GetAddCaption: string; override;
-    class function GetDataType: TFieldedTextFieldDataType; override;
+    class function GetDataType: TFieldedTextField.TDataType; override;
   end;
-
-var
-  DateTimeFieldPropertiesFrame: TDateTimeFieldPropertiesFrame;
 
 implementation
 
@@ -79,7 +76,7 @@ begin
   Result := 'DateTime';
 end;
 
-class function TDateTimeFieldPropertiesFrame.GetDataType: TFieldedTextFieldDataType;
+class function TDateTimeFieldPropertiesFrame.GetDataType: TFieldedTextField.TDataType;
 begin
   Result := ftdtDateTime;
 end;

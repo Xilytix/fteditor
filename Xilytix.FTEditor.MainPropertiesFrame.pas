@@ -11,7 +11,6 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls, Tabs, DockTabSet,
   ButtonGroup, CategoryButtons, ExtCtrls, Grids, ValEdit,
-  Xilytix.FieldedText.BaseField,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.EditorFrame,
   Xilytix.FTEditor.Binder,
