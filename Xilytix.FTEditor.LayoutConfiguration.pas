@@ -11,9 +11,6 @@ unit Xilytix.FTEditor.LayoutConfiguration;
 interface
 
 uses
-  System.Collections,
-  System.Xml,
-  Borland.Vcl.Classes,
   Xilytix.FTEditor.LayoutableFrame;
 
 type
