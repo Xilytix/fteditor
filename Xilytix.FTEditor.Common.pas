@@ -8,7 +8,8 @@ unit Xilytix.FTEditor.Common;
 interface
 
 uses
-  Messages;
+  Messages,
+  Xilytix.FieldedText.Utils;
 
 type
   TCommon = class
@@ -58,6 +59,10 @@ type
     class function SafeFileNameEncode(const value: string): string;
     class function TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Boolean;
 
+    class function DotNetNumberStylesToInteger(const Value: TDotNetNumberStyles): Integer;
+    class function IntegerToDotNetNumberStyles(Value: Integer): TDotNetNumberStyles;
+    class function DotNetDateTimeStylesToInteger(const Value: TDotNetDateTimeStyles): Integer;
+    class function IntegerToDotNetDateTimeStyles(Value: Integer): TDotNetDateTimeStyles;
   end;
 
   TNonRefCountedInterfacedObject = class(TObject, IInterface)
@@ -76,8 +81,7 @@ uses
   Character,
   Forms,
   SHFolder,
-  PJVersionInfo,
-  Xilytix.FieldedText.Utils;
+  PJVersionInfo;
 
 { TCommon }
 
@@ -114,6 +118,18 @@ begin
 
   FColorSchemaFolder := TPath.Combine(FApplicationDataFolder, ColorSchemaSubFolder);
   FLayoutConfigurationsFolder := TPath.Combine(FApplicationDataFolder, LayoutConfigurationsSubFolder);
+end;
+
+class function TCommon.DotNetDateTimeStylesToInteger(
+  const Value: TDotNetDateTimeStyles): Integer;
+begin
+  Result := Int8(Value);
+end;
+
+class function TCommon.DotNetNumberStylesToInteger(
+  const Value: TDotNetNumberStyles): Integer;
+begin
+  Result := Int16(Value);
 end;
 
 class procedure TCommon.EnsureColorSchemaFolderExists;
@@ -186,6 +202,24 @@ begin
       end;
     end;
   end;
+end;
+
+class function TCommon.IntegerToDotNetDateTimeStyles(
+  Value: Integer): TDotNetDateTimeStyles;
+var
+  ValueAsInt8: Int8;
+begin
+  ValueAsInt8 := Int8(Value);
+  Result := TDotNetDateTimeStyles(ValueAsInt8);
+end;
+
+class function TCommon.IntegerToDotNetNumberStyles(
+  Value: Integer): TDotNetNumberStyles;
+var
+  ValueAsInt16: Int16;
+begin
+  ValueAsInt16 := Int16(Value);
+  Result := TDotNetNumberStyles(ValueAsInt16);
 end;
 
 class function TCommon.IntToHexChar(const Value: Integer): Char;

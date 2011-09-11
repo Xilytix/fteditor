@@ -25,7 +25,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure CheckBoxClick(Sender: TObject);
   private
-    FValue: TCompositeBooleanStyles;
+    FValue: TBooleanStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
     { Private declarations }
@@ -59,9 +59,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      Include(FValue.Styles, TBooleanStyle(StyleValue))
+      Include(FValue, TBooleanStyle(StyleValue))
     else
-      Exclude(FValue.Styles, TBooleanStyle(StyleValue));
+      Exclude(FValue, TBooleanStyle(StyleValue));
 
     LoadControls;
   end;
@@ -85,7 +85,7 @@ end;
 
 function TBooleanStylesForm.GetAsString: string;
 begin
-  Result := FValue.AsString;
+  Result := TBooleanStylesInfo.ToString(FValue);
 end;
 
 procedure TBooleanStylesForm.LoadControls;
@@ -110,12 +110,12 @@ procedure TBooleanStylesForm.SetAsString(asStringValue: string; fallBack, defaul
 begin
   asStringValue := Trim(asStringValue);
   if asStringValue= '' then
-    FValue.Styles := default
+    FValue := default
   else
   begin
-    if not TCompositeBooleanStyles.TryStrToStyles(asStringValue, FValue.Styles) then
+    if not TBooleanStylesInfo.TryFromString(asStringValue, FValue) then
     begin
-      FValue.Styles := fallBack;
+      FValue := fallBack;
     end;
   end;
 
@@ -123,8 +123,11 @@ begin
 end;
 
 procedure TBooleanStylesForm.SetCheckBox(checkBox: TCheckBox);
+var
+  TagStyle: TBooleanStyle;
 begin
-  checkBox.Checked := (FValue.AsInteger and checkBox.Tag) = checkBox.Tag;
+  TagStyle := TBooleanStyle(checkBox.Tag);
+  checkBox.Checked := TagStyle in FValue;
 end;
 
 end.

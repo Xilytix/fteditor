@@ -1585,13 +1585,13 @@ end;
 procedure TBinder.LoadBooleanStylesEdit(edit: TEdit; idx: Integer);
 var
   Value: TValue;
-  Styles: TCompositeBooleanStyles;
+  Styles: TBooleanStyles;
   Culture: TFieldedTextLocaleSettings;
 begin
   Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
-  Styles.Styles := Value.AsType<TBooleanStyles>;
+  Styles := Value.AsType<TBooleanStyles>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Styles.AsString;
+  edit.Text := TBooleanStylesInfo.ToString(Styles);
   ClearEditError(edit);
 end;
 
@@ -1656,11 +1656,11 @@ end;
 procedure TBinder.LoadDateTimeStylesEdit(edit: TEdit; idx: Integer);
 var
   Value: TValue;
-  Styles: TCompositeDotNetDateTimeStyles;
+  Styles: TDotNetDateTimeStyles;
 begin
   Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
-  Styles.Styles := Value.AsType<TDotNetDateTimeStyles>;
-  edit.Text := Styles.AsString;
+  Styles := Value.AsType<TDotNetDateTimeStyles>;
+  edit.Text := TDotNetDateTimeStylesInfo.ToString(Styles);
   ClearEditError(edit);
 end;
 
@@ -1741,13 +1741,13 @@ end;
 procedure TBinder.LoadNumberStylesEdit(edit: TEdit; idx: Integer);
 var
   Value: TValue;
-  Styles: TCompositeDotNetNumberStyles;
+  Styles: TDotNetNumberStyles;
   Culture: TFieldedTextLocaleSettings;
 begin
   Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
-  Styles.Styles := Value.AsType<TDotNetNumberStyles>;
+  Styles := Value.AsType<TDotNetNumberStyles>;
   Culture := FEditEngine.DisplayCulture;
-  edit.Text := Styles.AsString;
+  edit.Text := TDotNetNumberStylesInfo.ToString(Styles);
   ClearEditError(edit);
 end;
 
@@ -2185,14 +2185,8 @@ begin
 end;
 
 function TBinder.TryParseBooleanStylesDisplay(const display: string; out value: TBooleanStyles): Boolean;
-var
-  Styles: TCompositeBooleanStyles;
 begin
-  Result := Styles.Parse(display);
-  if Result then
-  begin
-    Value := Styles.Styles;
-  end;
+  Result := TBooleanStylesInfo.TryFromString(display, value);
 end;
 
 function TBinder.TryParseCommaTextDisplay(const display: string): Boolean;
@@ -2203,14 +2197,8 @@ begin
 end;
 
 function TBinder.TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyles): Boolean;
-var
-  Styles: TCompositeDotNetDateTimeStyles;
 begin
-  Result := Styles.Parse(display);
-  if Result then
-  begin
-    Value := Styles.Styles;
-  end;
+  Result := TDotNetDateTimeStylesInfo.TryFromString(display, Value);
 end;
 
 function TBinder.TryParseCurrencyDisplay(const display: string; out value: Currency): Boolean;
@@ -2266,14 +2254,8 @@ begin
 end;
 
 function TBinder.TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyles): Boolean;
-var
-  Styles: TCompositeDotNetNumberStyles;
 begin
-  Result := Styles.Parse(display);
-  if Result then
-  begin
-    value := Styles.Styles;
-  end;
+  Result := TDotNetNumberStylesInfo.TryFromString(display, Value);
 end;
 
 procedure TBinder.UnsubscribeErrorCountChangeEvent(

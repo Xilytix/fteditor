@@ -208,6 +208,7 @@ implementation
 uses
   Types,
   IOUtils,
+  Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Common,
   Xilytix.FTEditor.TypedXml,
@@ -944,7 +945,7 @@ begin
   except
     on E: EFieldedText do
     begin
-      if E.ErrorCode <> ftecMetaLoad then
+      if E.Code <> ftecMetaLoad then
         raise
       else
         MessageDlg('Error Loading Meta File "' + FilePath + '"'#13 + FEditEngine.MetaLoadErrorDescription,
