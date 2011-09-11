@@ -742,7 +742,10 @@ end;
 
 function TRow.GetLastCell: TCell;
 begin
-  Result := FCells.Last;
+  if FCells.Count = 0 then
+    Result := nil
+  else
+    Result := FCells.Last;
 end;
 
 procedure TRow.Resolve;

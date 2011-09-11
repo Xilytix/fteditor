@@ -38,7 +38,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
-    FValue: TCompositeDotNetNumberStyles;
+    FValue: TDotNetNumberStyles;
     FLoadingControls: Boolean;
     FOk: Boolean;
 
@@ -53,7 +53,7 @@ type
     { Public declarations }
 
     property AsString: string read GetAsString;
-    procedure SetAsString(asStringValue: string; fallBack, default: TDotNetNumberStyles);
+    procedure SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyles);
   end;
 
 var
@@ -62,6 +62,9 @@ var
 implementation
 
 {$R *.dfm}
+
+uses
+  Xilytix.FTEditor.Common;
 
 procedure TNumberStylesForm.OkButtonClick(Sender: TObject);
 begin
@@ -72,7 +75,7 @@ procedure TNumberStylesForm.CompositeClick(Sender: TObject);
 begin
   if not FLoadingControls then
   begin
-    FValue.AsInteger := (Sender as TRadioButton).Tag;
+    FValue := TCommon.IntegerToDotNetNumberStyles((Sender as TRadioButton).Tag);
 
     LoadControls;
   end;
@@ -88,13 +91,13 @@ end;
 
 procedure TNumberStylesForm.FormCreate(Sender: TObject);
 begin
-  AnyRadioButton.Tag := TCompositeDotNetNumberStyles.CreateAny.AsInteger;
-  CurrencyRadioButton.Tag := TCompositeDotNetNumberStyles.CreateCurrency.AsInteger;
-  FloatRadioButton.Tag := TCompositeDotNetNumberStyles.CreateFloat.AsInteger;
-  HexNumberRadioButton.Tag := TCompositeDotNetNumberStyles.CreateHexNumber.AsInteger;
-  IntegerRadioButton.Tag := TCompositeDotNetNumberStyles.CreateInteger.AsInteger;
-  NoneRadioButton.Tag := TCompositeDotNetNumberStyles.CreateNone.AsInteger;
-  NumberRadioButton.Tag := TCompositeDotNetNumberStyles.CreateNumber.AsInteger;
+  AnyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncAny);
+  CurrencyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncCurrency);
+  FloatRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncFloat);
+  HexNumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncHexNumber);
+  IntegerRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncInteger);
+  NoneRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncNone);
+  NumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncNumber);
 
   AllowCurrencySymbolCheckBox.Tag := Integer(dnnsAllowCurrencySymbol);
   AllowDecimalPointCheckBox.Tag := Integer(dnnsAllowDecimalPoint);
@@ -108,7 +111,7 @@ end;
 
 function TNumberStylesForm.GetAsString: string;
 begin
-  Result := FValue.AsString;
+  Result := TDotNetNumberStylesInfo.ToString(FValue);
 end;
 
 procedure TNumberStylesForm.LoadControls;
@@ -136,16 +139,16 @@ begin
   end;
 end;
 
-procedure TNumberStylesForm.SetAsString(asStringValue: string; fallBack, default: TDotNetNumberStyles);
+procedure TNumberStylesForm.SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyles);
 begin
   asStringValue := Trim(asStringValue);
   if asStringValue= '' then
-    FValue.Styles := default
+    FValue := default
   else
   begin
-    if not TCompositeDotNetNumberStyles.TryStrToStyles(asStringValue, FValue.Styles) then
+    if not TDotNetNumberStylesInfo.TryFromString(asStringValue, FValue) then
     begin
-      FValue.Styles := fallBack;
+      FValue := fallBack;
     end;
   end;
 
@@ -153,13 +156,16 @@ begin
 end;
 
 procedure TNumberStylesForm.SetCheckBox(checkBox: TCheckBox);
+var
+  TagStyles: TDotNetNumberStyles;
 begin
-  checkBox.Checked := (FValue.AsInteger and checkBox.Tag) = checkBox.Tag;
+  TagStyles := TCommon.IntegerToDotNetNumberStyles(checkBox.Tag);
+  checkBox.Checked := (FValue * TagStyles) = TagStyles;
 end;
 
 procedure TNumberStylesForm.SetRadioButton(button: TRadioButton);
 begin
-  button.Checked := FValue.AsInteger = button.Tag;
+  button.Checked := FValue = TCommon.IntegerToDotNetNumberStyles(button.Tag);
 end;
 
 procedure TNumberStylesForm.StyleClick(Sender: TObject);
@@ -172,9 +178,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      Include(FValue.Styles, TDotNetNumberStyle(StyleValue))
+      Include(FValue, TDotNetNumberStyle(StyleValue))
     else
-      Exclude(FValue.Styles, TDotNetNumberStyle(StyleValue));
+      Exclude(FValue, TDotNetNumberStyle(StyleValue));
 
     LoadControls;
   end;

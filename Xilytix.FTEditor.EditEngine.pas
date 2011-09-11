@@ -434,7 +434,7 @@ end;
 
 function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode): string;
 begin
-  Result := 'Code: ' + FieldedTextErrorCodeToName(errorCode);
+  Result := 'Code: ' + EFieldedText.CodeToName(errorCode);
   case errorCode of
     ftecInvalidDeclaration: Result := Result + ': ' + FFieldedText.DeclarationErrorDescription;
     ftecMetaLoad: Result := Result + ': ' + FFieldedText.MetaLoadErrorDescription;
