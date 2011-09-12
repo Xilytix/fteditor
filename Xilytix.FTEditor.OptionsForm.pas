@@ -815,7 +815,7 @@ begin
   Configuration.DisplayCultureType := TDisplayCultureType(GetSelectedData(DisplayCultureComboBox));
   Configuration.NamedDisplayCultureName := NamedDisplayCultureEdit.Text;
   Configuration.DisplayCharEncodingType := TDisplayCharEncodingType(GetSelectedData(DisplayEncodingComboBox));
-  Configuration.NamedDisplayCharEncodingName := NamedDisplayEncodingEdit.Text;
+//  Configuration.NamedDisplayCharEncodingName := NamedDisplayEncodingEdit.Text;
 
   Configuration.TextFont := FTextFont;
   Configuration.ColorText := ColorTextCheckBox.Checked;
