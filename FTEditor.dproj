@@ -42,7 +42,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<Icon_MainIcon>FTEditor_Icon2.ico</Icon_MainIcon>
+			<Icon_MainIcon>FTEditor_Icon.ico</Icon_MainIcon>
 			<Manifest_File>None</Manifest_File>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
@@ -74,15 +74,15 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<DCC_UnitSearchPath>$(PJVersionInfoW64Dbg);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_UnitSearchPath>$(PJVersionInfoLib)\Win64\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_DcuOutput>W64Dbg</DCC_DcuOutput>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<DCC_UnitSearchPath>$(PJVersionInfoW32Dbg);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-			<DCC_DcuOutput>W32Dbg</DCC_DcuOutput>
+			<DCC_UnitSearchPath>$(PJVersionInfoLib)\Win32\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+			<DCC_DcuOutput>Win32\Debug</DCC_DcuOutput>
 			<VerInfo_MinorVer>0</VerInfo_MinorVer>
 			<VerInfo_MajorVer>2</VerInfo_MajorVer>
 			<VerInfo_Locale>1033</VerInfo_Locale>
