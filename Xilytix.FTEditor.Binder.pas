@@ -1153,7 +1153,7 @@ begin
       piSequenceItemField: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequence.TItem);
       piRedirectSequence: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequence);
       piRedirectValue: PropertyTypeInfoArray[PropId] := nil;
-      piRedirectInvokationDelay: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequenceRedirect.TType);
+      piRedirectInvokationDelay: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequenceRedirect.TInvokationDelay);
       else raise Exception.Create('Property TypeInfo not set');
     end;
   end;
@@ -1482,7 +1482,7 @@ procedure TBinder.HandleRedirectComboBoxChange(comboBox: TComboBox;
 var
   ItemIndex: Integer;
   Id: TPropertyId;
-  ComboBoxValue: TObject;
+  ComboBoxValue: TFieldedText.TSequenceRedirect.TInvokationDelay;
   Value: TValue;
   Modified: Boolean;
 begin
@@ -1490,8 +1490,8 @@ begin
   if ItemIndex >= 0 then
   begin
     Id := TagToPropertyId(comboBox.Tag);
-    ComboBoxValue := comboBox.Items.Objects[ItemIndex];
-    Value.FromOrdinal(PropertyTypeInfoArray[Id], Integer(ComboBoxValue));
+    ComboBoxValue := TFieldedText.TSequenceRedirect.TInvokationDelay(comboBox.Items.Objects[ItemIndex]);
+    Value := TValue.FromOrdinal(PropertyTypeInfoArray[Id], Int64(ComboBoxValue));
     SetRedirectPropertyValue(Id, redirect, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
@@ -1774,7 +1774,7 @@ var
   ValueAsInt: Integer;
 begin
   Value := GetRedirectPropertyValue(TagToPropertyId(comboBox.Tag), redirect);
-  ValueAsInt := Value.AsType<Integer>;
+  ValueAsInt := Value.AsOrdinal;
 
   comboBox.ItemIndex := comboBox.Items.IndexOfObject(TObject(ValueAsInt));
 end;

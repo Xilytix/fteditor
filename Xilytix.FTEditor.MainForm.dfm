@@ -119,7 +119,6 @@ object MainForm: TMainForm
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      PersistentHotKeys = True
       Spacing = 0
     end
     object AutoParseCheckBox: TCheckBox
@@ -585,10 +584,6 @@ object MainForm: TMainForm
   object ActionManager: TActionManager
     ActionBars = <
       item
-        Items = <
-          item
-            Action = NewTextAction
-          end>
       end
       item
       end
@@ -724,6 +719,10 @@ object MainForm: TMainForm
               end
               item
                 Action = OpenMetaFromUrlAction
+              end
+              item
+                Action = SaveMetaAction
+                ShortCut = 49238
               end
               item
                 Action = SaveMetaToReferenceAction
@@ -864,6 +863,13 @@ object MainForm: TMainForm
       Category = 'File'
       Caption = 'Open Meta from UR&L ...'
       OnExecute = OpenMetaFromUrlActionExecute
+    end
+    object SaveMetaAction: TAction
+      Category = 'File'
+      Caption = 'Sa&ve Meta'
+      ShortCut = 49238
+      OnExecute = SaveMetaActionExecute
+      OnUpdate = SaveMetaActionUpdate
     end
     object SaveMetaToReferenceAction: TAction
       Category = 'File'
