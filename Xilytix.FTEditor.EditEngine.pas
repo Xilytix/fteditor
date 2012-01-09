@@ -87,6 +87,7 @@ type
     var
       FFieldedText: TFieldedText;
 
+      FOpenedMetaFilePath: string;
       FMetaModified: Boolean;
       FTextModified: Boolean;
 
@@ -307,10 +308,13 @@ type
     property MetaLoadErrorDescription: string read GetMetaLoadErrorDescription;
     property MetaCharEncoding: TEncoding read GetMetaCharEncoding;
     property MetaCharEncodingName: string read GetMetaCharEncodingName write SetMetaCharEncodingName;
+
+    property OpenedMetaFilePath: string read FOpenedMetaFilePath;
     procedure ResetMeta;
-    procedure OpenMeta(filePath: string);
-    procedure OpenMetaFromUrl(url: string);
-    procedure SaveMetaAs(filePath: string);
+    procedure OpenMeta(const filePath: string);
+    procedure OpenMetaFromUrl(const url: string);
+    procedure SaveMetaAs(const filePath: string);
+    procedure SaveMeta;
 
     property Text: string read GetText;
     property TextFilePath: string read GetTextFilePath;
@@ -1184,8 +1188,9 @@ begin
   end;
 end;
 
-procedure TEditEngine.OpenMeta(filePath: string);
+procedure TEditEngine.OpenMeta(const filePath: string);
 begin
+  FOpenedMetaFilePath := filePath;
   FFieldedText.LoadMeta(filePath);
   MetaModified := False;
   NotifySequencesChange;
@@ -1193,8 +1198,9 @@ begin
   RefreshControls;
 end;
 
-procedure TEditEngine.OpenMetaFromUrl(url: string);
+procedure TEditEngine.OpenMetaFromUrl(const url: string);
 begin
+  FOpenedMetaFilePath := '';
   FFieldedText.LoadMetaFromUrl(url);
   MetaModified := False;
   NotifySequencesChange;
@@ -1455,6 +1461,7 @@ end;
 
 procedure TEditEngine.ResetMeta;
 begin
+  FOpenedMetaFilePath := '';
   FFieldedText.ResetMetaProperties;
   MetaModified := True;
   RefreshControls;
@@ -1486,7 +1493,7 @@ begin
           tkInt64:  Result := Value1.AsInt64 = Value2.AsInt64;
           tkUnknown,
           tkSet,
-          tkClass,
+          tkClass: Result := Value1.AsObject = Value2.AsObject;
           tkMethod,
           tkWChar,
           tkLString,
@@ -1506,8 +1513,17 @@ begin
   end;
 end;
 
-procedure TEditEngine.SaveMetaAs(filePath: string);
+procedure TEditEngine.SaveMeta;
 begin
+  if FOpenedMetaFilePath <> '' then
+  begin
+    FFieldedText.SaveMeta(FOpenedMetaFilePath, Configuration.SaveDesignOnlyMeta, Configuration.SaveMetaWithExplicitIndices);
+  end;
+end;
+
+procedure TEditEngine.SaveMetaAs(const filePath: string);
+begin
+  FOpenedMetaFilePath := filePath;
   FFieldedText.SaveMeta(filePath, Configuration.SaveDesignOnlyMeta, Configuration.SaveMetaWithExplicitIndices);
 end;
 

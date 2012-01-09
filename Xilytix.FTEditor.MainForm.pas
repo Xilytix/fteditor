@@ -95,6 +95,7 @@ type
     GenerateAction: TAction;
     GenerateAsAction: TFileSaveAs;
     HelpAction: TBrowseURL;
+    SaveMetaAction: TAction;
     procedure FormCreate(Sender: TObject);
     procedure ConfigureLayoutButtonClick(Sender: TObject);
     procedure LayoutConfigurationsComboBoxChange(Sender: TObject);
@@ -124,6 +125,8 @@ type
     procedure GenerateActionExecute(Sender: TObject);
     procedure GenerateAsActionAccept(Sender: TObject);
     procedure AboutActionExecute(Sender: TObject);
+    procedure SaveMetaActionExecute(Sender: TObject);
+    procedure SaveMetaActionUpdate(Sender: TObject);
   private
     type
       TActiveSourceSummary = (asNone, asText, asGrid, asReadOnly);
@@ -516,7 +519,11 @@ begin
 
 
     ActiveLayoutConfigurationName := Configuration.ActiveLayoutConfigurationName;
-//    FActiveLayoutConfiguration := FLayoutConfigurations.Get(ActiveLayoutConfigurationName);
+    if TLayoutConfiguration.Exists(ActiveLayoutConfigurationName) then
+    begin
+      FActiveLayoutConfiguration := TLayoutConfiguration.CreateFromFile(ActiveLayoutConfigurationName);
+    end;
+
     if not Assigned(FActiveLayoutConfiguration) then
     begin
       SetDefaultActiveLayoutConfiguration;
@@ -1242,6 +1249,16 @@ begin
   Configuration.ActiveLayoutConfigurationName := ActiveLayoutConfigurationName;
 
   Configuration.Save;
+end;
+
+procedure TMainForm.SaveMetaActionExecute(Sender: TObject);
+begin
+  FEditEngine.SaveMeta;
+end;
+
+procedure TMainForm.SaveMetaActionUpdate(Sender: TObject);
+begin
+  SaveMetaAction.Enabled := (FEditEngine.OpenedMetaFilePath <> '');
 end;
 
 procedure TMainForm.SaveMetaAsActionAccept(Sender: TObject);

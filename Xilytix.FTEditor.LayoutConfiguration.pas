@@ -304,6 +304,7 @@ type
     class function BooleanToXmlValue(value: Boolean): string;
     class function XmlValueToBoolean(const value: string): Boolean;
 
+    class function Exists(const LayoutConfigurationName: string): Boolean;
     class function CreateFromFile(const LayoutConfigurationName: string): TLayoutConfiguration;
     procedure SaveToFile;
 
@@ -507,6 +508,15 @@ begin
 
     Result := TLayoutConfiguration.Create(LayoutConfigurationName, XmlDocument);
   end;
+end;
+
+class function TLayoutConfiguration.Exists(
+  const LayoutConfigurationName: string): Boolean;
+var
+  FilePath: string;
+begin
+  FilePath := NameToFilePath(LayoutConfigurationName);
+  Result := TFile.Exists(FilePath);
 end;
 
 {class function TLayoutConfiguration.GenerateBlankFrameSlotConfigs: TFrameSlotConfigs;

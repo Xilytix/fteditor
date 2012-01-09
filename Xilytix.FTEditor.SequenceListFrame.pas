@@ -218,14 +218,11 @@ var
   Id: TItemTypeId;
 begin
   Data := AddItemComboBox.Items.Objects[AddItemComboBox.ItemIndex];
-  if Assigned(Data) then
-  begin
-    Id := TItemTypeId(Data);
-    case Id of
-      itSequence: AddSequence;
-      itSequenceItem: AddSequenceItem(nil);
-      else AddRedirect(Id);
-    end;
+  Id := TItemTypeId(NativeInt(Data));
+  case Id of
+    itSequence: AddSequence;
+    itSequenceItem: AddSequenceItem(nil);
+    else AddRedirect(Id);
   end;
 
   PopulateAddItemComboBox(True);
@@ -760,11 +757,11 @@ begin
   AddItemComboBox.ItemIndex := 0;
   if not addOnly then
   begin
-    AddItemComboBox.Items.AddObject(ItemInfoArray[itSequence].AddCaption, TObject(ItemInfoArray[itSequence].Id));
+    AddItemComboBox.Items.AddObject(ItemInfoArray[itSequence].AddCaption, TObject(NativeInt(ItemInfoArray[itSequence].Id)));
 
     if Assigned(FSelectedSequence) and (FEditEngine.FieldCount > 0) then
     begin
-      AddItemComboBox.Items.AddObject(ItemInfoArray[itSequenceItem].AddCaption, TObject(ItemInfoArray[itSequenceItem].Id))
+      AddItemComboBox.Items.AddObject(ItemInfoArray[itSequenceItem].AddCaption, TObject(NativeInt(ItemInfoArray[itSequenceItem].Id)))
     end;
 
     if Assigned(FSelectedSequenceItem) then
@@ -773,7 +770,7 @@ begin
       begin
         case Id of
           itSequence, itSequenceItem: ;
-          else AddItemComboBox.Items.AddObject(ItemInfoArray[Id].AddCaption, TObject(ItemInfoArray[Id].Id));
+          else AddItemComboBox.Items.AddObject(ItemInfoArray[Id].AddCaption, TObject(NativeInt(ItemInfoArray[Id].Id)));
         end;
       end;
     end;
@@ -1258,13 +1255,31 @@ end;
 
 procedure TSequenceListFrame.UnselectRedirect;
 var
+  BaseItem: TBaseItem;
   ButtonItem: TButtonItem;
+  Category: TButtonCategory;
 begin
-  ButtonItem := Buttons.SelectedItem as TButtonItem;
-  if Assigned(ButtonItem) and (ButtonItem.Category = FRedirectsCategory) then
+  BaseItem := Buttons.SelectedItem;
+  if BaseItem is TButtonItem then
   begin
-    Buttons.SelectedItem := nil;
+    ButtonItem := Buttons.SelectedItem as TButtonItem;
+    if Assigned(ButtonItem) and (ButtonItem.Category = FRedirectsCategory) then
+    begin
+      Buttons.SelectedItem := nil;
+    end;
+  end
+  else
+  begin
+    if BaseItem is TButtonCategory then
+    begin
+      Category := Buttons.SelectedItem as TButtonCategory;
+      if Assigned(Category) and (Category = FRedirectsCategory) then
+      begin
+        Buttons.SelectedItem := nil;
+      end;
+    end;
   end;
+
   if GetFocusedCategory = FRedirectsCategory then
   begin
     RemovePropertiesFrame;
@@ -1290,15 +1305,33 @@ end;
 
 procedure TSequenceListFrame.UnselectSequenceItem;
 var
+  BaseItem: TBaseItem;
   ButtonItem: TButtonItem;
+  Category: TButtonCategory;
 begin
   UnselectRedirect;
 
-  ButtonItem := Buttons.SelectedItem as TButtonItem;
-  if Assigned(ButtonItem) and (ButtonItem.Category = FSequenceItemsCategory) then
+  BaseItem := Buttons.SelectedItem;
+  if BaseItem is TButtonItem then
   begin
-    Buttons.SelectedItem := nil;
+    ButtonItem := Buttons.SelectedItem as TButtonItem;
+    if Assigned(ButtonItem) and (ButtonItem.Category = FSequenceItemsCategory) then
+    begin
+      Buttons.SelectedItem := nil;
+    end;
+  end
+  else
+  begin
+    if BaseItem is TButtonCategory then
+    begin
+      Category := Buttons.SelectedItem as TButtonCategory;
+      if Assigned(Category) and (Category = FSequenceItemsCategory) then
+      begin
+        Buttons.SelectedItem := nil;
+      end;
+    end;
   end;
+
   if GetFocusedCategory = FSequenceItemsCategory then
   begin
     RemovePropertiesFrame;
