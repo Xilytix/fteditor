@@ -41,7 +41,7 @@ type
       TFrameTypeAndFillRecs = TLayoutConfiguration.TFrameTypeAndFillRecs;
 //      TExplicitSizeDirectionRec = TLayoutConfiguration.TExplicitSizeDirectionRec;
       TExplicitSizesRec = TLayoutConfiguration.TExplicitSizesRec;
-//      TFrameSlotConfigs = TLayoutConfiguration.TFrameSlotConfigs;
+      TFrameSlotConfigs = TLayoutConfiguration.TFrameSlotConfigs;
 
       TFrameTypeIds = array of TLayoutableFrame.TTypeId;
 
@@ -111,8 +111,8 @@ type
   public
     { Public declarations }
 
-    procedure ConfigureLayout(layoutConfiguration: TLayoutConfiguration);
-//    procedure SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
+    procedure ConfigureLayout(LayoutConfiguration: TLayoutConfiguration);
+    procedure SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
 
     property LayoutableFrameCount: Integer read GetLayoutableFrameCount;
     property LayoutableFrames[idx: Integer]: TLayoutableFrame read GetLayoutableFrames;
@@ -194,16 +194,16 @@ begin
   end;
 end;
 
-procedure TLayoutFrame.ConfigureLayout(layoutConfiguration: TLayoutConfiguration);
+procedure TLayoutFrame.ConfigureLayout(LayoutConfiguration: TLayoutConfiguration);
 begin
   Clear;
 
-  layoutConfiguration.Calculate;
+  LayoutConfiguration.Calculate;
 
-  if Length(layoutConfiguration.CalculatedHalfAndFillRecs) > 0 then
+  if Length(LayoutConfiguration.CalculatedHalfAndFillRecs) > 0 then
   begin
-    CreateHalves(layoutConfiguration.CalculatedHalfAndFillRecs, layoutConfiguration.CalculatedHalvesArrangement, layoutConfiguration.Tabbed,
-                 layoutConfiguration.ExplicitSize);
+    CreateHalves(LayoutConfiguration.CalculatedHalfAndFillRecs, LayoutConfiguration.CalculatedHalvesArrangement, LayoutConfiguration.Tabbed,
+                 LayoutConfiguration.ExplicitSize);
   end;
 end;
 
@@ -516,20 +516,20 @@ begin
   end;
 end;
 
-(*procedure TLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
+procedure TLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs: TFrameSlotConfigs; out ExplicitSizes: TExplicitSizesRec);
 var
   I: TFrameSlot;
 begin
   for I := Low(FrameSlotConfigs) to High(FrameSlotConfigs) do
   begin
-    if {Assigned(FrameSlotConfigs[I]) and} Assigned(FFrameSlotInfos[I].Frame) then
+    if Assigned(FrameSlotConfigs[I]) and Assigned(FFrameSlotInfos[I].Frame) then
     begin
       FFrameSlotInfos[I].Frame.SaveToXml(FrameSlotConfigs[I]);
     end;
   end;
 
   ExplicitSizes := GetExplicitSizesRec;
-end; *)
+end;
 
 procedure TLayoutFrame.CreateSplitHalf(half: THalf; parentControl: TWinControl;
   out implicitWidth, implicitHeight: Integer);
