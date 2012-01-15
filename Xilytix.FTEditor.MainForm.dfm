@@ -726,7 +726,7 @@ object MainForm: TMainForm
               end
               item
                 Action = SaveMetaToReferenceAction
-                Caption = 'Sa&ve Meta To Reference'
+                Caption = 'Save Meta To Re&ference'
               end
               item
                 Action = SaveMetaAsAction

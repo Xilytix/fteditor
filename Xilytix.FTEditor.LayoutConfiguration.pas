@@ -54,7 +54,7 @@ type
         Fill: Boolean;
         ExplicitSize: Integer;
         Slot: TFrameSlotId;
-//        Config: TFrameSlotConfig;
+        Config: TFrameSlotConfig;
       end;
       TFrameTypeAndFillRecs = array of TFrameTypeAndFillRec;
 
@@ -85,17 +85,17 @@ type
           FLeftFrameFill: Boolean;
           FLeftFrameExplicitSize: Integer;
           FLeftFrameSlot: TFrameSlotId;
-//          FLeftFrameConfiguration: TFrameSlotConfig;
+          FLeftFrameConfiguration: TFrameSlotConfig;
           FMiddleFrameTypeId: TLayoutableFrame.TTypeId;
           FMiddleFrameFill: Boolean;
           FMiddleFrameExplicitSize: Integer;
           FMiddleFrameSlot: TFrameSlotId;
-//          FMiddleFrameConfiguration: TFrameSlotConfig;
+          FMiddleFrameConfiguration: TFrameSlotConfig;
           FRightFrameTypeId: TLayoutableFrame.TTypeId;
           FRightFrameFill: Boolean;
           FRightFrameExplicitSize: Integer;
           FRightFrameSlot: TFrameSlotId;
-//          FRightFrameConfiguration: TFrameSlotConfig;
+          FRightFrameConfiguration: TFrameSlotConfig;
 
           FCalculatedArrangement: TArrangement;
           FCalculatedFrameTypeAndFills: TFrameTypeAndFillRecs;
@@ -126,15 +126,15 @@ type
         property LeftFrameTypeId: TLayoutableFrame.TTypeId read FLeftFrameTypeId write FLeftFrameTypeId;
         property LeftFrameFill: Boolean read FLeftFrameFill write SetLeftFrameFill;
         property LeftFrameExplicitSize: Integer read FLeftFrameExplicitSize;
-//        property LeftFrameConfiguration: TFrameSlotConfig read FLeftFrameConfiguration;
+        property LeftFrameConfiguration: TFrameSlotConfig read FLeftFrameConfiguration;
         property MiddleFrameTypeId: TLayoutableFrame.TTypeId read FMiddleFrameTypeId write FMiddleFrameTypeId;
         property MiddleFrameFill: Boolean read FMiddleFrameFill write SetMiddleFrameFill;
         property MiddleFrameExplicitSize: Integer read FMiddleFrameExplicitSize;
-//        property MiddleFrameConfiguration: TFrameSlotConfig read FMiddleFrameConfiguration;
+        property MiddleFrameConfiguration: TFrameSlotConfig read FMiddleFrameConfiguration;
         property RightFrameTypeId: TLayoutableFrame.TTypeId read FRightFrameTypeId write FRightFrameTypeId;
         property RightFrameFill: Boolean read FRightFrameFill write SetRightFrameFill;
         property RightFrameExplicitSize: Integer read FRightFrameExplicitSize;
-//        property RightFrameConfiguration: TFrameSlotConfig read FRightFrameConfiguration;
+        property RightFrameConfiguration: TFrameSlotConfig read FRightFrameConfiguration;
 
         procedure Calculate;
         procedure Check;
@@ -143,7 +143,8 @@ type
         property CalculatedIdFills: TFrameTypeAndFillRecs read FCalculatedFrameTypeAndFills;
         property CalculatedTabbed: Boolean read FCalculatedTabbed;
 
-//        procedure AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
+        procedure AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
+        procedure ClearFrameConfigurations;
         procedure AssignExplicitSizes(myExplicitSize: Integer; frameSlotExplicitSizes: TFrameSlotExplicitSizes);
         procedure ResetExplicitSizes;
 
@@ -232,10 +233,15 @@ type
       XmlTag_RightFrameExplicitSize = 'RightFrameExplicitSize';
       XmlTag_RightFrameConfiguration = 'RightFrameConfiguration';
 
+      XmlTag_FrameSlotConfig = 'FrameSlotConfig';
+
       MinimumExplicitSize = 4;
 
       TrueBooleanXmlValue = 'True';
       FalseBooleanXmlValue = 'False';
+
+    class var
+      FFrameSlotConfigDoc: ITypedXmlDocument;
 
     var
       FName: string;
@@ -295,7 +301,7 @@ type
 
     procedure Calculate;
 
-//    procedure AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
+    procedure AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
     procedure AssignExplicitSizes(const explicitSizes: TExplicitSizesRec);
     procedure ResetExplicitSizes;
 
@@ -308,7 +314,7 @@ type
     class function CreateFromFile(const LayoutConfigurationName: string): TLayoutConfiguration;
     procedure SaveToFile;
 
-//    class function GenerateBlankFrameSlotConfigs: TFrameSlotConfigs;
+    class function GenerateBlankFrameSlotConfigs: TFrameSlotConfigs;
     class function GetFrameSlotConfigElementName(slot: TFrameSlotId): string;
 
     class function GetSavedNames(const FolderPath: string): TStringDynArray;
@@ -359,11 +365,11 @@ begin
   FHalfB.AssignExplicitSizes(explicitSizes.Halves[lhb], explicitSizes.Frames);
 end;
 
-{procedure TLayoutConfiguration.AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
+procedure TLayoutConfiguration.AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
 begin
   FHalfA.AssignFrameSlotConfigs(configs);
   FHalfB.AssignFrameSlotConfigs(configs);
-end;}
+end;
 
 class function TLayoutConfiguration.BooleanToXmlValue(value: Boolean): string;
 begin
@@ -457,6 +463,10 @@ begin
       raise Exception.Create('FrameSlotInfos out of order');
     end;
   end;
+
+  FFrameSlotConfigDoc := TTypedXmlDocument.Create(nil);
+  FFrameSlotConfigDoc.Active := True;
+  FFrameSlotConfigDoc.AddElement(XmlTag_FrameSlotConfig);
 end;
 
 constructor TLayoutConfiguration.Create(const MyName: string; MyXmlDocument: ITypedXMLDocument);
@@ -519,15 +529,21 @@ begin
   Result := TFile.Exists(FilePath);
 end;
 
-{class function TLayoutConfiguration.GenerateBlankFrameSlotConfigs: TFrameSlotConfigs;
+class function TLayoutConfiguration.GenerateBlankFrameSlotConfigs: TFrameSlotConfigs;
 begin
-  Result[fsALeft] := doc.CreateElement(XmlTag_LeftFrameConfiguration);
-  Result[fsAMiddle] := doc.CreateElement(XmlTag_MiddleFrameConfiguration);
-  Result[fsARight] := doc.CreateElement(XmlTag_RightFrameConfiguration);
-  Result[fsBLeft] := doc.CreateElement(XmlTag_LeftFrameConfiguration);
-  Result[fsBMiddle] := doc.CreateElement(XmlTag_MiddleFrameConfiguration);
-  Result[fsBRight] := doc.CreateElement(XmlTag_RightFrameConfiguration);
-end;}
+  Result[fsALeft] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_LeftFrameConfiguration);
+  Result[fsALeft].ChildNodes.Clear;
+  Result[fsAMiddle] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_MiddleFrameConfiguration);
+  Result[fsAMiddle].ChildNodes.Clear;
+  Result[fsARight] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_RightFrameConfiguration);
+  Result[fsARight].ChildNodes.Clear;
+  Result[fsBLeft] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_LeftFrameConfiguration);
+  Result[fsBLeft].ChildNodes.Clear;
+  Result[fsBMiddle] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_MiddleFrameConfiguration);
+  Result[fsBMiddle].ChildNodes.Clear;
+  Result[fsBRight] := FFrameSlotConfigDoc.RootElement.ForceFindElement(XmlTag_RightFrameConfiguration);
+  Result[fsBRight].ChildNodes.Clear;
+end;
 
 class function TLayoutConfiguration.GetFrameSlotConfigElementName(slot: TFrameSlotId): string;
 begin
@@ -790,7 +806,7 @@ begin
   end;
 end;
 
-{procedure TLayoutConfiguration.THalf.AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
+procedure TLayoutConfiguration.THalf.AssignFrameSlotConfigs(configs: TFrameSlotConfigs);
 begin
   case id of
     Xilytix.FTEditor.LayoutConfiguration.lhA:
@@ -806,7 +822,7 @@ begin
       FRightFrameConfiguration := Configs[fsBRight];
     end;
   end;
-end;}
+end;
 
 procedure TLayoutConfiguration.THalf.Calculate;
 begin
@@ -919,6 +935,13 @@ begin
     end
     else Assert(False);
   end;
+end;
+
+procedure TLayoutConfiguration.THalf.ClearFrameConfigurations;
+begin
+  FLeftFrameConfiguration := nil;
+  FMiddleFrameConfiguration := nil;
+  FRightFrameConfiguration := nil;
 end;
 
 class constructor TLayoutConfiguration.THalf.Create;
@@ -1050,6 +1073,8 @@ begin
 end;
 
 procedure TLayoutConfiguration.THalf.SaveToXml(element: ITypedXmlElement);
+var
+  ConfigurationElement: ITypedXmlElement;
 begin
   element.SetAttribute(XmlTag_HalfId, HalfIdToXmlValue(Id));
   element.SetAttribute(XmlTag_Arrangement, ArrangementToXmlValue(Arrangement));
@@ -1059,20 +1084,28 @@ begin
   element.SetAttribute(XmlTag_LeftFrameTypeId, LayoutableFrameTypeIdToXmlValue(LeftFrameTypeId));
   element.SetAttribute(XmlTag_LeftFrameFill, BooleanToXmlValue(LeftFrameFill));
   element.SetAttribute(XmlTag_LeftFrameExplicitSize, IntegerToXmlValue(LeftFrameExplicitSize));
-//  ChildElement := element.AddElement(XmlTag_LeftFrameConfiguration);
-//  LeftFrameConfiguration.SaveToXml(ChildElement);
+  if Assigned(LeftFrameConfiguration) then
+  begin
+    element.ChildNodes.Add(LeftFrameConfiguration);
+  end;
 
   element.SetAttribute(XmlTag_MiddleFrameTypeId, LayoutableFrameTypeIdToXmlValue(MiddleFrameTypeId));
   element.SetAttribute(XmlTag_MiddleFrameFill, BooleanToXmlValue(MiddleFrameFill));
   element.SetAttribute(XmlTag_MiddleFrameExplicitSize, IntegerToXmlValue(MiddleFrameExplicitSize));
-//  ChildElement := element.AddElement(XmlTag_MiddleFrameConfiguration);
-//  MiddleFrameConfiguration.SaveToXml(ChildElement);
+  if Assigned(MiddleFrameConfiguration) then
+  begin
+    element.ChildNodes.Add(MiddleFrameConfiguration);
+  end;
 
   element.SetAttribute(XmlTag_RightFrameTypeId, LayoutableFrameTypeIdToXmlValue(RightFrameTypeId));
   element.SetAttribute(XmlTag_RightFrameFill, BooleanToXmlValue(RightFrameFill));
   element.SetAttribute(XmlTag_RightFrameExplicitSize, IntegerToXmlValue(RightFrameExplicitSize));
-//  ChildElement := element.AddElement(XmlTag_RightFrameConfiguration);
-//  RightFrameConfiguration.SaveToXml(ChildElement);
+  if Assigned(RightFrameConfiguration) then
+  begin
+    element.ChildNodes.Add(RightFrameConfiguration);
+  end;
+
+  ClearFrameConfigurations;
 end;
 
 procedure TLayoutConfiguration.THalf.SetArrangement(const Value: TArrangement);

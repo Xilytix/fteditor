@@ -424,7 +424,7 @@ var
   Abbr: string;
   Value: string;
 begin
-  case redirect.&Type of
+  case redirect.GetType of
     ftrtExactString:
     begin
       Abbr := 'ExStr';
@@ -803,7 +803,7 @@ begin
   if KeepPropertiesFrame then
   begin
     RedirectPropertiesFrame := FPropertiesFrame as TSequenceRedirect_BasePropertiesFrame;
-    KeepPropertiesFrame := RedirectPropertiesFrame.Redirect.&Type = Redirect.&Type;
+    KeepPropertiesFrame := RedirectPropertiesFrame.Redirect.GetType = Redirect.GetType;
   end;
 
   if not KeepPropertiesFrame then
@@ -812,7 +812,7 @@ begin
     begin
       RemovePropertiesFrame;
     end;
-    RedirectPropertiesFrame := RedirectTypeInfoArray[Redirect.&Type].FrameClass.Create(Self);
+    RedirectPropertiesFrame := RedirectTypeInfoArray[Redirect.GetType].FrameClass.Create(Self);
     SetPropertiesFrame(RedirectPropertiesFrame);
   end;
 

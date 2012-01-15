@@ -184,8 +184,9 @@ type
     procedure UpdateLayoutConfigurationsComboBox;
     procedure ConfigureLayoutFrame;
     procedure LoadComboBoxLayoutConfiguration;
+    procedure SaveActiveLayoutConfiguration(includeExplicitSizes: Boolean);
 
-    procedure SaveConfiguration(includeExplicitSizes: Boolean = True);
+    procedure SaveConfiguration;
 
     procedure SetDefaultTextCharEncoding;
     procedure SetDefaultMetaCharEncoding;
@@ -318,7 +319,7 @@ begin
     Form.RequestDeleteEvent := HandleRequestDeleteConfigurationEvent;
     if Form.ShowModal = mrOk then
     begin
-      SaveConfiguration(not Form.ExplicitSizesReset);
+      SaveActiveLayoutConfiguration(not Form.ExplicitSizesReset);
       ConfigureLayoutFrame;
       UpdateLayoutConfigurationsComboBox;
     end;
@@ -615,7 +616,8 @@ end;
 
 procedure TMainForm.HandleLayoutConfigurationChange;
 begin
-  SaveConfiguration;
+  SaveActiveLayoutConfiguration(True);
+//  SaveConfiguration;
   ConfigureLayoutFrame;
 end;
 
@@ -737,7 +739,8 @@ end;
 
 function TMainForm.HandleRequestNewConfigurationEvent: TLayoutConfiguration;
 begin
-  SaveConfiguration;
+  SaveActiveLayoutConfiguration(True);
+//  SaveConfiguration;
   Result := TLayoutConfiguration.Create('', nil);
   FActiveLayoutConfiguration := Result;
   UpdateLayoutConfigurationsComboBox;
@@ -1214,12 +1217,36 @@ begin
   FEditEngine.ResetMeta;
 end;
 
-procedure TMainForm.SaveConfiguration(includeExplicitSizes: Boolean);
+procedure TMainForm.SaveActiveLayoutConfiguration(includeExplicitSizes: Boolean);
 var
   ActiveLayoutConfigurationName: string;
-//  Element: ITypedXmlElement;
-//  FrameSlotConfigs: TLayoutConfiguration.TFrameSlotConfigs;
+  FrameSlotConfigs: TLayoutConfiguration.TFrameSlotConfigs;
   ExplicitSizes: TLayoutConfiguration.TExplicitSizesRec;
+begin
+  if not Assigned(FActiveLayoutConfiguration) then
+    ActiveLayoutConfigurationName := ''
+  else
+  begin
+    ActiveLayoutConfigurationName := FActiveLayoutConfiguration.Name;
+
+    FrameSlotConfigs := FActiveLayoutConfiguration.GenerateBlankFrameSlotConfigs;
+    FLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs, ExplicitSizes);
+    FActiveLayoutConfiguration.AssignFrameSlotConfigs(FrameSlotConfigs);
+    if includeExplicitSizes then
+    begin
+      FActiveLayoutConfiguration.AssignExplicitSizes(ExplicitSizes);
+    end;
+
+    Configuration.ActiveLayoutConfigurationName := ActiveLayoutConfigurationName;
+  end;
+
+  FActiveLayoutConfiguration.SaveToFile;
+end;
+
+procedure TMainForm.SaveConfiguration;
+var
+  ActiveLayoutConfigurationName: string;
+  Element: ITypedXmlElement;
   WindowStateMaximised: Boolean;
 begin
   WindowStateMaximised := WindowState = wsMaximized;
@@ -1232,21 +1259,7 @@ begin
     Configuration.MainWindowWidth := Width;
   end;
 
-  if not Assigned(FActiveLayoutConfiguration) then
-    ActiveLayoutConfigurationName := ''
-  else
-  begin
-    ActiveLayoutConfigurationName := FActiveLayoutConfiguration.Name;
-
-//    FrameSlotConfigs := FActiveLayoutConfiguration.GenerateBlankFrameSlotConfigs(Configuration.XmlElementHolder);
-//    FLayoutFrame.SaveFrameConfigurations(FrameSlotConfigs, ExplicitSizes);
-//    FActiveLayoutConfiguration.AssignFrameSlotConfigs(FrameSlotConfigs);
-    if includeExplicitSizes then
-    begin
-      FActiveLayoutConfiguration.AssignExplicitSizes(ExplicitSizes);
-    end;
-  end;
-  Configuration.ActiveLayoutConfigurationName := ActiveLayoutConfigurationName;
+  SaveActiveLayoutConfiguration(True);
 
   Configuration.Save;
 end;
