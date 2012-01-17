@@ -1245,8 +1245,6 @@ end;
 
 procedure TMainForm.SaveConfiguration;
 var
-  ActiveLayoutConfigurationName: string;
-  Element: ITypedXmlElement;
   WindowStateMaximised: Boolean;
 begin
   WindowStateMaximised := WindowState = wsMaximized;
