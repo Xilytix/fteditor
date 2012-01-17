@@ -1073,8 +1073,6 @@ begin
 end;
 
 procedure TLayoutConfiguration.THalf.SaveToXml(element: ITypedXmlElement);
-var
-  ConfigurationElement: ITypedXmlElement;
 begin
   element.SetAttribute(XmlTag_HalfId, HalfIdToXmlValue(Id));
   element.SetAttribute(XmlTag_Arrangement, ArrangementToXmlValue(Arrangement));
