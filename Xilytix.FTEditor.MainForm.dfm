@@ -722,7 +722,7 @@ object MainForm: TMainForm
               end
               item
                 Action = SaveMetaAction
-                ShortCut = 49238
+                ShortCut = 49235
               end
               item
                 Action = SaveMetaToReferenceAction
@@ -867,7 +867,7 @@ object MainForm: TMainForm
     object SaveMetaAction: TAction
       Category = 'File'
       Caption = 'Sa&ve Meta'
-      ShortCut = 49238
+      ShortCut = 49235
       OnExecute = SaveMetaActionExecute
       OnUpdate = SaveMetaActionUpdate
     end
