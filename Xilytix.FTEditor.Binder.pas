@@ -44,6 +44,7 @@ type
         piAllowEndOfLineInQuotes,
         piStuffedEmbeddedQuotes,
         piIgnoreExtraChars,
+        piIncompleteRecordsAllowed,
         piHeadingAlwaysWriteOptionalQuote,
         piHeadingWritePrefixSpace,
         piSubstitutionsEnabled,
@@ -194,6 +195,7 @@ type
         (Id: piAllowEndOfLineInQuotes; Cat: pcMainMeta),
         (Id: piStuffedEmbeddedQuotes; Cat: pcMainMeta),
         (Id: piIgnoreExtraChars; Cat: pcMainMeta),
+        (Id: piIncompleteRecordsAllowed; Cat: pcMainMeta),
         (Id: piHeadingAlwaysWriteOptionalQuote; Cat: pcMainMeta; ForceRefresh: True),
         (Id: piHeadingWritePrefixSpace; Cat: pcMainMeta; ForceRefresh: True),
         (Id: piSubstitutionsEnabled; Cat: pcMainMeta),
@@ -1079,6 +1081,7 @@ begin
       piAllowEndOfLineInQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piStuffedEmbeddedQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piIgnoreExtraChars: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piIncompleteRecordsAllowed: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piHeadingAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piHeadingWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piSubstitutionsEnabled: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);

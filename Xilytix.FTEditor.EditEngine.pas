@@ -535,7 +535,7 @@ end;
 
 function TEditEngine.GetActiveItemNumber: Integer;
 begin
-  Result := IndexToNumber(FFieldedText.ActiveItemIndex);
+  Result := IndexToNumber(FFieldedText.TableItemIndex);
 end;
 
 function TEditEngine.GetCells(aCol, aRow: Integer): TCell;
@@ -869,7 +869,7 @@ var
   ErrorText: string;
 begin
   ErrorText := CalculateFieldedTextErrorText(errorCode);
-  FEditData.SetError(FFieldedText.ActiveItemIndex);
+  FEditData.SetError(FFieldedText.TableFieldIndex);
   NotifyError(ErrorText);
 end;
 
@@ -878,7 +878,7 @@ begin
   if FFieldedText.Generating then
   begin
     try
-      field.Headings[FFieldedText.HeadingLineIndex] := FEditData.Cells[FFieldedText.ActiveItemIndex, FFieldedText.HeadingLineIndex].ValueAsString;
+      field.Headings[FFieldedText.HeadingLineIndex] := FEditData.Cells[FFieldedText.TableFieldIndex, FFieldedText.HeadingLineIndex].ValueAsString;
     except
       on E: EConvertError do
       begin
@@ -894,7 +894,7 @@ begin
   if FFieldedText.Generating then
   begin
     try
-      field.AsVariant := FEditData.Cells[FFieldedText.ActiveItemIndex, FEditData.HeadingCount + FFieldedText.RecordCount - 1].Value;
+      field.AsVariant := FEditData.Cells[FFieldedText.TableFieldIndex, FEditData.HeadingCount + FFieldedText.RecordCount - 1].Value;
     except
       on E: EConvertError do
       begin
@@ -911,11 +911,11 @@ begin
     ftpeFieldParsed:
     begin
       if FFieldedText.InHeadingLine then
-        FEditData.AddCell(FFieldedText.ActiveItemIndex, FFieldedText.CurrentField.Headings[FFieldedText.HeadingLineIndex],
+        FEditData.AddCell(FFieldedText.TableFieldIndex, FFieldedText.CurrentField.Headings[FFieldedText.HeadingLineIndex],
                           FFieldedText.CurrentSequenceItem,
                           FFieldedText.CurrentFieldStartPosition, FFieldedText.CurrentFieldLength)
       else
-        FEditData.AddCell(FFieldedText.ActiveItemIndex, FFieldedText.CurrentField.AsVariant,
+        FEditData.AddCell(FFieldedText.TableFieldIndex, FFieldedText.CurrentField.AsVariant,
                           FFieldedText.CurrentSequenceItem,
                           FFieldedText.CurrentFieldStartPosition, FFieldedText.CurrentFieldLength);
     end;

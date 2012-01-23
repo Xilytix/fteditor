@@ -34,7 +34,7 @@ type
     CommentCharEdit: TEdit;
     IgnoreBlankLinesCheckBox: TCheckBox;
     AllowInQuotesCheckBox: TCheckBox;
-    IgnoreExtraFieldsCheckBox: TCheckBox;
+    IgnoreExtraCharsCheckBox: TCheckBox;
     Label6: TLabel;
     EndOfLineTypeComboBox: TComboBox;
     Label7: TLabel;
@@ -138,6 +138,7 @@ type
     DesignNewFieldFalseTextEdit: TEdit;
     HeadingWritePrefixSpaceCheckBox: TCheckBox;
     HeadingAlwaysWriteOptionalQuoteCheckBox: TCheckBox;
+    IncompleteRecordsAllowedCheckBox: TCheckBox;
     procedure CharEditKeyPress(Sender: TObject; var Key: Char);
     procedure CharEditExit(Sender: TObject);
     procedure CultureEditExit(Sender: TObject);
@@ -300,7 +301,8 @@ begin
   IgnoreBlankLinesCheckBox.Tag := TBinder.CreateControlTag(piIgnoreBlankLines);
   AllowInQuotesCheckBox.Tag := TBinder.CreateControlTag(piAllowEndOfLineInQuotes);
   StuffedEmbeddedQuotesCheckBox.Tag := TBinder.CreateControlTag(piStuffedEmbeddedQuotes);
-  IgnoreExtraFieldsCheckBox.Tag := TBinder.CreateControlTag(piIgnoreExtraChars);
+  IgnoreExtraCharsCheckBox.Tag := TBinder.CreateControlTag(piIgnoreExtraChars);
+  IncompleteRecordsAllowedCheckBox.Tag := TBinder.CreateControlTag(piIncompleteRecordsAllowed);
   HeadingWritePrefixSpaceCheckBox.Tag := TBinder.CreateControlTag(piHeadingWritePrefixSpace);
   HeadingAlwaysWriteOptionalQuoteCheckBox.Tag := TBinder.CreateControlTag(piHeadingAlwaysWriteOptionalQuote);
   SubstitutionsEnabledCheckBox.Tag := TBinder.CreateControlTag(piSubstitutionsEnabled);
@@ -594,7 +596,8 @@ begin
     Binder.LoadCheckBox(IgnoreBlankLinesCheckBox, 0);
     Binder.LoadCheckBox(AllowInQuotesCheckBox, 0);
     Binder.LoadCheckBox(StuffedEmbeddedQuotesCheckBox, 0);
-    Binder.LoadCheckBox(IgnoreExtraFieldsCheckBox, 0);
+    Binder.LoadCheckBox(IgnoreExtraCharsCheckBox, 0);
+    Binder.LoadCheckBox(IncompleteRecordsAllowedCheckBox, 0);
     Binder.LoadCheckBox(HeadingAlwaysWriteOptionalQuoteCheckBox, 0);
     Binder.LoadCheckBox(HeadingWritePrefixSpaceCheckBox, 0);
     Binder.LoadCheckBox(SubstitutionsEnabledCheckBox, 0);
