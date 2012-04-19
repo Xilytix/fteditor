@@ -42,12 +42,13 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<VerInfo_MajorVer>2</VerInfo_MajorVer>
 			<Icon_MainIcon>FTEditor_Icon.ico</Icon_MainIcon>
 			<Manifest_File>None</Manifest_File>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<VerInfo_MinorVer>1</VerInfo_MinorVer>
+			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Keys>CompanyName=Xilytix;FileDescription=;FileVersion=1.1.0.0;InternalName=;LegalCopyright=Public Domain;LegalTrademarks=;OriginalFilename=;ProductName=FTEditor;ProductVersion=1.1.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=Xilytix;FileDescription=;FileVersion=2.2.0.0;InternalName=;LegalCopyright=Public Domain;LegalTrademarks=;OriginalFilename=;ProductName=FTEditor;ProductVersion=1.1.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Locale>3081</VerInfo_Locale>
 			<DCC_UnitSearchPath>$(XilytixFieldedTextSrc);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_DependencyCheckOutputName>FTEditor.exe</DCC_DependencyCheckOutputName>
@@ -55,16 +56,12 @@
 			<DCC_Platform>x86</DCC_Platform>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
 			<DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
 			<DCC_DebugDCUs>true</DCC_DebugDCUs>
@@ -73,21 +70,14 @@
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_UnitSearchPath>$(PJVersionInfoLib)\Win64\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_DcuOutput>W64Dbg</DCC_DcuOutput>
-			<VerInfo_Locale>1033</VerInfo_Locale>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<DCC_DebugDCUs>false</DCC_DebugDCUs>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_UnitSearchPath>$(PJVersionInfoLib)\Win32\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_DcuOutput>Win32\Debug</DCC_DcuOutput>
-			<VerInfo_MinorVer>0</VerInfo_MinorVer>
-			<VerInfo_MajorVer>2</VerInfo_MajorVer>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-			<VerInfo_Keys>CompanyName=Xilytix;FileDescription=;FileVersion=2.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<ItemGroup>
 			<DelphiCompile Include="$(MainSource)">
@@ -312,10 +302,13 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\Steema Software\TeeChart 2011 for RAD XE2\Delphi16.win32\Bin\DclFMXTeePro916.bpl">TeeChart Pro 2011 for FireMonkey Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\Steema Software\TeeChart 2011 for RAD XE2\Delphi16.iOS\Bin\DclFMITeePro916.bpl">TeeChart Pro 2011 for FireMonkey iOS Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\bcboffice2k160.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\bcbofficexp160.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcltee9160.bpl">TeeChart Standard VCL Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Platforms>

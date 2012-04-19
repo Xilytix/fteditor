@@ -862,6 +862,9 @@ begin
   FFieldedText.EmbeddedMetaMargin := Configuration.EmbeddedMetaMargin;
   FFieldedText.EmbeddedMetaIncludeDesignOnly := Configuration.SaveDesignOnlyMeta;
   FFieldedText.EmbeddedMetaExplicitIndices := Configuration.SaveMetaWithExplicitIndices;
+  FFieldedText.MetaTextIndented := Configuration.MetaTextFormatting;
+  FFieldedText.MetaTextIndentation := Configuration.MetaTextIndentation;
+  FFieldedText.MetaTextIndentChar := Configuration.MetaTextIndentChar;
 end;
 
 procedure TEditEngine.HandleErrorEvent(sender: TFieldedText; errorCode: TFieldedText.TErrorCode; field: TFieldedText.TField);

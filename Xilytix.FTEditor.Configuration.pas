@@ -99,7 +99,7 @@ type
       DefaultNamedDisplayCharEncodingName = 'UTF8';
       DefaultResetMetaForNewOpenText = True;
       DefaultIgnoreDeclaredMeta = False;
-//      DefaultMetaTextFormatting = TFieldedText.DefaultMetaTextFormatting;
+      DefaultMetaTextFormatting = TFieldedText.DefaultMetaTextIndented;
       DefaultMetaTextIndentation = TFieldedText.DefaultMetaTextIndentation;
       DefaultMetaTextIndentChar = TFieldedText.DefaultMetaTextIndentChar;
       DefaultEmbeddedMetaMargin = TFieldedText.DefaultEmbeddedMetaMargin;
@@ -548,7 +548,7 @@ begin
 
   FResetMetaForNewOpenText := DefaultResetMetaForNewOpenText;
   FIgnoreDeclaredMeta := DefaultIgnoreDeclaredMeta;
-//  FMetaTextFormatting := TFieldedText.DefaultMetaTextFormatting;
+  FMetaTextFormatting := TFieldedText.DefaultMetaTextIndented;
   FMetaTextIndentation := DefaultMetaTextIndentation;
   FMetaTextIndentChar := DefaultMetaTextIndentChar;
   FEmbeddedMetaMargin := DefaultEmbeddedMetaMargin;
@@ -783,10 +783,10 @@ begin
   begin
     FIgnoreDeclaredMeta := DefaultIgnoreDeclaredMeta;
   end;
-{  if not XmlNode.TryGetBooleanAttr(XmlTag_MetaTextFormatting, FMetaTextFormatting) then
+  if not XmlNode.TryGetBooleanAttr(XmlTag_MetaTextFormatting, FMetaTextFormatting) then
   begin
     FMetaTextFormatting := DefaultMetaTextFormatting;
-  end;}
+  end;
   if not XmlNode.TryGetIntegerAttr(XmlTag_MetaTextIndentation, FMetaTextIndentation) then
   begin
     FMetaTextIndentation := DefaultMetaTextIndentation;
