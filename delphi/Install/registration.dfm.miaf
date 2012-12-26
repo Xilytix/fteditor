@@ -1,0 +1,4 @@
+IF (Name.Text <> )  THEN  Next.Visible := True;
+IF (Company.Text <> )  THEN  Next.Visible := True;
+IF (Name.Text = )  THEN  Next.Visible := False;
+IF (Company.Text = )  THEN  Next.Visible := False;
