@@ -1,0 +1,14 @@
+IF (Name.Text <> )  THEN  Next.Visible := True;
+IF (Company.Text <> )  THEN  Next.Visible := True;
+IF (Serial1.Text <> )  THEN  Next.Visible := True;
+IF (Serial2.Text <> )  THEN  Next.Visible := True;
+IF (Serial3.Text <> )  THEN  Next.Visible := True;
+IF (Serial4.Text <> )  THEN  Next.Visible := True;
+IF (Serial5.Text <> )  THEN  Next.Visible := True;
+IF (Name.Text = )  THEN  Next.Visible := False;
+IF (Company.Text = )  THEN  Next.Visible := False;
+IF (Serial1.Text = )  THEN  Next.Visible := False;
+IF (Serial2.Text = )  THEN  Next.Visible := False;
+IF (Serial3.Text = )  THEN  Next.Visible := False;
+IF (Serial4.Text = )  THEN  Next.Visible := False;
+IF (Serial5.Text = )  THEN  Next.Visible := False;
