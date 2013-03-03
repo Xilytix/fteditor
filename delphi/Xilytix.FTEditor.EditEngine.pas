@@ -881,7 +881,7 @@ begin
   if FFieldedText.Generating then
   begin
     try
-      field.Headings[FFieldedText.HeadingLineIndex] := FEditData.Cells[FFieldedText.TableFieldIndex, FFieldedText.HeadingLineIndex].ValueAsString;
+      field.HeadingValues[FFieldedText.HeadingLineIndex] := FEditData.Cells[FFieldedText.TableFieldIndex, FFieldedText.HeadingLineIndex].ValueAsString;
     except
       on E: EConvertError do
       begin
@@ -914,7 +914,7 @@ begin
     ftpeFieldParsed:
     begin
       if FFieldedText.InHeadingLine then
-        FEditData.AddCell(FFieldedText.TableFieldIndex, FFieldedText.CurrentField.Headings[FFieldedText.HeadingLineIndex],
+        FEditData.AddCell(FFieldedText.TableFieldIndex, FFieldedText.CurrentField.HeadingValues[FFieldedText.HeadingLineIndex],
                           FFieldedText.CurrentSequenceItem,
                           FFieldedText.CurrentFieldStartPosition, FFieldedText.CurrentFieldLength)
       else
