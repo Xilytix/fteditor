@@ -99,6 +99,8 @@ type
                        myNumber: Integer;
                        myLineNumber: Integer;
                        myTableNr: Integer);
+    destructor Destroy; override;
+
     procedure SetNewTable(const Value: Boolean);
 
     property Cells: TCellCollection read FCells;
@@ -208,6 +210,7 @@ type
     property LastRowIdx: Integer read GetLastRowIdx;
   public
     constructor Create(myDisplayCulture: TFieldedTextLocaleSettings);
+    destructor Destroy; override;
     property RowCount: Integer read GetRowCount;
     property HeadingCount: Integer read FHeadingCount;
     property Heading[aCol: Integer]: string read GetHeading;
@@ -516,6 +519,14 @@ begin
   ResetParsing(myDisplayCulture);
 end;
 
+destructor TEditData.Destroy;
+begin
+  FAllCells.Free;
+  FRows.Free;
+
+  inherited;
+end;
+
 procedure TEditData.FindCellAtRichPos(pos: Integer; out aCell: TCell;
                                       out aCol, aRow: Integer);
 var
@@ -738,6 +749,12 @@ begin
   FNumber := myNumber;
   FLineNumber := myLineNumber;
   FTableNr := myTableNr;
+end;
+
+destructor TRow.Destroy;
+begin
+  FCells.Free;
+  inherited;
 end;
 
 function TRow.GetLastCell: TCell;

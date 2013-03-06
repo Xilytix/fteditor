@@ -24,8 +24,8 @@
 		</Contact_Info>
 		<Support_Info>
 			<Sales_Email />
-			<Support_Email>support@xilytix.com</Support_Email>
-			<General_Email>info@xilytix.com</General_Email>
+			<Support_Email />
+			<General_Email />
 			<Sales_Phone />
 			<Support_Phone />
 			<General_Phone />
@@ -34,22 +34,22 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>FTEditor</Program_Name>
-		<Program_Version>1.5.5</Program_Version>
-		<Program_Release_Month>10</Program_Release_Month>
-		<Program_Release_Day>13</Program_Release_Day>
-		<Program_Release_Year>2007</Program_Release_Year>
+		<Program_Version>1.6</Program_Version>
+		<Program_Release_Month>3</Program_Release_Month>
+		<Program_Release_Day>5</Program_Release_Day>
+		<Program_Release_Year>2013</Program_Release_Year>
 		<Program_Cost_Dollars>0</Program_Cost_Dollars>
 		<Program_Cost_Other_Code>AUD</Program_Cost_Other_Code>
 		<Program_Cost_Other>0</Program_Cost_Other>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Minor Update</Program_Release_Status>
 		<Program_Install_Support>No Install Support</Program_Install_Support>
-		<Program_OS_Support>Windows2000,WinXP,Windows2003,Windows Vista Starter,Windows Vista Home Basic,Windows Vista Home Premium,Windows Vista Business,Windows Vista Enterprise,Windows Vista Ultimate</Program_OS_Support>
+		<Program_OS_Support>Windows</Program_OS_Support>
 		<Program_Language>English</Program_Language>
-		<Program_Change_Info>Minor bug fixes and improvements</Program_Change_Info>
+		<Program_Change_Info>Conversion to Win32</Program_Change_Info>
 		<Program_Specific_Category>Utilities</Program_Specific_Category>
 		<Program_Category_Class>System Utilities::Text/Document Editors</Program_Category_Class>
-		<Program_System_Requirements>.NET 2 Framework</Program_System_Requirements>
+		<Program_System_Requirements></Program_System_Requirements>
 		<File_Info>
 			<File_Size_Bytes>3312951</File_Size_Bytes>
 			<File_Size_K>3235</File_Size_K>
@@ -97,20 +97,20 @@ The Meta properties can be saved to a Fielded Text Meta file.  This file can be 
 			<Application_XML_File_URL>http://www.xilytix.com/padfiles/FTEditorPad.xml</Application_XML_File_URL>
 		</Application_URLs>
 		<Download_URLs>
-			<Primary_Download_URL>http://www.xilytix.com/FieldedText/Editor/Releases/FTEditorSetup1.5.5.exe</Primary_Download_URL>
+			<Primary_Download_URL>https://sourceforge.net/projects/fteditor/files/fteditor.exe/download</Primary_Download_URL>
 			<Secondary_Download_URL />
 			<Additional_Download_URL_1 />
 			<Additional_Download_URL_2 />
 		</Download_URLs>
 	</Web_Info>
 	<Permissions>
-		<Distribution_Permissions>Program is subject to GPL licence (http://www.gnu.org/copyleft/gpl.html).  You may distribute in accordance with this licence.
+		<Distribution_Permissions>Program is in public domain
 
 The source code is available from
   http://sourceforge.net/projects/FTEditor</Distribution_Permissions>
-		<EULA>Program is subject to GPL licence (http://www.gnu.org/copyleft/gpl.html).
+		<EULA>Program and its source is in Public Domain.  No warranties are provided what so ever.  Use at your own risk.
 
-You may freely use this software.  You may also use its source code provided this is done in accordance with the GPL licence.
+You may freely use this software.  You may also freely use its source code.
 
 The source code is available from
   http://sourceforge.net/projects/FTEditor</EULA>

@@ -278,6 +278,7 @@ type
     procedure SetHalvesArrangement(const Value: TArrangement);
   public
     constructor Create(const MyName: string; MyXmlDocument: ITypedXMLDocument);
+    destructor Destroy; override;
 
     property Name: string read FName write FName;
     property FrameSlotConfigs: TFrameSlotConfigs read FFrameSlotConfigs;
@@ -518,6 +519,14 @@ begin
 
     Result := TLayoutConfiguration.Create(LayoutConfigurationName, XmlDocument);
   end;
+end;
+
+destructor TLayoutConfiguration.Destroy;
+begin
+  FHalfA.Free;
+  FHalfB.Free;
+
+  inherited;
 end;
 
 class function TLayoutConfiguration.Exists(
