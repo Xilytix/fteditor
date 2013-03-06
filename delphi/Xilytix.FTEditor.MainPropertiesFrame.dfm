@@ -13,6 +13,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     TabOrder = 0
     object MainTabSheet: TTabSheet
       Caption = 'Main'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object CultureEditLabel: TLabel
         Left = 159
         Top = 99
@@ -203,6 +207,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object HeadingTabSheet: TTabSheet
       Caption = 'Heading'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label10: TLabel
         Left = 0
         Top = 3
@@ -495,6 +503,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object SubstitutionsTabSheet: TTabSheet
       Caption = 'Substitutions'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object SubstitutionsTopPanel: TPanel
         Left = 0
         Top = 0
@@ -749,6 +761,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object DesignTabSheet: TTabSheet
       Caption = 'Design'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         256
         167)
@@ -1070,6 +1086,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object FileTabSheet: TTabSheet
       Caption = 'Declare'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object FileParametersValueListEditor: TValueListEditor
         Left = 0
         Top = 107

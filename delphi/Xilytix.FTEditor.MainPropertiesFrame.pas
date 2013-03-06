@@ -216,6 +216,7 @@ type
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     class function GetTypeId: TLayoutableFrame.TTypeId; override;
     class function GetTypeName: string; override;
     class function GetTypeCaption: string; override;
@@ -293,7 +294,7 @@ begin
   QuoteCharEdit.Tag := TBinder.CreateControlTag(piQuoteChar);
   CommentCharEdit.Tag := TBinder.CreateControlTag(piLineCommentChar);
   EndOfLineCharEdit.Tag := TBinder.CreateControlTag(piEndOfLineChar);
-  SubstitutionCharEdit.Tag := TBinder.CreateControlTag(piSubstitutionChar);
+//  SubstitutionCharEdit.Tag := TBinder.CreateControlTag(piSubstitutionChar);
   HeadingPadCharEdit.Tag := TBinder.CreateControlTag(piHeadingPadChar);
   HeadingPadEoFCharEdit.Tag := TBinder.CreateControlTag(piHeadingEndOfValueChar);
   HeadingTruncateCharEdit.Tag := TBinder.CreateControlTag(piHeadingTruncateChar);
@@ -520,6 +521,63 @@ end;
 procedure TMainPropertiesFrame.DesignNewFieldStylesIntegerEditKeyPress(Sender: TObject; var Key: Char);
 begin
   FBinder.HandleNumberStylesEditKeyPress(Sender as TEdit, 0, TFieldedTextField_Integer.DefaultStyles, Key);
+end;
+
+destructor TMainPropertiesFrame.Destroy;
+begin
+  TBinder.DestroyControlTag(CultureEdit.Tag);
+  TBinder.DestroyControlTag(DelimiterCharEdit.Tag);
+  TBinder.DestroyControlTag(QuoteCharEdit.Tag);
+  TBinder.DestroyControlTag(CommentCharEdit.Tag);
+  TBinder.DestroyControlTag(EndOfLineCharEdit.Tag);
+//  TBinder.DestroyControlTag(SubstitutionCharEdit.Tag);
+  TBinder.DestroyControlTag(HeadingPadCharEdit.Tag);
+  TBinder.DestroyControlTag(HeadingPadEoFCharEdit.Tag);
+  TBinder.DestroyControlTag(HeadingTruncateCharEdit.Tag);
+
+  TBinder.DestroyControlTag(IgnoreBlankLinesCheckBox.Tag);
+  TBinder.DestroyControlTag(AllowInQuotesCheckBox.Tag);
+  TBinder.DestroyControlTag(StuffedEmbeddedQuotesCheckBox.Tag);
+  TBinder.DestroyControlTag(IgnoreExtraCharsCheckBox.Tag);
+  TBinder.DestroyControlTag(IncompleteRecordsAllowedCheckBox.Tag);
+  TBinder.DestroyControlTag(HeadingWritePrefixSpaceCheckBox.Tag);
+  TBinder.DestroyControlTag(HeadingAlwaysWriteOptionalQuoteCheckBox.Tag);
+  TBinder.DestroyControlTag(SubstitutionsEnabledCheckBox.Tag);
+  TBinder.DestroyControlTag(DeclaredCheckBox.Tag);
+
+  TBinder.DestroyControlTag(HeadingLineCountEdit.Tag);
+  TBinder.DestroyControlTag(HeadingMainLineIndexEdit.Tag);
+
+  TBinder.DestroyControlTag(SubstitutionCharEdit.Tag);
+  TBinder.DestroyControlTag(SubstitutionTokenEdit.Tag);
+  TBinder.DestroyControlTag(SubstitutionCharValueEdit.Tag);
+
+  TBinder.DestroyControlTag(DesignNewFieldFalseTextEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldTrueTextEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldFormatIntegerEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldFormatFloatEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldFormatDecimalEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldFormatDateTimeEdit.Tag);
+
+  TBinder.DestroyControlTag(DesignNewFieldStylesBooleanEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldStylesIntegerEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldStylesFloatEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldStylesDecimalEdit.Tag);
+  TBinder.DestroyControlTag(DesignNewFieldStylesDateTimeEdit.Tag);
+
+  TBinder.DestroyControlTag(EndOfLineTypeComboBox.Tag);
+  TBinder.DestroyControlTag(EndOfLineAutoWriteComboBox.Tag);
+  TBinder.DestroyControlTag(HeadingConstraintComboBox.Tag);
+  TBinder.DestroyControlTag(HeadingQuotedTypeComboBox.Tag);
+  TBinder.DestroyControlTag(HeadingPadAlignmentComboBox.Tag);
+  TBinder.DestroyControlTag(HeadingPadCharTypeComboBox.Tag);
+  TBinder.DestroyControlTag(HeadingTruncateTypeComboBox.Tag);
+
+  TBinder.DestroyControlTag(MetaReferenceTypeComboBox.Tag);
+  TBinder.DestroyControlTag(MetaReferenceEdit.Tag);
+
+
+  inherited;
 end;
 
 function TMainPropertiesFrame.GetInitialHeight: Integer;

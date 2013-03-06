@@ -235,6 +235,7 @@ type
     property SequenceProperties[const name: string; idx: Integer]: TValue read GetSequenceProperties write SetSequenceProperties;
   public
     constructor Create;
+    destructor Destroy; override;
 
     property DataTypeAbbr[&type: TFieldedText.TDataType]: string read GetDataTypeAbbr;
 
@@ -474,6 +475,13 @@ begin
   MetaModified := True;
 end;
 
+destructor TEditEngine.Destroy;
+begin
+  FEditData.Free;
+  FFieldedText.Free;
+  inherited;
+end;
+
 function TEditEngine.GetFieldProperties(const Name: string; idx: Integer): TValue;
 var
   Context: TRttiContext;
@@ -501,8 +509,9 @@ begin
     try
       Success := FFieldedText.Generate(Writer);
       SetText(nil, Writer.ToString);
-    finally
       Writer.Close;
+    finally
+      Writer.Free;
     end;
 
   finally
@@ -1248,8 +1257,9 @@ begin
         errorDescription := 'Out of Memory';
       end;
     end;
-  finally
     Reader.Close;
+  finally
+    Reader.Free;
   end;
 
   if Result then
@@ -1401,8 +1411,9 @@ begin
     Reader := TStringReader.Create(FEditData.Text);
     try
       Success := FFieldedText.Parse(Reader);
-    finally
       Reader.Close;
+    finally
+      Reader.Free;
     end;
 
     FEditData.Resolve;

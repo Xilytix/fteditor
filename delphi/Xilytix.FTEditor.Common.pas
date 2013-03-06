@@ -266,33 +266,36 @@ begin
   FileNameLength := Length(fileName);
   Result := True;
   Bldr := TStringBuilder.Create;
-
-  I := 1;
-  while I <= FileNameLength do
-  begin
-    if fileName[I] <> SafeFileNameEscapeChar then
-      Bldr.Append(fileName[I])
-    else
+  try
+    I := 1;
+    while I <= FileNameLength do
     begin
-      Inc(I);
-      if I >= FileNameLength then
-        Break
+      if fileName[I] <> SafeFileNameEscapeChar then
+        Bldr.Append(fileName[I])
       else
       begin
-        Result := ExtractEscapedFileNameChar(fileName, FileNameLength, I, EscapedChar);
-        if not Result then
+        Inc(I);
+        if I >= FileNameLength then
           Break
         else
-          Bldr.Append(EscapedChar);
+        begin
+          Result := ExtractEscapedFileNameChar(fileName, FileNameLength, I, EscapedChar);
+          if not Result then
+            Break
+          else
+            Bldr.Append(EscapedChar);
+        end;
       end;
+
+      Inc(I);
     end;
 
-    Inc(I);
-  end;
-
-  if Result then
-  begin
-    decodedValue := Bldr.ToString;
+    if Result then
+    begin
+      decodedValue := Bldr.ToString;
+    end;
+  finally
+    Bldr.Free;
   end;
 end;
 
@@ -307,29 +310,32 @@ var
 begin
   SetLength(SingleCharArray, 1);
   Bldr := TStringBuilder.Create(512);
-
-  for I := 1 to Length(value) do
-  begin
-    if not IsInvalidFileNameChar(Value[I]) and (Value[I] <> SafeFileNameEscapeChar) then
-      Bldr.Append(value[I])
-    else
+  try
+    for I := 1 to Length(value) do
     begin
-      SingleCharArray[0] := value[I];
-      CharBytes := TEncoding.UTF8.GetBytes(SingleCharArray);
-      CharBytesLengthStr := IntToHex(Length(CharBytes), 1);
-      Assert(Length(CharBytesLengthStr) = 1);
-
-      Bldr.Append(SafeFileNameEscapeChar);
-      Bldr.Append(CharBytesLengthStr[1]);
-      for J := Low(CharBytes) to High(CharBytes) do
+      if not IsInvalidFileNameChar(Value[I]) and (Value[I] <> SafeFileNameEscapeChar) then
+        Bldr.Append(value[I])
+      else
       begin
-        CharHex := ByteToHex(CharBytes[J]);
-        Bldr.Append(CharHex);
+        SingleCharArray[0] := value[I];
+        CharBytes := TEncoding.UTF8.GetBytes(SingleCharArray);
+        CharBytesLengthStr := IntToHex(Length(CharBytes), 1);
+        Assert(Length(CharBytesLengthStr) = 1);
+
+        Bldr.Append(SafeFileNameEscapeChar);
+        Bldr.Append(CharBytesLengthStr[1]);
+        for J := Low(CharBytes) to High(CharBytes) do
+        begin
+          CharHex := ByteToHex(CharBytes[J]);
+          Bldr.Append(CharHex);
+        end;
       end;
     end;
-  end;
 
-  Result := Bldr.ToString;
+    Result := Bldr.ToString;
+  finally
+    Bldr.Free;
+  end;
 end;
 
 { TNonRefCountedInterfacedObject }

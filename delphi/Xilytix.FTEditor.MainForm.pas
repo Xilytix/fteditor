@@ -474,7 +474,11 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SaveConfiguration;
+  FBinder.Free;
+  FActiveLayoutConfiguration.Free;
+  FEditEngine.Free;
   Configuration.Free;
+  FCommandLineParser.Free;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

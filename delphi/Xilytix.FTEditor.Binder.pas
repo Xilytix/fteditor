@@ -473,6 +473,7 @@ type
 
     class function TagToPropertyId(value: Integer): TPropertyId;
     class function CreateControlTag(value: TPropertyId): Integer;
+    class procedure DestroyControlTag(Tag: Integer);
 
     function GetPropertyValue(control: TWinControl; idx: Integer): TValue; overload;
     procedure SetPropertyValue(id: TPropertyId; idx: Integer; const value: TValue; out modified: Boolean);
@@ -969,11 +970,15 @@ begin
   CharEncoding := CalculateDisplayCharEncoding;
   Bytes := CharEncoding.GetBytes(value);
   ResultBuilder := TStringBuilder.Create;
-  for I := Low(Bytes) to High(Bytes) do
-  begin
-    ResultBuilder.Append(IntToHex(Bytes[I], 2));
+  try
+    for I := Low(Bytes) to High(Bytes) do
+    begin
+      ResultBuilder.Append(IntToHex(Bytes[I], 2));
+    end;
+    Result := ResultBuilder.ToString;
+  finally
+    ResultBuilder.Free;
   end;
-  Result := ResultBuilder.ToString;
 end;
 
 function TBinder.CheckRefresh(id: TPropertyId; modified: Boolean): Boolean;
@@ -1986,6 +1991,11 @@ end;
 class function TBinder.CreateControlTag(value: TPropertyId): Integer;
 begin
   Result := Integer(TControlTag.Create(value));
+end;
+
+class procedure TBinder.DestroyControlTag(Tag: Integer);
+begin
+  TControlTag(Tag).Free;
 end;
 
 procedure TBinder.SetEditError(edit: TEdit);
