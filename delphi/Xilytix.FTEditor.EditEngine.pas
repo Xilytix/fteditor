@@ -134,6 +134,7 @@ type
 //    procedure HandleRecordFieldsEndEvent(sender: TFieldedText; var stop: Boolean);
     procedure HandleErrorEvent(sender: TFieldedText;
                                errorCode: TFieldedText.TErrorCode;
+                               const ErrorDescription: string;
                                field: TFieldedText.TField);
     procedure HandleConfigurationUpdatedEvent;
 
@@ -156,7 +157,7 @@ type
     procedure NotifyFieldedTextFilePathSet;
     procedure NotifyNewOpenText;
 
-    function CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode): string;
+    function CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode; const ErrorDescription: string): string;
 
     function SameValue(const Value1, Value2: TValue): Boolean;
 
@@ -437,12 +438,16 @@ begin
   Result := value;
 end;
 
-function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode): string;
+function TEditEngine.CalculateFieldedTextErrorText(errorCode: TFieldedText.TErrorCode; const ErrorDescription: string): string;
 begin
   Result := 'Code: ' + EFieldedText.CodeToName(errorCode);
   case errorCode of
     ftecInvalidDeclaration: Result := Result + ': ' + FFieldedText.DeclarationErrorDescription;
     ftecMetaLoad: Result := Result + ': ' + FFieldedText.MetaLoadErrorDescription;
+  end;
+  if ErrorDescription <> '' then
+  begin
+    Result := Result + ': ' + ErrorDescription;
   end;
 end;
 
@@ -876,11 +881,12 @@ begin
   FFieldedText.MetaTextIndentChar := Configuration.MetaTextIndentChar;
 end;
 
-procedure TEditEngine.HandleErrorEvent(sender: TFieldedText; errorCode: TFieldedText.TErrorCode; field: TFieldedText.TField);
+procedure TEditEngine.HandleErrorEvent(sender: TFieldedText; errorCode: TFieldedText.TErrorCode; const ErrorDescription: string;
+                                       field: TFieldedText.TField);
 var
   ErrorText: string;
 begin
-  ErrorText := CalculateFieldedTextErrorText(errorCode);
+  ErrorText := CalculateFieldedTextErrorText(errorCode, ErrorDescription);
   FEditData.SetError(FFieldedText.TableFieldIndex);
   NotifyError(ErrorText);
 end;
