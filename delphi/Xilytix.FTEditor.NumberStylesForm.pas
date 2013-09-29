@@ -10,6 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils;
 
 type
@@ -38,7 +39,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
   private
-    FValue: TDotNetNumberStyles;
+    FValue: TDotNetNumberStyle.TIds;
     FLoadingControls: Boolean;
     FOk: Boolean;
 
@@ -53,7 +54,7 @@ type
     { Public declarations }
 
     property AsString: string read GetAsString;
-    procedure SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyles);
+    procedure SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyle.TIds);
   end;
 
 var
@@ -91,13 +92,13 @@ end;
 
 procedure TNumberStylesForm.FormCreate(Sender: TObject);
 begin
-  AnyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncAny);
-  CurrencyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncCurrency);
-  FloatRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncFloat);
-  HexNumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncHexNumber);
-  IntegerRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncInteger);
-  NoneRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncNone);
-  NumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(dnncNumber);
+  AnyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncAny);
+  CurrencyRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncCurrency);
+  FloatRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncFloat);
+  HexNumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncHexNumber);
+  IntegerRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncInteger);
+  NoneRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncNone);
+  NumberRadioButton.Tag := TCommon.DotNetNumberStylesToInteger(TDotNetNumberStyle.dnncNumber);
 
   AllowCurrencySymbolCheckBox.Tag := Integer(dnnsAllowCurrencySymbol);
   AllowDecimalPointCheckBox.Tag := Integer(dnnsAllowDecimalPoint);
@@ -139,7 +140,7 @@ begin
   end;
 end;
 
-procedure TNumberStylesForm.SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyles);
+procedure TNumberStylesForm.SetAsString(asStringValue: string; const fallBack, default: TDotNetNumberStyle.TIds);
 begin
   asStringValue := Trim(asStringValue);
   if asStringValue= '' then
@@ -157,7 +158,7 @@ end;
 
 procedure TNumberStylesForm.SetCheckBox(checkBox: TCheckBox);
 var
-  TagStyles: TDotNetNumberStyles;
+  TagStyles: TDotNetNumberStyle.TIds;
 begin
   TagStyles := TCommon.IntegerToDotNetNumberStyles(checkBox.Tag);
   checkBox.Checked := (FValue * TagStyles) = TagStyles;
@@ -178,9 +179,9 @@ begin
     CheckBox := Sender as TCheckBox;
     StyleValue := CheckBox.Tag;
     if CheckBox.Checked then
-      Include(FValue, TDotNetNumberStyle(StyleValue))
+      Include(FValue, TDotNetNumberStyle.TId(StyleValue))
     else
-      Exclude(FValue, TDotNetNumberStyle(StyleValue));
+      Exclude(FValue, TDotNetNumberStyle.TId(StyleValue));
 
     LoadControls;
   end;

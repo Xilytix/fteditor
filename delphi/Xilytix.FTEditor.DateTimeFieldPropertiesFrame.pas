@@ -47,6 +47,7 @@ implementation
 
 uses
   Rtti,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.StandardFields,
   Xilytix.FTEditor.Binder;
@@ -104,14 +105,14 @@ end;
 procedure TDateTimeFieldPropertiesFrame.StylesButtonClick(Sender: TObject);
 var
   Value: TValue;
-  Styles: TDotNetDateTimeStyles;
+  Styles: TDotNetDateTimeStyle.TIds;
   NewValue: string;
-  DefaultStyles: TDotNetDateTimeStyles;
+  DefaultStyles: TDotNetDateTimeStyle.TIds;
 begin
   DefaultStyles := TFieldedTextField_DateTime.DefaultStyles;
 
   Value := FBinder.GetPropertyValue(StylesEdit, FFieldIndex);
-  Styles := Value.AsType<TDotNetDateTimeStyles>;
+  Styles := Value.AsType<TDotNetDateTimeStyle.TIds>;
 
   if FBinder.EditDateTimeStyles(Self,
                                 StylesEdit.Text,

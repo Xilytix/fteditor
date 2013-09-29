@@ -19,7 +19,7 @@ uses
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.SourceFrame,
   Xilytix.FTEditor.LayoutFrame, StdActns, BandActn,
-  Xilytix.FTEditor.CommandLineParser, ExtActns;
+  Xilytix.FTEditor.CommandLineParser, ExtActns, System.Actions;
 
 type
   TMainForm = class(TForm)
@@ -210,8 +210,9 @@ implementation
 {$R *.dfm}
 
 uses
-  Types,
-  IOUtils,
+  System.Types,
+  System.IOUtils,
+  System.UITypes,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Common,

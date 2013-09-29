@@ -12,6 +12,7 @@ uses
   Generics.Defaults,
   Generics.Collections,
   Rtti,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.Common,

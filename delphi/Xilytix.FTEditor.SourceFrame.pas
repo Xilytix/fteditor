@@ -154,6 +154,7 @@ implementation
 {$R *.dfm}
 
 uses
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
   Xilytix.FTEditor.EditData,
   Xilytix.FTEditor.LayoutConfiguration,

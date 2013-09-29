@@ -16,6 +16,7 @@ uses
   ComCtrls,
   TypInfo,
   Rtti,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
 //  Xilytix.FieldedText.BaseField,
   Xilytix.FieldedText.Main,
@@ -338,8 +339,8 @@ type
     function TryParseDoubleDisplay(const display: string; out value: Double): Boolean;
     function TryParseCurrencyDisplay(const display: string; out value: Currency): Boolean;
 
-    function TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyles): Boolean;
-    function TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyles): Boolean;
+    function TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyle.TIds): Boolean;
+    function TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyle.TIds): Boolean;
     function TryParseBooleanStylesDisplay(const display: string; out value: TBooleanStyles): Boolean;
 
     function GetPropertyName(id: TPropertyId): string;
@@ -370,8 +371,8 @@ type
     procedure SetEditWarning(edit: TEdit);
     procedure ClearEditWarning(edit: TEdit);
 
-    function EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyles; out NewValue: string): Boolean;
-    function EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyles; out NewValue: string): Boolean;
+    function EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyle.TIds; out NewValue: string): Boolean;
+    function EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyle.TIds; out NewValue: string): Boolean;
     function EditBooleanStyles(formOwner: TComponent; asString: string; fallback, default: TBooleanStyles; out NewValue: string): Boolean;
 
     procedure LoadStringEdit(edit: TEdit; idx: Integer);
@@ -423,12 +424,12 @@ type
     procedure HandleRedirectDecimalEditExit(edit: TEdit; redirect: TFieldedText.TSequenceRedirect);
 
     procedure LoadNumberStylesEdit(edit: TEdit; idx: Integer);
-    procedure SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyles);
-    procedure HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyles; var key: Char);
+    procedure SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyle.TIds);
+    procedure HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyle.TIds; var key: Char);
 
     procedure LoadDateTimeStylesEdit(edit: TEdit; idx: Integer);
-    procedure SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles);
-    procedure HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles; var key: Char);
+    procedure SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyle.TIds);
+    procedure HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyle.TIds; var key: Char);
 
     procedure LoadBooleanStylesEdit(edit: TEdit; idx: Integer);
     procedure SaveBooleanStylesEdit(edit: TEdit; idx: Integer; default: TBooleanStyles);
@@ -636,12 +637,12 @@ begin
   end;
 end;
 
-procedure TBinder.SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles);
+procedure TBinder.SaveDateTimeStylesEdit(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyle.TIds);
 var
   Text: string;
   Error: Boolean;
   Id: TPropertyId;
-  Styles: TDotNetDateTimeStyles;
+  Styles: TDotNetDateTimeStyle.TIds;
   Value: TValue;
   Modified: Boolean;
 begin
@@ -659,7 +660,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    Value := TValue.From<TDotNetDateTimeStyles>(Styles);
+    Value := TValue.From<TDotNetDateTimeStyle.TIds>(Styles);
     SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
@@ -794,12 +795,12 @@ begin
   end;
 end;
 
-procedure TBinder.SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyles);
+procedure TBinder.SaveNumberStylesEdit(edit: TEdit; idx: Integer; default: TDotNetNumberStyle.TIds);
 var
   Text: string;
   Error: Boolean;
   Id: TPropertyId;
-  Styles: TDotNetNumberStyles;
+  Styles: TDotNetNumberStyle.TIds;
   Value: TValue;
   Modified: Boolean;
 begin
@@ -817,7 +818,7 @@ begin
   else
   begin
     Id := TagToPropertyId(edit.Tag);
-    Value := TValue.From<TDotNetNumberStyles>(Styles);
+    Value := TValue.From<TDotNetNumberStyle.TIds>(Styles);
     SetPropertyValue(Id, idx, Value, Modified);
 
     if not CheckRefresh(Id, Modified) then
@@ -903,7 +904,7 @@ begin
     case value[1] of
       '0':
       begin
-        if (Length(value) = 2) or (TCharacter.ToUpper(value[2]) <> 'X') then
+        if (Length(value) = 2) or (value[2].ToUpper <> 'X') then
           Result := False
         else
         begin
@@ -1100,10 +1101,10 @@ begin
       piNewDateTimeFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piNewDecimalFieldFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piNewBooleanFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TBooleanStyles);
-      piNewIntegerFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
-      piNewFloatFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
-      piNewDateTimeFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyles);
-      piNewDecimalFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piNewIntegerFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyle.TIds);
+      piNewFloatFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyle.TIds);
+      piNewDateTimeFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyle.TIds);
+      piNewDecimalFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyle.TIds);
       piEndOfLineType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineType);
       piEndOfLineAutoWriteType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineAutoWriteType);
       piHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.THeadingConstraint);
@@ -1149,13 +1150,13 @@ begin
       piTrueText: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piBooleanStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TBooleanStyles);
       piNumberFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
-      piNumberStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyles);
+      piNumberStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyle.TIds);
       piIntegerValue: PropertyTypeInfoArray[PropId] := TypeInfo(Integer);
       piFloatValue: PropertyTypeInfoArray[PropId] := TypeInfo(Double);
       piDecimalValue: PropertyTypeInfoArray[PropId] := TypeInfo(Currency);
       piDateTimeFormat: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piDateTimeValue: PropertyTypeInfoArray[PropId] := TypeInfo(TDateTime);
-      piDateTimeStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyles);
+      piDateTimeStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyle.TIds);
       piSequenceName: PropertyTypeInfoArray[PropId] := TypeInfo(string);
       piIsRoot: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piSequenceItemField: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TSequence.TItem);
@@ -1191,7 +1192,7 @@ begin
   end;
 end;
 
-function TBinder.EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyles;
+function TBinder.EditDateTimeStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetDateTimeStyle.TIds;
   out NewValue: string): Boolean;
 //var
 //  Form: TDateTimeStylesForm;
@@ -1210,7 +1211,7 @@ begin
   Result := False;
 end;
 
-function TBinder.EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyles;
+function TBinder.EditNumberStyles(formOwner: TComponent; asString: string; fallback, default: TDotNetNumberStyle.TIds;
   out NewValue: string): Boolean;
 var
   Form: TNumberStylesForm;
@@ -1348,7 +1349,7 @@ begin
   end;
 end;
 
-procedure TBinder.HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyles; var key: Char);
+procedure TBinder.HandleDateTimeStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetDateTimeStyle.TIds; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1450,7 +1451,7 @@ begin
   end;
 end;
 
-procedure TBinder.HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyles; var key: Char);
+procedure TBinder.HandleNumberStylesEditKeyPress(edit: TEdit; idx: Integer; default: TDotNetNumberStyle.TIds; var key: Char);
 begin
   if Key = #13 then
   begin
@@ -1581,13 +1582,13 @@ end;
 
 function TBinder.IsViewableChar(value: Char): Boolean;
 begin
-  Result := TCharacter.IsLetterOrDigit(value)
+  Result := value.IsLetterOrDigit
             or
-            TCharacter.IsPunctuation(value)
+            value.IsPunctuation
             or
-            TCharacter.IsNumber(value)
+            value.IsNumber
             or
-            TCharacter.IsSymbol(value);
+            value.IsSymbol;
 end;
 
 procedure TBinder.LoadBooleanStylesEdit(edit: TEdit; idx: Integer);
@@ -1664,10 +1665,10 @@ end;
 procedure TBinder.LoadDateTimeStylesEdit(edit: TEdit; idx: Integer);
 var
   Value: TValue;
-  Styles: TDotNetDateTimeStyles;
+  Styles: TDotNetDateTimeStyle.TIds;
 begin
   Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
-  Styles := Value.AsType<TDotNetDateTimeStyles>;
+  Styles := Value.AsType<TDotNetDateTimeStyle.TIds>;
   edit.Text := TDotNetDateTimeStylesInfo.ToString(Styles);
   ClearEditError(edit);
 end;
@@ -1749,11 +1750,11 @@ end;
 procedure TBinder.LoadNumberStylesEdit(edit: TEdit; idx: Integer);
 var
   Value: TValue;
-  Styles: TDotNetNumberStyles;
+  Styles: TDotNetNumberStyle.TIds;
   Culture: TFieldedTextLocaleSettings;
 begin
   Value := GetPropertyValue(TagToPropertyId(edit.Tag), idx);
-  Styles := Value.AsType<TDotNetNumberStyles>;
+  Styles := Value.AsType<TDotNetNumberStyle.TIds>;
   Culture := FEditEngine.DisplayCulture;
   edit.Text := TDotNetNumberStylesInfo.ToString(Styles);
   ClearEditError(edit);
@@ -2209,7 +2210,7 @@ begin
   Result := TCommaText.StrictValidate(display, ErrorDescription);
 end;
 
-function TBinder.TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyles): Boolean;
+function TBinder.TryParseDateTimeStylesDisplay(const display: string; out value: TDotNetDateTimeStyle.TIds): Boolean;
 begin
   Result := TDotNetDateTimeStylesInfo.TryFromString(display, Value);
 end;
@@ -2266,7 +2267,7 @@ begin
   end;
 end;
 
-function TBinder.TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyles): Boolean;
+function TBinder.TryParseNumberStylesDisplay(const display: string; out value: TDotNetNumberStyle.TIds): Boolean;
 begin
   Result := TDotNetNumberStylesInfo.TryFromString(display, Value);
 end;

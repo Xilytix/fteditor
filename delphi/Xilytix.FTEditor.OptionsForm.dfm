@@ -54,6 +54,10 @@ object OptionsForm: TOptionsForm
     object ControlsTabSheet: TTabSheet
       Caption = 'Controls'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label4: TLabel
         Left = 7
         Top = 8
@@ -130,6 +134,10 @@ object OptionsForm: TOptionsForm
     object TextTabSheet: TTabSheet
       Caption = 'Text'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label6: TLabel
         Left = 56
         Top = 91
@@ -229,6 +237,10 @@ object OptionsForm: TOptionsForm
     object GridTabSheet: TTabSheet
       Caption = 'Grid'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label5: TLabel
         Left = 184
         Top = 128
@@ -382,6 +394,10 @@ object OptionsForm: TOptionsForm
     object ColoursTabSheet: TTabSheet
       Caption = 'Colours'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object ColoursPropertyPanel: TPanel
         Left = 146
         Top = 0
@@ -546,6 +562,10 @@ object OptionsForm: TOptionsForm
     end
     object MetaTabSheet: TTabSheet
       Caption = 'Meta'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label1: TLabel
         Left = 26
         Top = 77
@@ -643,6 +663,10 @@ object OptionsForm: TOptionsForm
     object OtherTabSheet: TTabSheet
       Caption = 'Other'
       ImageIndex = 5
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object NumberFromZeroCheckBox: TCheckBox
         Left = 8
         Top = 188
