@@ -11,6 +11,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ComCtrls, Tabs, DockTabSet,
   ButtonGroup, CategoryButtons, ExtCtrls, Grids, ValEdit,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FTEditor.LayoutableFrame,
   Xilytix.FTEditor.EditorFrame,
   Xilytix.FTEditor.Binder,
@@ -394,7 +395,7 @@ var
   Edit: TEdit;
   NewValue: string;
   StylesValue: TValue;
-  DefaultStyles: TDotNetDateTimeStyles;
+  DefaultStyles: TDotNetDateTimeStyle.TIds;
 begin
   Edit := DesignNewFieldStylesDateTimeEdit;
   DefaultStyles := TFieldedTextField_DateTime.DefaultStyles;
@@ -402,7 +403,7 @@ begin
 
   if FBinder.EditDateTimeStyles(Self,
                                 Edit.Text,
-                                StylesValue.AsType<TDotNetDateTimeStyles>,
+                                StylesValue.AsType<TDotNetDateTimeStyle.TIds>,
                                 DefaultStyles,
                                 NewValue) then
   begin
@@ -426,7 +427,7 @@ var
   Edit: TEdit;
   NewValue: string;
   StylesValue: TValue;
-  DefaultStyles: TDotNetNumberStyles;
+  DefaultStyles: TDotNetNumberStyle.TIds;
 begin
   Edit := DesignNewFieldStylesDecimalEdit;
   DefaultStyles := TFieldedTextField_Decimal.DefaultStyles;
@@ -434,7 +435,7 @@ begin
 
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,
-                              StylesValue.AsType<TDotNetNumberStyles>,
+                              StylesValue.AsType<TDotNetNumberStyle.TIds>,
                               DefaultStyles,
                               NewValue) then
   begin
@@ -457,15 +458,15 @@ procedure TMainPropertiesFrame.DesignNewFieldStylesFloatButtonClick(Sender: TObj
 var
   Edit: TEdit;
   Value: TValue;
-  Styles: TDotNetNumberStyles;
+  Styles: TDotNetNumberStyle.TIds;
   NewValue: string;
-  DefaultStyles: TDotNetNumberStyles;
+  DefaultStyles: TDotNetNumberStyle.TIds;
 begin
   Edit := DesignNewFieldStylesFloatEdit;
   DefaultStyles := TFieldedTextField_Float.DefaultStyles;
 
   Value := FBinder.GetPropertyValue(Edit, 0);
-  Styles := Value.AsType<TDotNetNumberStyles>;
+  Styles := Value.AsType<TDotNetNumberStyle.TIds>;
 
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,
@@ -492,15 +493,15 @@ procedure TMainPropertiesFrame.DesignNewFieldStylesIntegerButtonClick(Sender: TO
 var
   Edit: TEdit;
   Value: TValue;
-  Styles: TDotNetNumberStyles;
+  Styles: TDotNetNumberStyle.TIds;
   NewValue: string;
-  DefaultStyles: TDotNetNumberStyles;
+  DefaultStyles: TDotNetNumberStyle.TIds;
 begin
   Edit := DesignNewFieldStylesIntegerEdit;
   DefaultStyles := TFieldedTextField_Integer.DefaultStyles;
 
   Value := FBinder.GetPropertyValue(Edit, 0);
-  Styles := Value.AsType<TDotNetNumberStyles>;
+  Styles := Value.AsType<TDotNetNumberStyle.TIds>;
 
   if FBinder.EditNumberStyles(Self,
                               Edit.Text,

@@ -16,6 +16,12 @@ To run, simply double click the fteditor.exe executable file.  Alternatively
 create a shortcut to this executable file.
 
 VERSION HISTORY
+29 Sep 2013  1.8.0         Adapted to version 2 of TFieldedText
+                           Line terminator in quotes no longer duplicated
+                           Generate now handles Nulls
+                           Generate now writes delimiter for delimited
+                             field prior to fixed width field
+                           Upgraded to Delphi XE5
 06 Apr 2013  1.6.2         Converted to Win32 program.
                              (.Net is no longer required)
 02 Nov 2007  1.6.0         Added support for Redirect InvokableDelay

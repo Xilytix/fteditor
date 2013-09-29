@@ -11,6 +11,7 @@ uses
   SysUtils,
   Forms,
   Rtti,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.Main,
   Xilytix.FTEditor.EditData;
@@ -412,6 +413,7 @@ implementation
 uses
   TypInfo,
   Classes,
+  System.Variants,
 //  Xilytix.FieldedText.Sequence,
   Xilytix.FTEditor.Configuration;
 
@@ -915,6 +917,11 @@ begin
       field.AsVariant := FEditData.Cells[FFieldedText.TableFieldIndex, FEditData.HeadingCount + FFieldedText.RecordCount - 1].Value;
     except
       on E: EConvertError do
+      begin
+        NotifyError('Field Value Format Error: ' + E.Message);
+        stop := True;
+      end;
+      on E: EVariantTypeCastError do
       begin
         NotifyError('Field Value Format Error: ' + E.Message);
         stop := True;

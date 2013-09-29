@@ -41,6 +41,7 @@ implementation
 
 uses
   Rtti,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils,
   Xilytix.FieldedText.StandardFields,
   Xilytix.FTEditor.Binder;
@@ -66,14 +67,14 @@ end;
 procedure TNumberFieldPropertiesFrame.StyleButtonClick(Sender: TObject);
 var
   Value: TValue;
-  Styles: TDotNetNumberStyles;
+  Styles: TDotNetNumberStyle.TIds;
   NewValue: string;
-  DefaultStyles: TDotNetNumberStyles;
+  DefaultStyles: TDotNetNumberStyle.TIds;
 begin
   DefaultStyles := TFieldedTextField_Number(FEditEngine.Fields[FFieldIndex]).GetDefaultStyles;
 
   Value := FBinder.GetPropertyValue(StylesEdit, FFieldIndex);
-  Styles := Value.AsType<TDotNetNumberStyles>;
+  Styles := Value.AsType<TDotNetNumberStyle.TIds>;
 
   if FBinder.EditNumberStyles(Self,
                               StylesEdit.Text,

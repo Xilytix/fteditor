@@ -9,6 +9,7 @@ interface
 
 uses
   Messages,
+  Xilytix.FieldedText.DotNet,
   Xilytix.FieldedText.Utils;
 
 type
@@ -25,7 +26,6 @@ type
 
     class constructor Create;
 
-    class function IsHexDigit(value: Char): Boolean;
     class function ByteToHex(const Value: Byte): string;
     class function IntToHexChar(const Value: Integer): Char;
     class function IsInvalidFileNameChar(value: Char): Boolean;
@@ -59,10 +59,10 @@ type
     class function SafeFileNameEncode(const value: string): string;
     class function TrySafeFileNameDecode(const fileName: string; out decodedValue: string): Boolean;
 
-    class function DotNetNumberStylesToInteger(const Value: TDotNetNumberStyles): Integer;
-    class function IntegerToDotNetNumberStyles(Value: Integer): TDotNetNumberStyles;
-    class function DotNetDateTimeStylesToInteger(const Value: TDotNetDateTimeStyles): Integer;
-    class function IntegerToDotNetDateTimeStyles(Value: Integer): TDotNetDateTimeStyles;
+    class function DotNetNumberStylesToInteger(const Value: TDotNetNumberStyle.TIds): Integer;
+    class function IntegerToDotNetNumberStyles(Value: Integer): TDotNetNumberStyle.TIds;
+    class function DotNetDateTimeStylesToInteger(const Value: TDotNetDateTimeStyle.TIds): Integer;
+    class function IntegerToDotNetDateTimeStyles(Value: Integer): TDotNetDateTimeStyle.TIds;
   end;
 
   TNonRefCountedInterfacedObject = class(TObject, IInterface)
@@ -121,13 +121,13 @@ begin
 end;
 
 class function TCommon.DotNetDateTimeStylesToInteger(
-  const Value: TDotNetDateTimeStyles): Integer;
+  const Value: TDotNetDateTimeStyle.TIds): Integer;
 begin
   Result := Int8(Value);
 end;
 
 class function TCommon.DotNetNumberStylesToInteger(
-  const Value: TDotNetNumberStyles): Integer;
+  const Value: TDotNetNumberStyle.TIds): Integer;
 begin
   Result := Int16(Value);
 end;
@@ -155,6 +155,7 @@ var
   EncodedByteCount: Integer;
   HexDigitCount: Integer;
   EncodedBytes: TBytes;
+  EncodedByteAsInt: Integer;
   DecodedChars: TCharArray;
   HexIdx: Integer;
 begin
@@ -181,8 +182,8 @@ begin
           for I := 0 to EncodedByteCount - 1 do
           begin
             HexIdx := Idx + I * 2;
-            if (IsHexDigit(fileName[HexIdx]) and IsHexDigit(fileName[HexIdx+1])) then
-              EncodedBytes[I] := TFieldedTextLocaleSettings.HexToByte(fileName, HexIdx)
+            if TFieldedTextLocaleSettings.TryHexToInt(Copy(fileName, HexIdx, 2), EncodedByteAsInt) then
+              EncodedBytes[I] := Byte(EncodedByteAsInt)
             else
             begin
               EncodedByteCount := I + 1;
@@ -205,21 +206,21 @@ begin
 end;
 
 class function TCommon.IntegerToDotNetDateTimeStyles(
-  Value: Integer): TDotNetDateTimeStyles;
+  Value: Integer): TDotNetDateTimeStyle.TIds;
 var
   ValueAsInt8: Int8;
 begin
   ValueAsInt8 := Int8(Value);
-  Result := TDotNetDateTimeStyles(ValueAsInt8);
+  Result := TDotNetDateTimeStyle.TIds(ValueAsInt8);
 end;
 
 class function TCommon.IntegerToDotNetNumberStyles(
-  Value: Integer): TDotNetNumberStyles;
+  Value: Integer): TDotNetNumberStyle.TIds;
 var
   ValueAsInt16: Int16;
 begin
   ValueAsInt16 := Int16(Value);
-  Result := TDotNetNumberStyles(ValueAsInt16);
+  Result := TDotNetNumberStyle.TIds(ValueAsInt16);
 end;
 
 class function TCommon.IntToHexChar(const Value: Integer): Char;
@@ -230,14 +231,6 @@ const
 begin
   Assert((Value >= 0) and (Value <= 15));
   Result := HexCharArray[Value];
-end;
-
-class function TCommon.IsHexDigit(value: Char): Boolean;
-begin
-  case value of
-    'a'..'f', 'A'..'F', '0'..'9': Result := True;
-    else Result := False;
-  end;
 end;
 
 class function TCommon.IsInvalidFileNameChar(value: Char): Boolean;

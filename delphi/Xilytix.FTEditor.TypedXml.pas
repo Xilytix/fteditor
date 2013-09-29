@@ -346,6 +346,7 @@ type
 implementation
 
 uses
+  System.UITypes,
   Variants,
   Xilytix.FieldedText.Utils;
 

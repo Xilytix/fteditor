@@ -23,7 +23,7 @@ uses
   ActnList,
   ButtonGroup,
   Xilytix.FTEditor.Colors,
-  Xilytix.FTEditor.Configuration;
+  Xilytix.FTEditor.Configuration, System.Actions;
 
 type
   TOptionsForm = class(TForm)
@@ -200,6 +200,7 @@ implementation
 {$R *.dfm}
 
 uses
+  System.UITypes,
   Xilytix.FTEditor.GridViewFrame,
   Xilytix.FTEditor.ColorSchemaForm;
 
