@@ -47,7 +47,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <DCC_UnitSearchPath>$(PJVersionInfoLib)\$(Platform)\$(Config);C:\Dev\Xilytix.FieldedText\delphi\2\D19\$(Platform)\$(Config);$(XilytixFieldedTextLib)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(PJVersionInfoLib)\$(Platform)\$(Config);$(XilytixFieldedTextLib)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_MinorVer>8</VerInfo_MinorVer>
