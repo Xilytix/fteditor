@@ -1518,9 +1518,9 @@ begin
           tkFloat: Result := Value1.AsExtended = Value2.AsExtended;
           tkString, tkUString, tkChar: Result := Value1.AsString = Value2.AsString;
           tkInt64:  Result := Value1.AsInt64 = Value2.AsInt64;
-          tkUnknown,
-          tkSet,
+          tkSet: Result := Value1.ToString = Value2.ToString;
           tkClass: Result := Value1.AsObject = Value2.AsObject;
+          tkUnknown,
           tkMethod,
           tkWChar,
           tkLString,
