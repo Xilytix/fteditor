@@ -158,10 +158,10 @@ end;
 
 procedure TNumberStylesForm.SetCheckBox(checkBox: TCheckBox);
 var
-  TagStyles: TDotNetNumberStyle.TIds;
+  TagStyleId: TDotNetNumberStyle.TId;
 begin
-  TagStyles := TCommon.IntegerToDotNetNumberStyles(checkBox.Tag);
-  checkBox.Checked := (FValue * TagStyles) = TagStyles;
+  TagStyleId := TDotNetNumberStyle.TId(checkBox.Tag);
+  checkBox.Checked := TagStyleId in FValue;
 end;
 
 procedure TNumberStylesForm.SetRadioButton(button: TRadioButton);
