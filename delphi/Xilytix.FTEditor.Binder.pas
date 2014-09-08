@@ -43,6 +43,7 @@ type
 
         piIgnoreBlankLines,
         piAllowEndOfLineInQuotes,
+        piEndOfLineIsSeparator,
         piStuffedEmbeddedQuotes,
         piIgnoreExtraChars,
         piIncompleteRecordsAllowed,
@@ -194,6 +195,7 @@ type
 
         (Id: piIgnoreBlankLines; Cat: pcMainMeta),
         (Id: piAllowEndOfLineInQuotes; Cat: pcMainMeta),
+        (Id: piEndOfLineIsSeparator; Cat: pcMainMeta),
         (Id: piStuffedEmbeddedQuotes; Cat: pcMainMeta),
         (Id: piIgnoreExtraChars; Cat: pcMainMeta),
         (Id: piIncompleteRecordsAllowed; Cat: pcMainMeta),
@@ -1085,6 +1087,7 @@ begin
       piHeadingEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piIgnoreBlankLines: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piAllowEndOfLineInQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piEndOfLineIsSeparator: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piStuffedEmbeddedQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piIgnoreExtraChars: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piIncompleteRecordsAllowed: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
