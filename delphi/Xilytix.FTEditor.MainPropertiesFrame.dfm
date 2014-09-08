@@ -13,13 +13,9 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     TabOrder = 0
     object MainTabSheet: TTabSheet
       Caption = 'Main'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object CultureEditLabel: TLabel
         Left = 159
-        Top = 99
+        Top = 101
         Width = 35
         Height = 13
         Caption = 'Culture'
@@ -50,8 +46,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         FocusControl = CommentCharEdit
       end
       object Label6: TLabel
-        Left = 18
-        Top = 73
+        Left = 119
+        Top = 46
         Width = 23
         Height = 13
         Caption = 'Char'
@@ -67,7 +63,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object Label8: TLabel
         Left = 120
-        Top = 73
+        Top = 77
         Width = 52
         Height = 13
         Caption = 'Auto Write'
@@ -89,7 +85,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object CultureEdit: TEdit
         Left = 159
-        Top = 114
+        Top = 116
         Width = 96
         Height = 21
         TabOrder = 10
@@ -132,7 +128,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object IgnoreBlankLinesCheckBox: TCheckBox
         Left = 3
-        Top = 97
+        Top = 99
         Width = 121
         Height = 19
         Caption = 'Ignore Blank Lines'
@@ -140,8 +136,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         OnClick = CheckBoxClick
       end
       object AllowInQuotesCheckBox: TCheckBox
-        Left = 120
-        Top = 45
+        Left = 18
+        Top = 65
         Width = 98
         Height = 19
         Caption = 'Allow in Quotes'
@@ -150,7 +146,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object IgnoreExtraCharsCheckBox: TCheckBox
         Left = 3
-        Top = 113
+        Top = 115
         Width = 121
         Height = 19
         Caption = 'Ignore Extra Chars'
@@ -167,8 +163,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         OnChange = ComboBoxChange
       end
       object EndOfLineCharEdit: TEdit
-        Left = 46
-        Top = 70
+        Left = 147
+        Top = 43
         Width = 37
         Height = 21
         TabOrder = 5
@@ -178,7 +174,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object EndOfLineAutoWriteComboBox: TComboBox
         Left = 177
-        Top = 67
+        Top = 72
         Width = 57
         Height = 21
         Style = csDropDownList
@@ -187,7 +183,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object StuffedEmbeddedQuotesCheckBox: TCheckBox
         Left = 3
-        Top = 129
+        Top = 131
         Width = 153
         Height = 19
         Caption = 'Stuffed Embedded Quotes'
@@ -196,21 +192,26 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object IncompleteRecordsAllowedCheckBox: TCheckBox
         Left = 3
-        Top = 145
+        Top = 147
         Width = 153
         Height = 19
         Caption = 'Incomplete Records Allowed'
         TabOrder = 11
         OnClick = CheckBoxClick
       end
+      object EndOfLineIsSeparatorCheckBox: TCheckBox
+        Left = 18
+        Top = 81
+        Width = 98
+        Height = 19
+        Caption = 'Is Separator'
+        TabOrder = 12
+        OnClick = CheckBoxClick
+      end
     end
     object HeadingTabSheet: TTabSheet
       Caption = 'Heading'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label10: TLabel
         Left = 0
         Top = 3
@@ -503,10 +504,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object SubstitutionsTabSheet: TTabSheet
       Caption = 'Substitutions'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object SubstitutionsTopPanel: TPanel
         Left = 0
         Top = 0
@@ -761,10 +758,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object DesignTabSheet: TTabSheet
       Caption = 'Design'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         256
         167)
@@ -1086,10 +1079,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object FileTabSheet: TTabSheet
       Caption = 'Declare'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object FileParametersValueListEditor: TValueListEditor
         Left = 0
         Top = 107
