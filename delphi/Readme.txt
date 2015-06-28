@@ -16,6 +16,7 @@ To run, simply double click the fteditor.exe executable file.  Alternatively
 create a shortcut to this executable file.
 
 VERSION HISTORY
+08 Sep 2014  1.8.6         Adapted to version 2.2.6 of TFieldedText
 29 Sep 2013  1.8.0         Adapted to version 2 of TFieldedText
                            Line terminator in quotes no longer duplicated
                            Generate now handles Nulls

@@ -140,6 +140,7 @@ type
     HeadingWritePrefixSpaceCheckBox: TCheckBox;
     HeadingAlwaysWriteOptionalQuoteCheckBox: TCheckBox;
     IncompleteRecordsAllowedCheckBox: TCheckBox;
+    EndOfLineIsSeparatorCheckBox: TCheckBox;
     procedure CharEditKeyPress(Sender: TObject; var Key: Char);
     procedure CharEditExit(Sender: TObject);
     procedure CultureEditExit(Sender: TObject);
@@ -302,6 +303,7 @@ begin
 
   IgnoreBlankLinesCheckBox.Tag := TBinder.CreateControlTag(piIgnoreBlankLines);
   AllowInQuotesCheckBox.Tag := TBinder.CreateControlTag(piAllowEndOfLineInQuotes);
+  EndOfLineIsSeparatorCheckBox.Tag := TBinder.CreateControlTag(piEndOfLineIsSeparator);
   StuffedEmbeddedQuotesCheckBox.Tag := TBinder.CreateControlTag(piStuffedEmbeddedQuotes);
   IgnoreExtraCharsCheckBox.Tag := TBinder.CreateControlTag(piIgnoreExtraChars);
   IncompleteRecordsAllowedCheckBox.Tag := TBinder.CreateControlTag(piIncompleteRecordsAllowed);
@@ -538,6 +540,7 @@ begin
 
   TBinder.DestroyControlTag(IgnoreBlankLinesCheckBox.Tag);
   TBinder.DestroyControlTag(AllowInQuotesCheckBox.Tag);
+  TBinder.DestroyControlTag(EndOfLineIsSeparatorCheckBox.Tag);
   TBinder.DestroyControlTag(StuffedEmbeddedQuotesCheckBox.Tag);
   TBinder.DestroyControlTag(IgnoreExtraCharsCheckBox.Tag);
   TBinder.DestroyControlTag(IncompleteRecordsAllowedCheckBox.Tag);
@@ -654,6 +657,7 @@ begin
 
     Binder.LoadCheckBox(IgnoreBlankLinesCheckBox, 0);
     Binder.LoadCheckBox(AllowInQuotesCheckBox, 0);
+    Binder.LoadCheckBox(EndOfLineIsSeparatorCheckBox, 0);
     Binder.LoadCheckBox(StuffedEmbeddedQuotesCheckBox, 0);
     Binder.LoadCheckBox(IgnoreExtraCharsCheckBox, 0);
     Binder.LoadCheckBox(IncompleteRecordsAllowedCheckBox, 0);
