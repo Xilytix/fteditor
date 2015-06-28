@@ -1,0 +1,16 @@
+syntax: glob
+delphi/__history
+*.dcu
+delphi/FTEditor.zip
+*.stat
+*.~dsk
+*.dsk
+*.local
+*.identcache
+*.drc
+delphi/FTEditor.otares
+delphi/FTEditor.res
+*.tvsconfig
+delphi/FTEditorWithFieldedText.groupproj
+delphi/Win32
+delphi/bugreport.txt
