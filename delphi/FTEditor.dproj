@@ -58,19 +58,19 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <SanitizedProjectName>FTEditor</SanitizedProjectName>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
-        <VerInfo_Release>8</VerInfo_Release>
         <DCC_MapFile>3</DCC_MapFile>
         <Icon_MainIcon>FTEditor.ico</Icon_MainIcon>
         <DCC_Description>FTEditor</DCC_Description>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <DCC_UnitSearchPath>$(PJVersionInfoLib)\$(Platform)\$(Config);$(XilytixFieldedTextLib)\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(PJVersionInfoLib)\$(Platform)\$(Config);C:\Dev\Xilytix.FieldedText\delphi\3\D23\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_MinorVer>8</VerInfo_MinorVer>
         <DCC_DcuOutput>.\$(Platform)\$(Config)\Dcu</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=Xilytix;FileDescription=;FileVersion=1.8.8.0;InternalName=;LegalCopyright=Public Domain;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Xilytix;FileDescription=;FileVersion=3.0.0.0;InternalName=;LegalCopyright=Public Domain;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>3081</VerInfo_Locale>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
         <DCC_ImageBase>00400000</DCC_ImageBase>
@@ -83,12 +83,10 @@
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -290,6 +288,11 @@
             <Form>FieldHeadingsForm</Form>
         </DCCReference>
         <DCCReference Include="Xilytix.FTEditor.TypedXml.pas"/>
+        <DCCReference Include="Xilytix.FTEditor.SequenceRedirect_NullPropertiesFrame.pas">
+            <Form>SequenceRedirect_NullPropertiesFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -348,14 +351,9 @@
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="2">
-                <DeployFile LocalName="FTEditor.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="Win32\Debug\FTEditor.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>FTEditor.rsm</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="FTEditor.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
+                        <RemoteName>FTEditor.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

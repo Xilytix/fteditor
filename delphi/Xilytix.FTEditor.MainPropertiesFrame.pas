@@ -114,15 +114,9 @@ type
     SubstitutionTypeCharRadioButton: TRadioButton;
     SubstitutionCharValueEdit: TEdit;
     SubstitutionTypeAutoEndOfLineRadioButton: TRadioButton;
-    SubstitutionTypeXmlCharLessThanRadioButton: TRadioButton;
     Label39: TLabel;
     SubstitutionTokenEdit: TEdit;
     Bevel7: TBevel;
-    Label40: TLabel;
-    SubstitutionTypeXmlCharGreaterThanRadioButton: TRadioButton;
-    SubstitutionTypeXmlCharAmpersandRadioButton: TRadioButton;
-    SubstitutionTypeXmlCharApostropheRadioButton: TRadioButton;
-    SubstitutionTypeXmlCharQuotationMarkRadioButton: TRadioButton;
     SubstitutionsAddButton: TButton;
     SubstitutionAddRemovePanel: TPanel;
     SubstitutionsRemoveButton: TButton;
@@ -139,8 +133,9 @@ type
     DesignNewFieldFalseTextEdit: TEdit;
     HeadingWritePrefixSpaceCheckBox: TCheckBox;
     HeadingAlwaysWriteOptionalQuoteCheckBox: TCheckBox;
-    IncompleteRecordsAllowedCheckBox: TCheckBox;
-    EndOfLineIsSeparatorCheckBox: TCheckBox;
+    AllowIncompleteRecordsCheckBox: TCheckBox;
+    LastLineEndedLabel: TLabel;
+    LastLineEndedTypeComboBox: TComboBox;
     procedure CharEditKeyPress(Sender: TObject; var Key: Char);
     procedure CharEditExit(Sender: TObject);
     procedure CultureEditExit(Sender: TObject);
@@ -157,10 +152,6 @@ type
     procedure SubstitutionTypeCharRadioButtonClick(Sender: TObject);
     procedure SubstitutionTypeStringRadioButtonClick(Sender: TObject);
     procedure SubstitutionTypeAutoEndOfLineRadioButtonClick(Sender: TObject);
-    procedure SubstitutionTypeXmlCharLessThanRadioButtonClick(Sender: TObject);
-    procedure SubstitutionTypeXmlCharGreaterThanRadioButtonClick(Sender: TObject);
-    procedure SubstitutionTypeXmlCharAmpersandRadioButtonClick(Sender: TObject);
-    procedure SubstitutionTypeXmlCharApostropheRadioButtonClick(Sender: TObject);
     procedure SubstitutionTypeXmlCharQuotationMarkRadioButtonClick(Sender: TObject);
     procedure SubstitutionStringValueEditExit(Sender: TObject);
     procedure SubstitutionStringValueEditKeyPress(Sender: TObject; var Key: Char);
@@ -248,11 +239,6 @@ begin
   case FEditEngine.SubstitutionType[idx] of
     ftsbString: TypeStr := '"' + FEditEngine.SubstitutionValue[idx] + '"';
     ftsbAutoEndOfLine: TypeStr := 'EoL';
-    ftsbXmlCharLessThan: TypeStr := '<';
-    ftsbXmlCharGreaterThan: TypeStr := '>';
-    ftsbXmlCharAmpersand: TypeStr := '&&';
-    ftsbXmlCharApostrophe: TypeStr := '''';
-    ftsbXmlCharQuotationMark: TypeStr := '"';
     else
     begin
       TypeStr := '?';
@@ -303,10 +289,9 @@ begin
 
   IgnoreBlankLinesCheckBox.Tag := TBinder.CreateControlTag(piIgnoreBlankLines);
   AllowInQuotesCheckBox.Tag := TBinder.CreateControlTag(piAllowEndOfLineInQuotes);
-  EndOfLineIsSeparatorCheckBox.Tag := TBinder.CreateControlTag(piEndOfLineIsSeparator);
   StuffedEmbeddedQuotesCheckBox.Tag := TBinder.CreateControlTag(piStuffedEmbeddedQuotes);
   IgnoreExtraCharsCheckBox.Tag := TBinder.CreateControlTag(piIgnoreExtraChars);
-  IncompleteRecordsAllowedCheckBox.Tag := TBinder.CreateControlTag(piIncompleteRecordsAllowed);
+  AllowIncompleteRecordsCheckBox.Tag := TBinder.CreateControlTag(piAllowIncompleteRecords);
   HeadingWritePrefixSpaceCheckBox.Tag := TBinder.CreateControlTag(piHeadingWritePrefixSpace);
   HeadingAlwaysWriteOptionalQuoteCheckBox.Tag := TBinder.CreateControlTag(piHeadingAlwaysWriteOptionalQuote);
   SubstitutionsEnabledCheckBox.Tag := TBinder.CreateControlTag(piSubstitutionsEnabled);
@@ -333,6 +318,7 @@ begin
   DesignNewFieldStylesDateTimeEdit.Tag := TBinder.CreateControlTag(piNewDateTimeFieldStyles);
 
   TBinder.PrepareEndOfLineTypeComboBox(EndOfLineTypeComboBox, piEndOfLineType);
+  TBinder.PrepareLastLineEndedTypeComboBox(LastLineEndedTypeComboBox, piLastLineEndedType);
   TBinder.PrepareEndOfLineAutoWriteTypeComboBox(EndOfLineAutoWriteComboBox, piEndOfLineAutoWriteType);
   TBinder.PrepareHeadingConstraintComboBox(HeadingConstraintComboBox, piHeadingConstraint);
   TBinder.PrepareQuotedTypeComboBox(HeadingQuotedTypeComboBox, piHeadingQuotedType);
@@ -540,10 +526,9 @@ begin
 
   TBinder.DestroyControlTag(IgnoreBlankLinesCheckBox.Tag);
   TBinder.DestroyControlTag(AllowInQuotesCheckBox.Tag);
-  TBinder.DestroyControlTag(EndOfLineIsSeparatorCheckBox.Tag);
   TBinder.DestroyControlTag(StuffedEmbeddedQuotesCheckBox.Tag);
   TBinder.DestroyControlTag(IgnoreExtraCharsCheckBox.Tag);
-  TBinder.DestroyControlTag(IncompleteRecordsAllowedCheckBox.Tag);
+  TBinder.DestroyControlTag(AllowIncompleteRecordsCheckBox.Tag);
   TBinder.DestroyControlTag(HeadingWritePrefixSpaceCheckBox.Tag);
   TBinder.DestroyControlTag(HeadingAlwaysWriteOptionalQuoteCheckBox.Tag);
   TBinder.DestroyControlTag(SubstitutionsEnabledCheckBox.Tag);
@@ -570,6 +555,7 @@ begin
   TBinder.DestroyControlTag(DesignNewFieldStylesDateTimeEdit.Tag);
 
   TBinder.DestroyControlTag(EndOfLineTypeComboBox.Tag);
+  TBinder.DestroyControlTag(LastLineEndedTypeComboBox.Tag);
   TBinder.DestroyControlTag(EndOfLineAutoWriteComboBox.Tag);
   TBinder.DestroyControlTag(HeadingConstraintComboBox.Tag);
   TBinder.DestroyControlTag(HeadingQuotedTypeComboBox.Tag);
@@ -657,10 +643,9 @@ begin
 
     Binder.LoadCheckBox(IgnoreBlankLinesCheckBox, 0);
     Binder.LoadCheckBox(AllowInQuotesCheckBox, 0);
-    Binder.LoadCheckBox(EndOfLineIsSeparatorCheckBox, 0);
     Binder.LoadCheckBox(StuffedEmbeddedQuotesCheckBox, 0);
     Binder.LoadCheckBox(IgnoreExtraCharsCheckBox, 0);
-    Binder.LoadCheckBox(IncompleteRecordsAllowedCheckBox, 0);
+    Binder.LoadCheckBox(AllowIncompleteRecordsCheckBox, 0);
     Binder.LoadCheckBox(HeadingAlwaysWriteOptionalQuoteCheckBox, 0);
     Binder.LoadCheckBox(HeadingWritePrefixSpaceCheckBox, 0);
     Binder.LoadCheckBox(SubstitutionsEnabledCheckBox, 0);
@@ -682,6 +667,7 @@ begin
     Binder.LoadDateTimeStylesEdit(DesignNewFieldStylesDateTimeEdit, 0);
 
     Binder.LoadComboBox(EndOfLineTypeComboBox, 0);
+    Binder.LoadComboBox(LastLineEndedTypeComboBox, 0);
     Binder.LoadComboBox(EndOfLineAutoWriteComboBox, 0);
     Binder.LoadComboBox(HeadingConstraintComboBox, 0);
     Binder.LoadComboBox(HeadingQuotedTypeComboBox, 0);
@@ -712,11 +698,6 @@ begin
   SubstitutionTypeCharRadioButton.Enabled := ControlsEnabled;
   SubstitutionTypeStringRadioButton.Enabled := ControlsEnabled;
   SubstitutionTypeAutoEndOfLineRadioButton.Enabled := ControlsEnabled;
-  SubstitutionTypeXmlCharLessThanRadioButton.Enabled := ControlsEnabled;
-  SubstitutionTypeXmlCharGreaterThanRadioButton.Enabled := ControlsEnabled;
-  SubstitutionTypeXmlCharAmpersandRadioButton.Enabled := ControlsEnabled;
-  SubstitutionTypeXmlCharApostropheRadioButton.Enabled := ControlsEnabled;
-  SubstitutionTypeXmlCharQuotationMarkRadioButton.Enabled := ControlsEnabled;
 
   Inc(FLoadingControlsCount);
   try
@@ -729,11 +710,6 @@ begin
       SubstitutionTypeCharRadioButton.Checked := False;
       SubstitutionTypeStringRadioButton.Checked := False;
       SubstitutionTypeAutoEndOfLineRadioButton.Checked := False;
-      SubstitutionTypeXmlCharLessThanRadioButton.Checked := False;
-      SubstitutionTypeXmlCharGreaterThanRadioButton.Checked := False;
-      SubstitutionTypeXmlCharAmpersandRadioButton.Checked := False;
-      SubstitutionTypeXmlCharApostropheRadioButton.Checked := False;
-      SubstitutionTypeXmlCharQuotationMarkRadioButton.Checked := False;
     end
     else
     begin
@@ -749,11 +725,6 @@ begin
             SubstitutionTypeStringRadioButton.Checked := True;
         end;
         ftsbAutoEndOfLine: SubstitutionTypeAutoEndOfLineRadioButton.Checked := True;
-        ftsbXmlCharLessThan: SubstitutionTypeXmlCharLessThanRadioButton.Checked := True;
-        ftsbXmlCharGreaterThan: SubstitutionTypeXmlCharGreaterThanRadioButton.Checked := True;
-        ftsbXmlCharAmpersand: SubstitutionTypeXmlCharAmpersandRadioButton.Checked := True;
-        ftsbXmlCharApostrophe: SubstitutionTypeXmlCharApostropheRadioButton.Checked := True;
-        ftsbXmlCharQuotationMark: SubstitutionTypeXmlCharQuotationMarkRadioButton.Checked := True;
         else Assert(False);
       end;
 
@@ -1033,70 +1004,6 @@ begin
       RefreshActiveSubstitution(True);
     end;
     SubstitutionStringValueEdit.SetFocus;
-  end;
-end;
-
-procedure TMainPropertiesFrame.SubstitutionTypeXmlCharAmpersandRadioButtonClick(Sender: TObject);
-var
-  Value: TValue;
-  Modified: Boolean;
-begin
-  if not LoadingControls then
-  begin
-    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharAmpersand);
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
-    if Modified then
-    begin
-      RefreshActiveSubstitution;
-    end;
-  end;
-end;
-
-procedure TMainPropertiesFrame.SubstitutionTypeXmlCharApostropheRadioButtonClick(Sender: TObject);
-var
-  Value: TValue;
-  Modified: Boolean;
-begin
-  if not LoadingControls then
-  begin
-    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharApostrophe);
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
-    if Modified then
-    begin
-      RefreshActiveSubstitution;
-    end;
-  end;
-end;
-
-procedure TMainPropertiesFrame.SubstitutionTypeXmlCharGreaterThanRadioButtonClick(Sender: TObject);
-var
-  Value: TValue;
-  Modified: Boolean;
-begin
-  if not LoadingControls then
-  begin
-    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharGreaterThan);
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
-    if Modified then
-    begin
-      RefreshActiveSubstitution;
-    end;
-  end;
-end;
-
-procedure TMainPropertiesFrame.SubstitutionTypeXmlCharLessThanRadioButtonClick(Sender: TObject);
-var
-  Value: TValue;
-  Modified: Boolean;
-begin
-  if not LoadingControls then
-  begin
-    Value := TValue.From<TFieldedTextSubstitutionType>(ftsbXmlCharLessThan);
-    FBinder.SetPropertyValue(piSubstitutionType, FActiveSubstitutionIdx, Value, Modified);
-    if Modified then
-    begin
-      RefreshActiveSubstitution;
-    end;
   end;
 end;
 

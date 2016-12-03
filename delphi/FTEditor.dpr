@@ -58,7 +58,8 @@ uses
   Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame in 'Xilytix.FTEditor.SequenceRedirect_ExactDateTimePropertiesFrame.pas' {SequenceRedirect_ExactDateTimePropertiesFrame: TFrame},
   Xilytix.FTEditor.AboutForm in 'Xilytix.FTEditor.AboutForm.pas' {AboutForm},
   Xilytix.FTEditor.FieldHeadingsForm in 'Xilytix.FTEditor.FieldHeadingsForm.pas' {FieldHeadingsForm},
-  Xilytix.FTEditor.TypedXml in 'Xilytix.FTEditor.TypedXml.pas';
+  Xilytix.FTEditor.TypedXml in 'Xilytix.FTEditor.TypedXml.pas',
+  Xilytix.FTEditor.SequenceRedirect_NullPropertiesFrame in 'Xilytix.FTEditor.SequenceRedirect_NullPropertiesFrame.pas' {SequenceRedirect_NullPropertiesFrame: TFrame};
 
 {$R *.res}
 

@@ -43,10 +43,9 @@ type
 
         piIgnoreBlankLines,
         piAllowEndOfLineInQuotes,
-        piEndOfLineIsSeparator,
         piStuffedEmbeddedQuotes,
         piIgnoreExtraChars,
-        piIncompleteRecordsAllowed,
+        piAllowIncompleteRecords,
         piHeadingAlwaysWriteOptionalQuote,
         piHeadingWritePrefixSpace,
         piSubstitutionsEnabled,
@@ -69,6 +68,7 @@ type
         piNewDecimalFieldStyles,
 
         piEndOfLineType,
+        piLastLineEndedType,
         piEndOfLineAutoWriteType,
 
         piHeadingConstraint,
@@ -195,10 +195,9 @@ type
 
         (Id: piIgnoreBlankLines; Cat: pcMainMeta),
         (Id: piAllowEndOfLineInQuotes; Cat: pcMainMeta),
-        (Id: piEndOfLineIsSeparator; Cat: pcMainMeta),
         (Id: piStuffedEmbeddedQuotes; Cat: pcMainMeta),
         (Id: piIgnoreExtraChars; Cat: pcMainMeta),
-        (Id: piIncompleteRecordsAllowed; Cat: pcMainMeta),
+        (Id: piAllowIncompleteRecords; Cat: pcMainMeta),
         (Id: piHeadingAlwaysWriteOptionalQuote; Cat: pcMainMeta; ForceRefresh: True),
         (Id: piHeadingWritePrefixSpace; Cat: pcMainMeta; ForceRefresh: True),
         (Id: piSubstitutionsEnabled; Cat: pcMainMeta),
@@ -221,6 +220,7 @@ type
         (Id: piNewDecimalFieldStyles; Cat: pcMainMeta),
 
         (Id: piEndOfLineType; Cat: pcMainMeta),
+        (Id: piLastLineEndedType; Cat: pcMainMeta),
         (Id: piEndOfLineAutoWriteType; Cat: pcMainMeta),
 
         (Id: piHeadingConstraint; Cat: pcMainMeta; ForceRefresh: True),
@@ -464,6 +464,7 @@ type
     procedure SetRedirectSequence(redirect: TFieldedText.TSequenceRedirect; value: TObject);
 
     class procedure PrepareEndOfLineTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+    class procedure PrepareLastLineEndedTypeComboBox(comboBox: TComboBox; id: TPropertyId);
     class procedure PrepareEndOfLineAutoWriteTypeComboBox(comboBox: TComboBox; id: TPropertyId);
     class procedure PrepareHeadingConstraintComboBox(comboBox: TComboBox; id: TPropertyId);
     class procedure PrepareQuotedTypeComboBox(comboBox: TComboBox; id: TPropertyId);
@@ -1087,10 +1088,9 @@ begin
       piHeadingEndOfValueChar: PropertyTypeInfoArray[PropId] := TypeInfo(Char);
       piIgnoreBlankLines: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piAllowEndOfLineInQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
-      piEndOfLineIsSeparator: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piStuffedEmbeddedQuotes: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piIgnoreExtraChars: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
-      piIncompleteRecordsAllowed: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
+      piAllowIncompleteRecords: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piHeadingAlwaysWriteOptionalQuote: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piHeadingWritePrefixSpace: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
       piSubstitutionsEnabled: PropertyTypeInfoArray[PropId] := TypeInfo(Boolean);
@@ -1109,6 +1109,7 @@ begin
       piNewDateTimeFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetDateTimeStyle.TIds);
       piNewDecimalFieldStyles: PropertyTypeInfoArray[PropId] := TypeInfo(TDotNetNumberStyle.TIds);
       piEndOfLineType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineType);
+      piLastLineEndedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TLastLineEndedType);
       piEndOfLineAutoWriteType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TEndOfLineAutoWriteType);
       piHeadingConstraint: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.THeadingConstraint);
       piHeadingQuotedType: PropertyTypeInfoArray[PropId] := TypeInfo(TFieldedText.TQuotedType);
@@ -1929,6 +1930,16 @@ begin
   comboBox.Tag := CreateControlTag(id);
 end;
 
+class procedure TBinder.PrepareLastLineEndedTypeComboBox(comboBox: TComboBox; id: TPropertyId);
+begin
+  comboBox.Items.Clear;
+  comboBox.Items.AddObject('Never', TObject(ftleNever));
+  comboBox.Items.AddObject('Always', TObject(ftleAlways));
+  comboBox.Items.AddObject('Optional', TObject(ftleOptional));
+
+  comboBox.Tag := CreateControlTag(id);
+end;
+
 class procedure TBinder.PreparePadAlignmentComboBox(comboBox: TComboBox; id: TPropertyId);
 begin
   comboBox.Items.Clear;
@@ -2173,7 +2184,7 @@ begin
     Result := False
   else
   begin
-    if not Culture.TryHexToUInt64(HexStr, Int64Value) then
+    if not TryHexToUInt64(HexStr, Int64Value) then
     begin
       Int64Value := 0;
       Result := False;

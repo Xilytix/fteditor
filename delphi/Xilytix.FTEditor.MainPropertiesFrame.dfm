@@ -1,21 +1,23 @@
 inherited MainPropertiesFrame: TMainPropertiesFrame
   Width = 264
-  Height = 195
+  Height = 213
   ExplicitWidth = 264
-  ExplicitHeight = 195
+  ExplicitHeight = 213
   object PageControl: TPageControl
     Left = 0
     Top = 0
     Width = 264
-    Height = 195
+    Height = 213
     ActivePage = MainTabSheet
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 195
     object MainTabSheet: TTabSheet
       Caption = 'Main'
+      ExplicitHeight = 167
       object CultureEditLabel: TLabel
         Left = 159
-        Top = 101
+        Top = 119
         Width = 35
         Height = 13
         Caption = 'Culture'
@@ -62,8 +64,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         FocusControl = EndOfLineTypeComboBox
       end
       object Label8: TLabel
-        Left = 120
-        Top = 77
+        Left = 134
+        Top = 72
         Width = 52
         Height = 13
         Caption = 'Auto Write'
@@ -83,9 +85,17 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Height = 13
         Caption = 'End-of-Line'
       end
+      object LastLineEndedLabel: TLabel
+        Left = 18
+        Top = 95
+        Width = 75
+        Height = 13
+        Caption = 'Last Line Ended'
+        FocusControl = LastLineEndedTypeComboBox
+      end
       object CultureEdit: TEdit
         Left = 159
-        Top = 116
+        Top = 134
         Width = 96
         Height = 21
         TabOrder = 10
@@ -128,7 +138,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object IgnoreBlankLinesCheckBox: TCheckBox
         Left = 3
-        Top = 99
+        Top = 117
         Width = 121
         Height = 19
         Caption = 'Ignore Blank Lines'
@@ -137,7 +147,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object AllowInQuotesCheckBox: TCheckBox
         Left = 18
-        Top = 65
+        Top = 69
         Width = 98
         Height = 19
         Caption = 'Allow in Quotes'
@@ -146,7 +156,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object IgnoreExtraCharsCheckBox: TCheckBox
         Left = 3
-        Top = 115
+        Top = 133
         Width = 121
         Height = 19
         Caption = 'Ignore Extra Chars'
@@ -173,8 +183,8 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         OnKeyPress = CharEditKeyPress
       end
       object EndOfLineAutoWriteComboBox: TComboBox
-        Left = 177
-        Top = 72
+        Left = 192
+        Top = 68
         Width = 57
         Height = 21
         Style = csDropDownList
@@ -183,35 +193,36 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
       end
       object StuffedEmbeddedQuotesCheckBox: TCheckBox
         Left = 3
-        Top = 131
+        Top = 149
         Width = 153
         Height = 19
         Caption = 'Stuffed Embedded Quotes'
         TabOrder = 9
         OnClick = CheckBoxClick
       end
-      object IncompleteRecordsAllowedCheckBox: TCheckBox
+      object AllowIncompleteRecordsCheckBox: TCheckBox
         Left = 3
-        Top = 147
+        Top = 165
         Width = 153
         Height = 19
-        Caption = 'Incomplete Records Allowed'
+        Caption = 'Allow Incomplete Records'
         TabOrder = 11
         OnClick = CheckBoxClick
       end
-      object EndOfLineIsSeparatorCheckBox: TCheckBox
-        Left = 18
-        Top = 81
-        Width = 98
-        Height = 19
-        Caption = 'Is Separator'
+      object LastLineEndedTypeComboBox: TComboBox
+        Left = 99
+        Top = 91
+        Width = 70
+        Height = 21
+        Style = csDropDownList
         TabOrder = 12
-        OnClick = CheckBoxClick
+        OnChange = ComboBoxChange
       end
     end
     object HeadingTabSheet: TTabSheet
       Caption = 'Heading'
       ImageIndex = 1
+      ExplicitHeight = 167
       object Label10: TLabel
         Left = 0
         Top = 3
@@ -504,6 +515,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object SubstitutionsTabSheet: TTabSheet
       Caption = 'Substitutions'
       ImageIndex = 3
+      ExplicitHeight = 167
       object SubstitutionsTopPanel: TPanel
         Left = 0
         Top = 0
@@ -544,17 +556,18 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
         Left = 65
         Top = 25
         Width = 191
-        Height = 142
+        Height = 160
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitHeight = 142
         DesignSize = (
           191
-          142)
+          160)
         object SubstitutionsSplitter: TSplitter
           Left = 0
           Top = 0
-          Height = 142
+          Height = 160
           ExplicitLeft = 24
           ExplicitTop = 56
           ExplicitHeight = 140
@@ -574,13 +587,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Height = 8
           Anchors = [akLeft, akTop, akRight]
           Shape = bsTopLine
-        end
-        object Label40: TLabel
-          Left = 11
-          Top = 114
-          Width = 101
-          Height = 13
-          Caption = 'XML Character Entity'
         end
         object SubstitutionTypeStringRadioButton: TRadioButton
           Left = 9
@@ -632,15 +638,6 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           TabOrder = 5
           OnClick = SubstitutionTypeAutoEndOfLineRadioButtonClick
         end
-        object SubstitutionTypeXmlCharLessThanRadioButton: TRadioButton
-          Left = 9
-          Top = 129
-          Width = 32
-          Height = 17
-          Caption = '<'
-          TabOrder = 6
-          OnClick = SubstitutionTypeXmlCharLessThanRadioButtonClick
-        end
         object SubstitutionTokenEdit: TEdit
           Left = 72
           Top = 16
@@ -651,51 +648,16 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           OnExit = SubstitutionTokenEditExit
           OnKeyPress = SubstitutionTokenEditKeyPress
         end
-        object SubstitutionTypeXmlCharGreaterThanRadioButton: TRadioButton
-          Left = 48
-          Top = 129
-          Width = 32
-          Height = 17
-          Caption = '>'
-          TabOrder = 7
-          OnClick = SubstitutionTypeXmlCharGreaterThanRadioButtonClick
-        end
-        object SubstitutionTypeXmlCharAmpersandRadioButton: TRadioButton
-          Left = 87
-          Top = 129
-          Width = 32
-          Height = 17
-          Caption = '&&'
-          TabOrder = 8
-          OnClick = SubstitutionTypeXmlCharAmpersandRadioButtonClick
-        end
-        object SubstitutionTypeXmlCharApostropheRadioButton: TRadioButton
-          Left = 126
-          Top = 129
-          Width = 32
-          Height = 17
-          Caption = #39
-          TabOrder = 9
-          OnClick = SubstitutionTypeXmlCharApostropheRadioButtonClick
-        end
-        object SubstitutionTypeXmlCharQuotationMarkRadioButton: TRadioButton
-          Left = 163
-          Top = 129
-          Width = 32
-          Height = 17
-          Caption = '"'
-          TabOrder = 10
-          OnClick = SubstitutionTypeXmlCharQuotationMarkRadioButtonClick
-        end
       end
       object SubstitutionsListPanel: TPanel
         Left = 0
         Top = 25
         Width = 65
-        Height = 142
+        Height = 160
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitHeight = 142
         object Label38: TLabel
           Left = 0
           Top = 0
@@ -710,7 +672,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Left = 0
           Top = 13
           Width = 65
-          Height = 112
+          Height = 130
           Align = alClient
           BevelInner = bvNone
           BorderStyle = bsNone
@@ -718,15 +680,17 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           Items = <>
           TabOrder = 0
           OnClick = SubstitutionsButtonGroupClick
+          ExplicitHeight = 112
         end
         object SubstitutionAddRemovePanel: TPanel
           Left = 0
-          Top = 125
+          Top = 143
           Width = 65
           Height = 17
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitTop = 125
           object SubstitutionsAddButton: TButton
             AlignWithMargins = True
             Left = 0
@@ -758,9 +722,10 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object DesignTabSheet: TTabSheet
       Caption = 'Design'
       ImageIndex = 2
+      ExplicitHeight = 167
       DesignSize = (
         256
-        167)
+        185)
       object Bevel5: TBevel
         Left = 115
         Top = 26
@@ -1079,11 +1044,12 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
     object FileTabSheet: TTabSheet
       Caption = 'Declare'
       ImageIndex = 4
+      ExplicitHeight = 167
       object FileParametersValueListEditor: TValueListEditor
         Left = 0
         Top = 107
         Width = 256
-        Height = 60
+        Height = 78
         Align = alClient
         BorderStyle = bsNone
         TabOrder = 1
@@ -1091,6 +1057,7 @@ inherited MainPropertiesFrame: TMainPropertiesFrame
           'Name'
           'Value')
         Visible = False
+        ExplicitHeight = 60
         ColWidths = (
           96
           158)

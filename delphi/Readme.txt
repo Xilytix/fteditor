@@ -16,6 +16,8 @@ To run, simply double click the fteditor.exe executable file.  Alternatively
 create a shortcut to this executable file.
 
 VERSION HISTORY
+03 Dec 2016  3.0.0         Support for Fielded Text standard 1.1
+                           Compiled with version 3.0.4 of TFieldedText
 26 Jan 2016  1.8.8         Compiled with version 2.2.16 of TFieldedText
 08 Sep 2014  1.8.6         Adapted to version 2.2.6 of TFieldedText
 29 Sep 2013  1.8.0         Adapted to version 2 of TFieldedText
