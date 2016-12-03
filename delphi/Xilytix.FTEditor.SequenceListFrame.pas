@@ -28,6 +28,7 @@ uses
   Xilytix.FTEditor.Binder,
   Xilytix.FTEditor.SequenceBasePropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_BasePropertiesFrame,
+  Xilytix.FTEditor.SequenceRedirect_NullPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_ExactStringPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_CaseInsensitiveStringPropertiesFrame,
   Xilytix.FTEditor.SequenceRedirect_BooleanPropertiesFrame,
@@ -62,6 +63,7 @@ type
     type
       TItemTypeId = (itSequence,
                      itSequenceItem,
+                     itRedirect_Null,
                      itRedirect_ExactString,
                      itRedirect_CaseInsensitiveString,
                      itRedirect_Boolean,
@@ -95,6 +97,7 @@ type
       (
         (Id: itSequence; AddCaption: 'Sequence'),
         (Id: itSequenceItem; AddCaption: 'Sequence Item'),
+        (Id: itRedirect_Null; AddCaption: 'Redirect: Null'),
         (Id: itRedirect_ExactString; AddCaption: 'Redirect: String'),
         (Id: itRedirect_CaseInsensitiveString; AddCaption: 'Redirect: Case Insensitive String'),
         (Id: itRedirect_Boolean; AddCaption: 'Redirect: Boolean'),
@@ -107,6 +110,7 @@ type
 
       RedirectTypeInfoArray: TRedirectTypeInfoArray =
       (
+        (RedirectType: ftrtNull; Id: itRedirect_Null; FrameClass: TSequenceRedirect_NullPropertiesFrame),
         (RedirectType: ftrtExactString; Id: itRedirect_ExactString; FrameClass: TSequenceRedirect_ExactStringPropertiesFrame),
         (RedirectType: ftrtCaseInsensitiveString; Id: itRedirect_CaseInsensitiveString;
                                            FrameClass: TSequenceRedirect_CaseInsensitiveStringPropertiesFrame),

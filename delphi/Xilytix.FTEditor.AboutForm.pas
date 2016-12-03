@@ -9,7 +9,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls;
+  Dialogs, StdCtrls, ExtCtrls,
+  Xilytix.FieldedText.Main;
 
 type
   TAboutForm = class(TForm)
@@ -17,7 +18,6 @@ type
     Label2: TLabel;
     VersionLabel: TLabel;
     Label3: TLabel;
-    SourceForgeLineLabel: TLabel;
     FieldedTextLinkLabel: TLabel;
     Bevel1: TBevel;
     Label6: TLabel;
@@ -26,7 +26,7 @@ type
     XilytixLinkLabel: TLabel;
     Button1: TButton;
     XilytixFTEditorLinkLabel: TLabel;
-    procedure SourceForgeLineLabelClick(Sender: TObject);
+    FieldedTextVersionLabel: TLabel;
     procedure FieldedTextLinkLabelClick(Sender: TObject);
     procedure XilytixFTEditorLinkLabelClick(Sender: TObject);
     procedure XilytixLinkLabelClick(Sender: TObject);
@@ -54,18 +54,17 @@ begin
 end;
 
 procedure TAboutForm.FormCreate(Sender: TObject);
+var
+  FieldedTextVersion: string;
 begin
-  VersionLabel.Caption := 'Version: ' + TCommon.VersionString; 
-end;
-
-procedure TAboutForm.SourceForgeLineLabelClick(Sender: TObject);
-begin
-  HLinkNavigateString(nil, 'http://sourceforge.net/projects/FTEditor');
+  VersionLabel.Caption := 'Version: ' + TCommon.VersionString;
+  FieldedTextVersion := IntToStr(TFieldedText.MyVersionMajor) + TFieldedText.VersionSeparator + IntToStr(TFieldedText.MyVersionMinor);
+  FieldedTextVersionLabel.Caption := 'Fielded Text Version: ' + FieldedTextVersion;
 end;
 
 procedure TAboutForm.XilytixFTEditorLinkLabelClick(Sender: TObject);
 begin
-  HLinkNavigateString(nil, 'http://www.xilytix.com/FieldedTextEditor.html');
+  HLinkNavigateString(nil, 'http://www.xilytix.com/fieldedtext/editor');
 end;
 
 procedure TAboutForm.XilytixLinkLabelClick(Sender: TObject);

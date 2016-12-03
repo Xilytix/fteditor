@@ -164,7 +164,7 @@ begin
 
   Result := False;
 
-  if TFieldedTextLocaleSettings.TryHexCharToInt(FileName[Idx], EncodedByteCount) then
+  if TryHexCharToInt(FileName[Idx], EncodedByteCount) then
   begin
     Inc(Idx);
     if Idx < FileNameLength then
@@ -182,7 +182,7 @@ begin
           for I := 0 to EncodedByteCount - 1 do
           begin
             HexIdx := Idx + I * 2;
-            if TFieldedTextLocaleSettings.TryHexToInt(Copy(fileName, HexIdx, 2), EncodedByteAsInt) then
+            if TryHexToInt(Copy(fileName, HexIdx, 2), EncodedByteAsInt) then
               EncodedBytes[I] := Byte(EncodedByteAsInt)
             else
             begin

@@ -672,7 +672,7 @@ begin
   Result := False;
   for Id := Low(Constants) to High(Constants) do
   begin
-    if InvariantSameString(Constants[Id].XmlValue, XmlValue, True) then
+    if SameString(Constants[Id].XmlValue, XmlValue, True) then
     begin
       ColorItemId := Id;
       Result := True;
@@ -745,7 +745,7 @@ end;
 
 class function TColorScheme.IsDefaultName(const value: string): Boolean;
 begin
-  Result := InvariantSameString(Value, DefaultSchemeName, True);
+  Result := SameString(Value, DefaultSchemeName, True);
 end;
 
 procedure TColorScheme.LoadFromXml(XmlNode: ITypedXmlElement);

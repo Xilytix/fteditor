@@ -381,11 +381,11 @@ end;
 
 procedure TSourceFrame.SetSourceModeAsXmlValue(const Value: string);
 begin
-  if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'Latched', True) then
+  if SameString(Value, 'Latched', True) then
     SourceMode := smLatched
   else
   begin
-    if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'ReadOnly', True) then
+    if SameString(Value, 'ReadOnly', True) then
       SourceMode := smReadOnly
     else
       SourceMode := smSelectable;
@@ -406,11 +406,11 @@ end;
 
 procedure TSourceFrame.SetSourceStateAsXmlValue(const Value: string);
 begin
-  if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'Active', True) then
+  if SameString(Value, 'Active', True) then
     SourceState := ssActive
   else
   begin
-    if TFieldedTextLocaleSettings.Invariant.SameString(Value, 'ReadOnly', True) then
+    if SameString(Value, 'ReadOnly', True) then
       SourceState := ssReadOnly
     else
       SourceState := ssSelectable;
